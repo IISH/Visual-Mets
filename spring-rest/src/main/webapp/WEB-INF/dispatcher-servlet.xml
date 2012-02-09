@@ -11,7 +11,7 @@
     <import resource="classpath:application-context.xml"/>
     <context:component-scan base-package="org.iish.visualmets.controllers"/>
 
-    <bean id="multiCore" class="org.apache.solr.core.CoreContainer">
+   <!-- <bean id="multiCore" class="org.apache.solr.core.CoreContainer">
         <constructor-arg value="#{visualmetsProperties['sor.multicore.dir']}"/>
         <constructor-arg value="#{visualmetsProperties['sor.multicore.configFile']}"/>
     </bean>
@@ -30,7 +30,7 @@
     </bean>
     <bean class="org.iish.visualmets.services.SolrQueryFactoryDocumentsImp">
         <property name="solrServer" ref="solrDocumentsServer"/>
-    </bean>
+    </bean>-->
 
     <bean id="imageTransformation" class="org.iish.visualmets.services.ImageTransformation"/>
     <bean id="documentDao" class="org.iish.visualmets.services.MtrReader">
