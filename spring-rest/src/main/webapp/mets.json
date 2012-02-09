@@ -1,0 +1,30 @@
+var test = {
+    data:{
+        title:'BLA BLA TITLE'
+
+        , resource:[
+            'reference',
+            'thumbnail'
+        ]
+                           
+        , pagecount:6
+
+        , zoom:100
+        , zoom_min:10
+        , zoom_max:400
+        , zoom_type:'integer'
+
+        , angle:0
+        , angle_choices:[0,90,180,270]
+
+        , contrast:1
+        , contrast_min:0
+        , contrast_max:10
+        , contrast_type:'float'
+
+        , brightness:0
+        , brightness_min:-100
+        , brightness_max:+100
+        , brightness_type:'float'
+    }
+};

@@ -1,0 +1,310 @@
+body {
+    margin:0;
+    padding:0;
+    /*height:100%;*/
+    /*width: 100%;*/
+    /*font-family: Tahoma,sans-serif;*/
+}
+
+#vm_content {
+    border-style: solid;
+    border-width: 1px;
+    width: 948px;
+    height: 598px;
+    font-family: Tahoma,sans-serif;
+}
+
+#tree {
+    float: left;
+    width: 20%;
+    height: 598px;
+    /*padding-top: 100px;*/
+    border-right: 4px double #333333;
+    display: inline;
+}
+
+#teasers{
+    width: 100%;
+    height:95%;
+    float:left;
+    overflow: auto;
+}
+
+
+.teaserHolder{
+    float:left;
+    height:128px;
+    padding:11px;
+    position:relative;
+    width:97%;
+}
+
+
+#main {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+#content {
+    /*float: right;*/
+    /*width: 80%;*/
+    height: 100%;
+    /*padding-top: 10px;*/
+    /*position: relative;*/
+    /*top: -40px;*/
+}
+
+#contentMain {
+    width: 100%;
+    height: 100%;
+}
+
+.image{
+    /*height: 92%;*/
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    /*float: left;*/
+    /*position: relative;*/
+}
+
+#archiveName {
+    width: 200px;
+    height: 35px;
+    z-index: 10;
+}
+
+
+#overviewPager{
+
+    /*left: 700px;*/
+    padding-right: 30px;
+    top: 508px;
+    position: absolute;
+    z-index: 10;
+}
+
+img {
+    position: relative;
+}
+
+.title{
+    font-family:  Tahoma,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #5d5d5d;
+    top: 15px;
+    left: 15px;
+    position: relative;
+}
+
+input {
+    font-family:  Tahoma,sans-serif;
+    font-size: 12px;
+}
+
+#nr_of_pages{
+    font-size: 12px;
+    font-family: Tahoma,sans-serif;
+}
+
+#linerNotes {
+}
+
+#logo {
+    height: 45px;
+}
+
+#contentTop {
+    width: 100%;
+    height: 60px;
+}
+
+#saveAndPrint {
+    width: 100px;
+    height: 33px;
+    float: left;
+}
+
+#brightness {
+    float:right;
+    padding-right:141px;
+}
+
+#contrast {
+    float:right;
+    padding-right:141px;
+}
+
+#sliders{
+    float: right;
+    width:138px;
+}
+
+.content{
+    height: 85%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-top: 3px solid #00A2B5;
+}
+
+.menuBottom {
+    height: 30%;
+    width:  200px;
+}
+
+#tabBreadcrumb{
+    top: 3px;
+    padding: 5px;
+}
+
+#thumbs{
+    background-color: #E1E1E1;
+    margin: 10px;
+}
+
+a.roundedButton {
+    background: transparent url('images/bg_button_a.gif') no-repeat scroll top right;
+    color: #444;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 24px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.roundedButton span {
+    background: transparent url('images/bg_button_span.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 5px 0 5px 18px;
+}
+
+a.roundedButton:active {
+    background-position: bottom right;
+    color: #000;
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+a.roundedButton:active span {
+    background-position: bottom left;
+    padding: 6px 0 4px 18px; /* push text down 1px */
+}
+
+.pagingControls {
+    width: 311px;
+    z-index: 70;
+    position: absolute;
+    background: white;
+    border: 1px solid #d4d0c8;
+    height: 29px;
+    left: 394px;
+    top: 568px;
+}
+
+.overviewThumbnail {
+    margin: 5px;
+    border: 0px;
+}
+
+.navImage{
+    position: relative;
+}
+
+.editSlider{
+    width: 100px;
+    height: 7px;
+    margin: 5px;
+}
+
+div.scrollableArea *{
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 5px;
+    border: 0;
+}
+
+.overlay{
+    background-color: #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 60;
+    font-family: Tahoma,sans-serif;
+    color: white;
+}
+
+.transcriptionOverlay{
+    /*opacity: 0.7;*/
+    /*filter:alpha(opacity=70);*/
+    position: relative;
+    width: 97%;
+    height: 31%;
+    left: 4px;
+    z-index: 60;
+    padding: 7px;
+    border-style: double solid solid;
+    border-width: 4px 2px 1px 1px;
+    border-color: #333333;
+    top: 0px;
+    overflow: auto;
+    font-family: Tahoma,sans-serif;
+    font-size: 12px;
+    background-color:#e1e1e1;
+}
+
+.transcriptionOverlay p{
+    font-family: Tahoma, sans-serif;
+    color:#000000;
+}
+
+.overlayImage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/******* tabbladen ***********/
+#contentTabs {
+    margin:0;
+    padding:0;
+    list-style:none;
+    overflow:hidden;
+}
+#contentTabs li {
+    float:left;
+    display:block;
+    padding:4px;
+    background-color:#bbb;
+    margin-right:5px;
+    height: 16px;
+}
+#contentTabs li a {
+    color:#fff;
+    text-decoration:none;
+
+}
+#contentTabs li.current {
+    background-color:#e1e1e1;
+}
+#contentTabs li.current a {
+    color:#000;
+    text-decoration:none;
+    outline: none;
+}
+#contentTabs li a.remove {
+    color:#f00;
+    margin-left:10px;
+}
+#contentTabs li img {
+    border-style:none;
+}

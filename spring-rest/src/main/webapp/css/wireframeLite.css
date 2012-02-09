@@ -1,0 +1,220 @@
+xxxhtml {
+    margin:0;
+    padding:0;
+    /*height:100%;*/
+    /*width: 100%;*/
+    /*font-family: Tahoma,sans-serif;*/
+}
+
+body {
+    margin:0;
+    padding:0;
+    /*height:100%;*/
+    /*width: 100%;*/
+    /*font-family: Tahoma,sans-serif;*/
+}
+
+#vm_content {
+    border-style: solid;
+    border-width: 1px;
+    width: 748px;
+    height: 598px;
+}
+
+#main {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+#content {
+    /*float: left;*/
+    width: 100%;
+    height: 100%;
+    /*padding-top: 10px;*/
+    /*position: relative;*/
+    /*top: -40px;*/
+}
+
+#contentMain {
+    width: 100%;
+    height: 100%;
+}
+#infoAndLink {
+    position: absolute;
+    top: 577px;
+}
+
+.image{
+    /*height: 92%;*/
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    /*float: left;*/
+    /*position: relative;*/
+}
+
+#archiveName {
+    width: 200px;
+    height: 35px;
+    z-index: 10;
+}
+
+/*.pagingControls {*/
+    /*width: 370px;*/
+    /*z-index: 70;*/
+    /*position: absolute;*/
+    /*float: left;*/
+/*}*/
+
+#overviewPager{
+    right: 5px;
+    /*left: 700px;*/
+    padding-right: 30px;
+    bottom: 92px;
+    position: absolute;
+    z-index: 10;
+}
+
+#thumbs{
+    background-color: #E1E1E1;
+    margin: 10px;
+}
+
+img {
+    position: relative;
+}
+
+input {
+    font-family:  Tahoma,sans-serif;
+}
+
+#linerNotes {
+}
+
+#logo {
+    height: 45px;
+}
+
+#contentTop {
+    width: 100%;
+    height: 15%;
+}
+
+#saveAndPrint {
+    width: 100px;
+    height: 33px;
+    float: left;
+}
+
+#brightness {
+    float:right;
+    padding-right:141px;
+}
+
+#contrast {
+    float:right;
+    padding-right:141px;
+}
+
+#sliders{
+    float: right;
+    width:138px;
+}
+
+.content{
+    height: 100%;
+    overflow: hidden;
+}
+
+.menuBottom {
+    height: 30%;
+    width:  200px;
+}
+
+.pagingtoolbar {        /* inner div containing buttons */
+    padding: 10px 4px;
+    height: 28px;
+    /*gcu*/
+    /*padding: 2px 2px 2px 2px;*/
+    /*height: 32px;*/
+}
+
+.overviewThumbnail {
+    margin: 5px;
+    border: 0px;
+}
+
+.navImage{
+    position: relative;
+}
+
+.editSlider{
+    width: 100px;
+    height: 7px;
+    margin: 5px;
+}
+
+div.scrollableArea *{
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 5px;
+    border: 0;
+}
+
+.overlay{
+    background-color: #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 60;
+    font-family: Tahoma,sans-serif;
+    color: white;
+}
+
+.transcriptionOverlay{
+    background-color: #E1E1E1;
+    border: 1px solid darkgray;
+    font-family: Tahoma,sans-serif;
+    font-size: 12px;
+    height: 18%;
+    left: 4px;
+    overflow: auto;
+    padding: 7px;
+    position: relative;
+    top: 0px;
+    width: 97%;
+    z-index: 60;
+    /*border: 1px solid darkgray;*/
+}
+
+
+
+.transcriptionOverlay p{
+    font-family: Tahoma, sans-serif;
+    color:#000000;
+}
+
+.overlayImage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pagingControls {
+    width: 311px;
+    z-index: 1200;
+    position: relative;
+    background: white;
+    border: 1px solid #d4d0c8;
+    height: 29px;
+    /*left: 212px;*/
+    /*top: 568px;*/
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <import resource="classpath:application-context.xml"/>
+    <context:component-scan base-package="org.iish.visualmets.controllers"/>
+
+    <bean id="multiCore" class="org.apache.solr.core.CoreContainer">
+        <constructor-arg value="#{visualmetsProperties['sor.multicore.dir']}"/>
+        <constructor-arg value="#{visualmetsProperties['sor.multicore.configFile']}"/>
+    </bean>
+
+    <bean id="solrArchivesServer" class="org.apache.solr.client.solrj.embedded.EmbeddedSolrServer">
+        <constructor-arg index="0" ref="multiCore"/>
+        <constructor-arg index="1" value="#{visualmetsProperties['sor.multicore.archives']}"/>
+    </bean>
+    <bean class="org.iish.visualmets.services.SolrQueryFactoryArchivesImp">
+        <property name="solrServer" ref="solrArchivesServer"/>
+    </bean>
+
+    <bean id="solrDocumentsServer" class="org.apache.solr.client.solrj.embedded.EmbeddedSolrServer">
+        <constructor-arg index="0" ref="multiCore"/>
+        <constructor-arg index="1" value="#{visualmetsProperties['sor.multicore.documents']}"/>
+    </bean>
+    <bean class="org.iish.visualmets.services.SolrQueryFactoryDocumentsImp">
+        <property name="solrServer" ref="solrDocumentsServer"/>
+    </bean>
+
+    <bean id="imageTransformation" class="org.iish.visualmets.services.ImageTransformation"/>
+    <bean id="documentDao" class="org.iish.visualmets.services.MtrReader">
+             <property name="cacheFolder" value="#{visualmetsProperties['external.cacheFolder']}"/>
+             <property name="cacheLimitInBytes" value="19327352832"/>
+             <property name="cacheLimitInSeconds" value="3600"/>
+             <property name="trusted" value="#{visualmetsProperties['external.trusted']}"/>
+    </bean>
+
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/templates/"/>
+    </bean>
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="suffix" value=".ftl"/>
+        <property name="contentType" value="text/plain; charset=utf-8"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="exposeSessionAttributes" value="false"/>
+        <property name="exposeRequestAttributes" value="false"/>
+        <property name="requestContextAttribute" value="requestContext"/>
+    </bean>
+
+    <bean id="localeChangeInterceptor" class="org.iish.visualmets.util.LocaleChangeInterceptor">
+        <property name="paramName" value="lang"/>
+    </bean>
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="cookieMaxAge" value="3600"/>
+        <property name="defaultLocale" value="#{visualmetsProperties['defaultLocale']}"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="localeChangeInterceptor"/>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="#{visualmetsProperties['message.resource']}"/>
+        <property name="cacheSeconds" value="#{visualmetsProperties['message.cache.seconds']}"/>
+        <property name="fileEncodings" value="UTF-8"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+</beans>
