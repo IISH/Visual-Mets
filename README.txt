@@ -12,4 +12,5 @@ Embed links to:
 - Optional: transcription (in text format)
 - Store your METS files on a HTTP accessible location, otherwise the API cannot read the METS documents
 - Embed the javascript on your website to show the METS viewer
+
 - Link naar de how to embed pagina
