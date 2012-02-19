@@ -18,7 +18,6 @@ package org.iish.visualmets.controllers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.iish.visualmets.dao.DocumentDao;
 import org.iish.visualmets.datamodels.ImageItem;
 import org.iish.visualmets.datamodels.PagerItem;
@@ -60,27 +59,27 @@ public class ControllerDocument {
     @Autowired
     private DocumentDao dao;
 
-    @RequestMapping(value="/document", method=RequestMethod.GET)
+    @RequestMapping(value = "/document", method = RequestMethod.GET)
     public ModelAndView getDocument(
-           @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
-           @RequestParam(value = "metsId", required = true) String metsId,
-           @RequestParam(value = "defaults", required = false, defaultValue = "false") Boolean defaults,
-           @RequestParam(value = "scale", required = false, defaultValue = "false") Boolean scale,
-           @RequestParam(value = "scale.width", required = false, defaultValue="800") int scaleWidth,
-           @RequestParam(value = "scale.height", required = false, defaultValue="600") int scaleHeight,
-           @RequestParam(value = "scale.pageId", required = false, defaultValue = "1") int pageId,
-           @RequestParam(value = "pager", required = false, defaultValue = "false") Boolean pager,
-           @RequestParam(value = "pager.start", required = false, defaultValue = "1") int pagerStart,
-           @RequestParam(value = "pager.rows", required = false, defaultValue = "20") int pagerRows,
-           @RequestParam(value = "callback", required = false) String callback,
-           @RequestParam(value = "fileGrp", required = false, defaultValue = "thumbnail image") String fileGrp,
-           HttpServletResponse response) throws Exception, IOException {
+            @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
+            @RequestParam(value = "metsId", required = true) String metsId,
+            @RequestParam(value = "defaults", required = false, defaultValue = "false") Boolean defaults,
+            @RequestParam(value = "scale", required = false, defaultValue = "false") Boolean scale,
+            @RequestParam(value = "scale.width", required = false, defaultValue = "800") int scaleWidth,
+            @RequestParam(value = "scale.height", required = false, defaultValue = "600") int scaleHeight,
+            @RequestParam(value = "scale.pageId", required = false, defaultValue = "1") int pageId,
+            @RequestParam(value = "pager", required = false, defaultValue = "false") Boolean pager,
+            @RequestParam(value = "pager.start", required = false, defaultValue = "1") int pagerStart,
+            @RequestParam(value = "pager.rows", required = false, defaultValue = "20") int pagerRows,
+            @RequestParam(value = "callback", required = false) String callback,
+            @RequestParam(value = "fileGrp", required = false, defaultValue = "thumbnail image") String fileGrp,
+            HttpServletResponse response) throws Exception, IOException {
 //        @RequestParam(value = "eadId", required = true) String eadId,
 
         // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
         // check if the given fileGrp is allowed
-        String[] allowedFileGrps = { "reference image", "thumbnail image", "reference"};
+        String[] allowedFileGrps = {"reference image", "thumbnail image", "reference"};
         if (!Arrays.asList(allowedFileGrps).contains(fileGrp)) {
             fileGrp = "reference image";
         }
@@ -90,9 +89,8 @@ public class ControllerDocument {
         ModelAndView mav = ControllerUtils.createModelAndViewPage("document", callback, response);
 
         // Now collect the resources and defaults
-        if ( defaults )
-        {
-            Map dfts =  visualMetsProperties.getClientResources();
+        if (defaults) {
+            Map dfts = visualMetsProperties.getClientResources();
             mav.addObject("defaults", dfts);
         }
 
@@ -101,13 +99,12 @@ public class ControllerDocument {
         mav.addObject("pageId", pageId);
 
         // The pager
-        if ( pager )
-        {
-            pagerRows = ( pagerRows > client_pager_rows_max )
+        if (pager) {
+            pagerRows = (pagerRows > client_pager_rows_max)
                     ? client_pager_rows_max
                     : pagerRows;
 
-            if ( pagerStart < 1 )
+            if (pagerStart < 1)
                 pagerStart = 1;
 
 //            PagerItem pagerItem = dao.getPager(eadId, metsId, pageId, pagerStart, pagerRows, "thumbnail");
@@ -116,8 +113,7 @@ public class ControllerDocument {
         }
 
         // Scale calculations based on the pageId
-        if ( scale )
-        {
+        if (scale) {
             // GET ORIGINAL SIZE IMAGE
             // ToDo: first, the controller must be able to accept a USE filesec type.
             // This will be added to the response... here we have a specific image layer... it must be generic.
@@ -126,7 +122,7 @@ public class ControllerDocument {
             ImageItem imageInfo = null;
             imageInfo = getImageInfo(eadId, metsId, pageId, "reference image");
             // hack voor dora russel (die returneert reference)
-            if ( imageInfo == null) {
+            if (imageInfo == null) {
                 imageInfo = getImageInfo(eadId, metsId, pageId, "reference");
             }
 
@@ -152,29 +148,19 @@ public class ControllerDocument {
     // Dan kun je in de afnemende functies gebruik maken van de getters.
     public ImageItem getImageInfo(String eadId, String metsId, int pageId, String use) throws Exception {
 
-        ImageItem imageInfo = null;
-        try {
-            imageInfo = dao.getUrl(eadId, metsId, pageId, use);
-
-            //dao.
-            logger.debug(imageInfo);
-        } catch (SolrServerException e) {
-            e.printStackTrace();
-        }
-
-        return imageInfo;
+        return dao.getUrl(eadId, metsId, pageId, use);
     }
 
-    @RequestMapping(value="/documentInfo", method=RequestMethod.GET)
+    @RequestMapping(value = "/documentInfo", method = RequestMethod.GET)
     public ModelAndView getDocumentInfo(
-           @RequestParam(value = "metsId", required = true) String metsId,
-           @RequestParam(value = "callback", required = false) String callback,
-           HttpServletResponse response) throws Exception, IOException {
+            @RequestParam(value = "metsId", required = true) String metsId,
+            @RequestParam(value = "callback", required = false) String callback,
+            HttpServletResponse response) throws Exception, IOException {
 
         ModelAndView mav = ControllerUtils.createModelAndViewPage("documentInfo", callback, response);
 
         // Now collect the resources and defaults
-        Map dfts =  visualMetsProperties.getClientResources();
+        Map dfts = visualMetsProperties.getClientResources();
         mav.addObject("defaults", dfts);
 
         mav.addObject("metsId", metsId);
@@ -186,17 +172,17 @@ public class ControllerDocument {
         return mav;
     }
 
-    @RequestMapping(value="/pageInfo", method=RequestMethod.GET)
+    @RequestMapping(value = "/pageInfo", method = RequestMethod.GET)
     public ModelAndView getPageInfo(
-           @RequestParam(value = "metsId", required = true) String metsId,
-           @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
-           @RequestParam(value = "callback", required = false) String callback,
-           HttpServletResponse response) throws Exception, IOException {
+            @RequestParam(value = "metsId", required = true) String metsId,
+            @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
+            @RequestParam(value = "callback", required = false) String callback,
+            HttpServletResponse response) throws Exception, IOException {
 
         ModelAndView mav = ControllerUtils.createModelAndViewPage("pageInfo", callback, response);
 
         // Now collect the resources and defaults
-        Map dfts =  visualMetsProperties.getClientResources();
+        Map dfts = visualMetsProperties.getClientResources();
         mav.addObject("defaults", dfts);
 
         mav.addObject("metsId", metsId);

@@ -41,8 +41,6 @@ public class TestStartUp {
 
     private Server Start() throws Exception
     {
-        // AANGEPAST, HET LIJKT EROP DAT 8080 AL WORDT GEBRUIKT DOOR EEN ANDERE PROCESS
-//        int port = 8080;
         int port = 8070;
         Server server = new Server(port);
 

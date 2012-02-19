@@ -72,8 +72,6 @@
 <hr/>
 <p>Same call, but now with the toggle at the client:</p>
 <img src="css/images/documents.jpg" alt=""/>
-<h2><@spring.message 'IndexSolrServer_t'/></h2>
-<a href="http://localhost:8983/solr/"><@spring.message 'IndexHere_t'/></a>
 
 
 </body>

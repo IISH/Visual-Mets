@@ -16,9 +16,6 @@
 
 package org.iish.visualmets.controllers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.iish.visualmets.dao.DocumentDao;
 import org.iish.visualmets.datamodels.ImageItem;
 import org.iish.visualmets.services.ImageTransformation;
@@ -33,15 +30,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
-//import java.awt.*;
-//import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-//import java.awt.image.RasterFormatException;
-//import java.awt.image.RescaleOp;
-import java.io.*;
-import java.net.MalformedURLException;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
+
+//import java.awt.*;
+//import java.awt.geom.AffineTransform;
+//import java.awt.image.RasterFormatException;
+//import java.awt.image.RescaleOp;
 
 @Controller
 public class ControllerResource {
@@ -87,7 +87,7 @@ public class ControllerResource {
             @RequestParam(value = "crop", required = false, defaultValue = "") String crop,
             @RequestParam(value = "callback", required = false) String callback,
             HttpServletResponse response
-            )
+    )
             throws Exception, IOException {
 
 //        @RequestParam(value = "eadId", required = true) String eadId,
@@ -186,7 +186,7 @@ public class ControllerResource {
         // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
         // check if the given fileGrp is allowed
-        String[] allowedFileGrps = { "reference image", "thumbnail image", "reference" };
+        String[] allowedFileGrps = {"reference image", "thumbnail image", "reference"};
         if (!Arrays.asList(allowedFileGrps).contains(fileGrp)) {
             fileGrp = "reference image";
         }
@@ -242,31 +242,31 @@ public class ControllerResource {
             @RequestParam(value = "metsId", required = true) String metsId,
             @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
             HttpServletResponse response
-            )
+    )
             throws Exception, IOException {
 
         ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, "ocr");
 
         String transcription = "";
 
-        if ( imageInfo != null) {
-             String filename = imageInfo.getUrl().toString();
+        if (imageInfo != null) {
+            String filename = imageInfo.getUrl().toString();
 
             // TODOx: READ FILE SOURCE
             try {
-                    URL u = new URL(filename);
-	                BufferedReader in = new BufferedReader(	new InputStreamReader( u.openStream() ) );
+                URL u = new URL(filename);
+                BufferedReader in = new BufferedReader(new InputStreamReader(u.openStream()));
 //                    BufferedReader in = new BufferedReader(	new InputStreamReader( u.openStream(), "UTF-8" ) );
-	                String inputLine;
-                	while ((inputLine = in.readLine()) != null) {
-                      transcription = transcription + inputLine + "<br>";
-                    }
-                    in.close();
-               } catch (FileNotFoundException e) {
-                     e.printStackTrace();
-               } catch (IOException e) {
-                 e.printStackTrace();
-               }
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    transcription = transcription + inputLine + "<br>";
+                }
+                in.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         response.setContentType("text/plain; utf-8");
@@ -280,39 +280,39 @@ public class ControllerResource {
             @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
             @RequestParam(value = "callback", required = false) String callback,
             HttpServletResponse response
-            )
+    )
             throws Exception, IOException {
 
         ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, "ocr");
 
         String transcription = "";
 
-        if ( imageInfo != null) {
-             String filename = imageInfo.getUrl().toString();
+        if (imageInfo != null) {
+            String filename = imageInfo.getUrl().toString();
 
             // TODOx: READ FILE SOURCE
             try {
-                  URL u = new URL(filename);
-                  boolean dataAdded = false;
-                  BufferedReader in = new BufferedReader(	new InputStreamReader( u.openStream() ) );
+                URL u = new URL(filename);
+                boolean dataAdded = false;
+                BufferedReader in = new BufferedReader(new InputStreamReader(u.openStream()));
 //                    BufferedReader in = new BufferedReader(	new InputStreamReader( u.openStream(), "UTF-8" ) );
-	                String inputLine;
-                	while ((inputLine = in.readLine()) != null) {
-                        dataAdded = true;
-                      transcription = transcription + inputLine + "<br>";
-                    }
-                    in.close();
-                    if ( !dataAdded ) {
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    dataAdded = true;
+                    transcription = transcription + inputLine + "<br>";
+                }
+                in.close();
+                if (!dataAdded) {
 //                        transcription += "-no transcription-";
-                    }
-               } catch (FileNotFoundException e) {
-                     e.printStackTrace();
-               } catch (IOException e) {
-                 e.printStackTrace();
-               }
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        if ( transcription.equals("") ) {
+        if (transcription.equals("")) {
 //            transcription += "-no transcription-";
         }
         // add json tags
@@ -335,18 +335,6 @@ public class ControllerResource {
     // maak een datamodel van de return waardes ( url, mimetype, use, metsid en fileId ).
     // Dan kun je in de afnemende functies gebruik maken van de getters.
     public ImageItem getImageInfo(String eadId, String metsId, int pageId, String use) throws Exception {
-        ImageItem imageInfo = null;
-        try {
-            imageInfo = dao.getUrl(eadId, metsId, pageId, use);
-
-            //dao.
-            System.out.print(imageInfo);
-        } catch (SolrServerException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return imageInfo;
+        return dao.getUrl(eadId, metsId, pageId, use);
     }
-
-    protected final Log logger = LogFactory.getLog(getClass());
 }

@@ -18,38 +18,30 @@
 
         <plugins>
             <plugin>
-                <groupId>net.jawr</groupId>
-                <artifactId>maven-jawr-plugin</artifactId>
-                <version>1.4.2</version>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat6-maven-plugin</artifactId>
                 <version>2.0-beta-1</version>
+                <configuration>
+                    <port>8070</port>
+                    <systemProperties>
+                        <visualmets>../visualmets.properties</visualmets>
+                    </systemProperties>
+                </configuration>
             </plugin>
-
         </plugins>
-
     </build>
-
 
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.0.4.RELEASE</version>
+            <version>3.0.7.RELEASE</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>3.0.4.RELEASE</version>
+            <version>3.0.7.RELEASE</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -82,7 +74,6 @@
             <version>2.3.16</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
@@ -90,24 +81,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-core</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.solr.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-        <dependency>
             <groupId>au.edu.apsr.mtk</groupId>
             <artifactId>metsapi</artifactId>
             <version>1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>net.jawr</groupId>
-            <artifactId>jawr</artifactId>
-            <version>3.3.3</version>
         </dependency>
 
     </dependencies>

@@ -18,27 +18,23 @@ package org.iish.visualmets.services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
 import org.iish.visualmets.dao.TocDao;
 import org.iish.visualmets.datamodels.TocFolderItem;
 import org.iish.visualmets.datamodels.TocMetsItem;
-//import org.w3c.dom.Document;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.parsers.*;
-import java.io.IOException;
-import org.xml.sax.SAXException;
-
-import java.util.Collections;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
-
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,9 +44,10 @@ import java.util.List;
  * @author Lucien van Wouw <lwo@iisg.nl>
  * @author Gordan Cupac <gcu@iisg.nl>
  */
-public class SolrQueryFactoryArchivesImp extends SolrQueryFactory implements TocDao {
+public class TocDaoImp implements TocDao {
 
     private String namespaceName;
+
     /**
      * Selects child folders that directly fall under the parent folder
      * Each child folder includes all objects ( Mets documents ) that fall under those folders.
@@ -58,13 +55,10 @@ public class SolrQueryFactoryArchivesImp extends SolrQueryFactory implements Toc
      * @param eadId URL to TableOfContents XML file
      * @param group The identity of the parent folder
      * @return An arraylist of all child folders and their objects
-     * @throws SolrServerException
      */
     @Override
-    public List<TocFolderItem> getEADFolders2(String eadId, String group, int namespace) throws SolrServerException {
-        int folderId = 0;
+    public List<TocFolderItem> getEADFolders(String eadId, String group, int namespace) {
 
-        System.out.println("namespace: " + namespace);
         if ( namespace ==  1 ) {
             namespaceName = "mets:";
         } else {
@@ -97,8 +91,6 @@ public class SolrQueryFactoryArchivesImp extends SolrQueryFactory implements Toc
             e.printStackTrace();
         }
 
-        XPathFactory factory = XPathFactory.newInstance();
-        XPath xpath = factory.newXPath();
         XPathExpression expr   =    null;
         try {
             // als geen group pak dan root mets:div directory
@@ -478,143 +470,6 @@ public class SolrQueryFactoryArchivesImp extends SolrQueryFactory implements Toc
         }
 
         return breadCrumbs;
-    }
-
-//    private ArrayList<TocFolderItem> findBreadCrumbs(ArrayList<TocFolderItem> breadCrumbs, Node breadNode) {
-//        // try to find parentNode
-//        Node parentNode = breadNode.getParentNode();
-//        if ( parentNode.getNodeName().equals("mets:div") ) {
-//
-//            // maak breadcrumb item
-//            TocFolderItem breadCrumbItem = new TocFolderItem();
-//            breadCrumbItem.setIndex(String.valueOf(parentNode.getAttributes().getNamedItem("ID").getNodeValue()));
-//            breadCrumbItem.setTitle(parentNode.getAttributes().getNamedItem("LABEL").getNodeValue());
-//
-//           // voeg breadcrumb toe aan lijst van breadcrumbs
-//            breadCrumbs.add(breadCrumbItem);
-//
-//            // recursive: try fo find parents parentnode
-//            breadCrumbs = findBreadCrumbs(breadCrumbs, parentNode);
-//        }
-//
-//        return breadCrumbs;
-//    }
-
-    /**
-     * Selects child folders that directly fall under the parent folder
-     * Each child folder includes all objects ( Mets documents ) that fall under those folders.
-     *
-     * @param eadId Identifier of the archive
-     * @param group The identity of the parent folder
-     * @return An arraylist of all child folders and their objects
-     * @throws SolrServerException
-     */
-    @Override
-    public List<TocFolderItem> getEADFolders(String eadId, String group) throws SolrServerException {
-
-        String query = "eadid:" + eadId + " AND (group:" + group + " OR (index:" + group + " AND haschildren:false))";
-        SolrQuery solrQuery = new SolrQuery(query);
-        solrQuery.addSortField("index", SolrQuery.ORDER.asc);
-        solrQuery.setRows(Integer.MAX_VALUE);
-
-        // This should return a list:
-        // folder and their items
-        // another folder and their items
-        // for example:
-        /*
-        <doc>
-         <date name="datestamp">2010-10-15T18:25:02.228Z</date>
-         <str name="eadid">ead_10767897</str>
-         <int name="index">1</int>
-         <str name="title">INVENTORY</str>
-         </doc>
-       - <doc>
-         <date name="datestamp">2010-10-15T18:25:02.318Z</date>
-         <str name="eadid">ead_10767897</str>
-         <int name="index">4</int>
-         <str name="metsid">1</str>
-         <str name="title">Diary. 1912-1913.</str>
-         <str name="url">http://webstore.iisg.nl/dorarussel/Jpeg/Russel_001/Russel_001_0001_thumbnail.jpg</str>
-         </doc>
-       - <doc>
-         <date name="datestamp">2010-10-15T18:25:02.32Z</date>
-         <str name="eadid">ead_10767897</str>
-         <int name="index">7</int>
-         <str name="metsid">2.1</str>
-         <str name="title">1922.</str>
-         <str name="url">http://webstore.iisg.nl/dorarussel/Jpeg/Russel_002-1/Russel_002-1_0001_thumbnail.jpg</str>
-         </doc>
-         */
-        //   Should be in the array as ONE folder with two items:
-        // folderItem   1
-        // - TocMetsItem 1
-        // - TocMetsItem  2
-        QueryResponse response = getSolrResponse(solrQuery);
-
-        SolrDocumentList documentList = response.getResults();
-        List<TocFolderItem> list = new ArrayList<TocFolderItem>();
-
-        int folderId = 0;
-        //int itemId = 0;
-
-        TocFolderItem folderItem = null;
-
-        for (SolrDocument doc : documentList) {
-
-            boolean hasUrl = doc.containsKey("url");
-            if (hasUrl && folderId > 0) {
-                // ITEM
-                TocMetsItem MetsItem = addItem(doc);
-                folderItem.add(MetsItem);
-            } else {
-                // FOLDER
-
-                folderItem = new TocFolderItem();
-                folderId++;
-
-                folderItem.setIndex(String.valueOf(doc.getFieldValue("index")));
-                folderItem.setTitle(String.valueOf(doc.getFieldValue("title")));
-                folderItem.setHaschildren(doc.getFieldValue("haschildren"));
-
-                //
-                ArrayList<String> breadCrumbles = (ArrayList) doc.getFieldValues("breadcrumbles");
-                if (breadCrumbles != null) {
-                    ArrayList<TocFolderItem> breadcrumbs = new ArrayList(breadCrumbles.size());
-                    for (String breadCrumble : breadCrumbles) {
-                        // 'single' breadcrump samen
-                        String[] gesplitst = breadCrumble.split(":");
-                        //System.out.println(gesplitst[0]);
-                        //System.out.println(gesplitst[1]);
-
-                        TocFolderItem breadCrumbItem = new TocFolderItem();
-                        breadCrumbItem.setIndex(String.valueOf(gesplitst[0]));
-                        breadCrumbItem.setTitle(String.valueOf(gesplitst[1]));
-
-                        // voeg 'single' breadcrump toe aan lijst van breadcrumps
-                        breadcrumbs.add(breadCrumbItem);
-                    }
-                    // voeg breadcrump lijst toe aan folder
-                    folderItem.setBreadcrumbs(breadcrumbs); // hier de breadcrumb lijstje
-                }
-
-                if (folderId == 1 && hasUrl) // Here we had just one item in the list ...
-                    folderItem.add(addItem(doc));
-
-                list.add(folderItem);
-            }
-
-            log.info(doc.getFieldValue("title"));
-        }
-
-        return list;
-    }
-
-    private TocMetsItem addItem(SolrDocument doc) {
-        TocMetsItem MetsItem = new TocMetsItem();
-        MetsItem.setMetsId(String.valueOf(doc.getFieldValue("metsid")));
-        MetsItem.setTitle(String.valueOf(doc.getFieldValue("title")));
-        MetsItem.setThumbnail(String.valueOf(doc.getFieldValue("url")));
-        return MetsItem;
     }
 
     private TocMetsItem addItem(String id, String title, String url) {

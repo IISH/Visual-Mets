@@ -151,7 +151,6 @@ public class VisualMetsProperties extends Properties {
 
     private static String[] EXPECT = {
             "log4j.xml",
-            "solr.archives.selectUrl",
             "message.resource"
     };
 }

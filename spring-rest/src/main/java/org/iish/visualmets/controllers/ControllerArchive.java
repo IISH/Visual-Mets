@@ -16,7 +16,6 @@
 
 package org.iish.visualmets.controllers;
 
-import org.apache.solr.client.solrj.SolrServerException;
 import org.iish.visualmets.dao.TocDao;
 import org.iish.visualmets.datamodels.TocFolderItem;
 import org.iish.visualmets.util.ControllerUtils;
@@ -43,47 +42,20 @@ public class ControllerArchive {
      * @param folderId  The identity of the parent folder in the archive
      * @param callback  If set, returns JSON. Otherwise XML
      * @return          The table of content of an archive and its objects
-     * @throws SolrServerException
-     */
-    @RequestMapping(value="/archive/toc", method=RequestMethod.GET)
-    public ModelAndView getFulllistArchive(
-            @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
-            @RequestParam(value = "folderId", required = false, defaultValue = "0") String folderId,
-            @RequestParam(value = "callback", required = false) String callback,
-            HttpServletResponse response ) throws SolrServerException {
-//        @RequestParam(value = "eadId", required = true) String eadId,
-
-        ModelAndView mav = ControllerUtils.createModelAndViewPage("toc", callback, response);
-
-        List<TocFolderItem> toc = dao.getEADFolders(eadId, folderId);
-        mav.addObject("toc", toc);
-
-        return mav;
-    }
-
-
-    /**
-     * Returns a subsection of the archival table of content and it's associated objects
-     *
-     * @param eadId     Identifier of the archive
-     * @param folderId  The identity of the parent folder in the archive
-     * @param callback  If set, returns JSON. Otherwise XML
-     * @return          The table of content of an archive and its objects
-     * @throws SolrServerException
      */
     @RequestMapping(value="/archive/toc2", method=RequestMethod.GET)
-    public ModelAndView getFulllistArchive2(
+    public ModelAndView getFulllistArchive(
             @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
             @RequestParam(value = "folderId", required = false, defaultValue = "0") String folderId,
             @RequestParam(value = "namespace", required = false, defaultValue = "0") int namespace,
             @RequestParam(value = "callback", required = false) String callback,
-            HttpServletResponse response ) throws SolrServerException {
+            HttpServletResponse response ) {
 
         // decide in which format the data should be returned (xml/json)
         ModelAndView mav = ControllerUtils.createModelAndViewPage("toc", callback, response);
 
         //
-        List<TocFolderItem> toc = dao.getEADFolders2(eadId, folderId, namespace);
+        List<TocFolderItem> toc = dao.getEADFolders(eadId, folderId, namespace);
         mav.addObject("toc", toc);
 
         return mav;
