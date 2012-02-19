@@ -27,7 +27,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
 * Date: 16-okt-2010
 * Time: 18:56:22
 *
-* @author: Luci�n van Wouw <lwo@iisg.nl>
+* @author: Lucien van Wouw <lwo@iisg.nl>
 */
 @Ignore
 public class TestStartUp {
