@@ -10,7 +10,7 @@ var tabId = 0;
 var MAX_NR_TEASERS = 20;
 var oldvmStartpage = 0;
 
-function shortenString(string){
+function shortenString(string) {
     if (string.length > 25) {
         return string.substring(0, 25) + '...';
     } else {
@@ -22,21 +22,19 @@ function makeTeasers(data) {
     $("div#tab_teasers").html('');
     //
     var breadcrumbs = "";
-    var txtbreadcrumb = "";
     if (data.toc.breadcrumbs != undefined) {
         $("a#teasers").text(shortenString(data.toc.breadcrumbs[data.toc.breadcrumbs.length - 1].title));
         $.each(data.toc.breadcrumbs, function(i, val) {
             var shortTitle = shortenString(this.title);
 
             breadcrumbs += '<a href="' + shortTitle + '" title="' + this.title + '" class="breadcrumb general" rel="' + this.index + '">' + this.title + '</a> > ';
-            txtbreadcrumb += this.title + ' > ';
         });
     } else {
         $("a#teasers").text("Inventory");
     }
 
+
     if (data.toc.docs != undefined) {
-        var docBreadcrumb = data.toc.breadcrumbs[data.toc.breadcrumbs.length - 1];
         $("div#tab_teasers").append('<div class = "teaserHolder" id = "docs" > </div>');
         //$("#docs").append('<div class="general"><a class="breadcrumb general" href="' + shortenString(docBreadcrumb.title) + '" rel="' + docBreadcrumb.index + '"> ' + docBreadcrumb.title + '</a></div>');
         $("#docs").append('<div class="general">' + breadcrumbs.substring(0, breadcrumbs.length - 2) + '</div>');
@@ -54,16 +52,16 @@ function makeTeasers(data) {
                 buildDetailTab(val.metsId, val.title, 1, breadcrumbs.substring(0, breadcrumbs.length - 2)); // '1' -> start with page 1
             });
         });
-
-        $.getScript(vm_proxy_host_mets + 'js/SmoothDivScroll-1.1/js/jquery.smoothDivScroll-1.1.js', function() {
-            $("div#docs").smoothDivScroll({
-                scrollWrapper: "div#docsScrollWrapper",
-                autoScroll: "onstart",
-                autoScrollDirection: "left",
-                visibleHotSpots: "always"
-            });
-        });
     }
+
+    $.getScript(vm_proxy_host_mets + 'js/SmoothDivScroll-1.1/js/jquery.smoothDivScroll-1.1.js', function() {
+        $("div#docs").smoothDivScroll({
+            scrollWrapper: "div#docsScrollWrapper",
+            autoScroll: "onstart",
+            autoScrollDirection: "left",
+            visibleHotSpots: "always"
+        });
+    });
 
     $.each(data.toc.folder, function(i, val) {
         var shortTitle = shortenString(this.title);
@@ -75,11 +73,10 @@ function makeTeasers(data) {
         var title = this.title;
 
         var breadcrumbTotal = breadcrumbs + '<a href="' + shortTitle + '" title="' + this.title + '" class="breadcrumb general" rel="' + this.index + '">' + this.title + '</a>';
-        //var txtbreadcrumbTotal = txtbreadcrumb + this.title;
-
 
         $("div#tab_teasers").append('<div class = "teaserHolder" id = "' + teaserId + '" > </div>');
         $("#" + teaserId).append(breadcrumbTotal);
+
         $("#" + teaserId).append('<div id = "' + buttLeftId + '" class = "scrollingHotSpotLeft" > </div>');
         $("#" + teaserId).append('<div id = "' + buttRightId + '" class = "scrollingHotSpotRight" > </div>');
         $("#" + teaserId).append('<div id = "' + scrollWrapperId + '"class = "scrollWrapper" > </div>');
@@ -110,12 +107,31 @@ function makeTeasers(data) {
         });
     });
 
+    // todo kijken of plaatjes zijn ingeladen ipv timeout.
+    setTimeout(function() {
+        a();
+    }, 2000);
+
+    function a() {
+        $.each(data.toc.folder, function(i, val) {
+            var teaserId = "teaserHolder" + i;
+            var scrollWrapperId = "scrollWrapper" + i;
+            $.getScript(vm_proxy_host_mets + 'js/SmoothDivScroll-1.1/js/jquery.smoothDivScroll-1.1.js', function() {
+                $("div#" + teaserId).smoothDivScroll({
+                    scrollWrapper: "div#" + scrollWrapperId,
+                    autoScroll: "onstart",
+                    autoScrollDirection: "left",
+                    visibleHotSpots: "always"
+                });
+            });
+        });
+    }
 
     $(".breadcrumb").click(function(event) {
         event.preventDefault();
-        var folder = $('[id=' + $(this).attr("href").substring(0, 16) + ']');
+        var rel = $(this).attr("rel");
+        var folder = $("[rel='" + rel + "']");
         //var folder = $('[id=' + event.currentTarget. + ']');
-
         var folderId = folder.attr("rel");
         open(folder.parent(), folderId);
     });
@@ -136,7 +152,7 @@ function addTab(id, title) {
     if (title.length > 20) title = title.substring(0, 20) + '...';
     if (id == "teasers") {
         if (!tabExists(id)) {
-            $("#contentTabs").append('<li class = "current"><a class = "tab" id = "teasers" href="#" style="padding-top: 3px;" >' + title + '</a></li>');
+            $("#contentTabs").append('<li class = "current teasers"><a class = "tab" id = "teasers" href="#" style="padding-top: 3px;" >' + title + '</a></li>');
             $("#content #tab_teasers").show();
         } else {
             $("#content #tab_teasers").show();
@@ -158,14 +174,14 @@ function setTabClickEvents() {
         // hide all other tabs
 
         $(".content").hide();
-        $("#content #closeicon").attr("src",  vm_proxy_host_mets + "css/images/opwitcloseicon.png");
+        $("#content #closeicon").attr("src", vm_proxy_host_mets + "css/images/opwitcloseicon.png");
         $("#content li").removeClass("current");
         $("#content .toolbar").hide();
 
         // show current tab
         $("#content #tab_" + tabid).show();
         $(this).parent().addClass("current");
-        $("#content .current #closeicon").attr("src",  vm_proxy_host_mets + "css/images/opblauwcloseicon.png");
+        $("#content .current #closeicon").attr("src", vm_proxy_host_mets + "css/images/opblauwcloseicon.png");
         //showEditButtons(tabid);
     });
 
@@ -192,7 +208,7 @@ function setTabClickEvents() {
             // find the last tab
             var lasttab = $("#content li:last-child");
             lasttab.addClass("current");
-            $("#content .current #closeicon").attr("src",   vm_proxy_host_mets + "css/images/opblauwcloseicon.png");
+            $("#content .current #closeicon").attr("src", vm_proxy_host_mets + "css/images/opblauwcloseicon.png");
 
             // get its link name and show related content
             var lasttabid = $(lasttab).find("a.tab").attr("id");
@@ -221,15 +237,36 @@ function buildDetailTab(metsId, title, page, breadcrumb) {
     $("#content").append('<div id = "tab_' + tabId + '" class = "content"></div>');
     $("#content #tab_" + tabId).append('<div id = "img_' + tabProperties.id + '" class = "image"></div>');
 
+    $("#content #img_" + tabId).append('<div id = "testDirectLink_' + tabProperties.id + '"><a href="">link</a>&nbsp;</div> ');
+    $("#testDirectLink_" + tabProperties.id).css('top', '484px');
+    $("#testDirectLink_" + tabProperties.id).css('position', 'relative');
+
+    $("#testDirectLink_" + tabId).append('<a href="">i</a>');
+
+
+    $("#content #testDirectLink_" + tabId + " a:first").click(function (e) {
+        e.preventDefault();
+        var document = $(".nochildren-expanded").children().attr("rel");
+        if (document == undefined) document = "";
+        var directLink = "?&document=" + document + "&metsId=" + metsId + "&page=" + page + "&title=" + title;
+        alert(directLink);
+    });
+    $("#content #testDirectLink_" + tabId + " a:last").click(function (e) {
+        e.preventDefault();
+        var directLink = "Test: (c) 2012 IISG Amsterdam www.iisg.nl";
+        alert(directLink);
+    });
+
 
     addTab(tabProperties.id, tabProperties.title);
     nrOfTabs++;
     tabId++;
-    getPagingDetailsAndDefaults(tabProperties, buildPager);
+
+    getPagingDetailsAndDefaults(tabProperties);
 }
 
 
-function loadCssFile(cssFile){
+function loadCssFile(cssFile) {
     $("head").append("<link>");
     var css = $("head").children(":last");
 
@@ -240,15 +277,15 @@ function loadCssFile(cssFile){
     });
 }
 
-function doGlobalSearch(){
+function doGlobalSearch() {
     var tempTabId = tabId;
     var globalSearchString = $("#globalSearchField").val();
-    if(!globalSearchString){
+    if (!globalSearchString) {
         return false;
     }
 
     // NEW GCU
-    if(!vm_search){
+    if (!vm_search) {
         return false;
     }
 
@@ -258,7 +295,7 @@ function doGlobalSearch(){
     // NEW GCU
     var searchUrl = "";
     var searchParameter = "";
-    if ( vm_search != "" ) {
+    if (vm_search != "") {
         searchUrl = vm_search.split(/\?(.+)/)[0] + "?";
         searchParameter = vm_search.split(/\?(.+)/)[1];
     }
@@ -270,26 +307,25 @@ function doGlobalSearch(){
         // NEW GCU
         url: searchUrl,
         data: searchParameter.replace("::SEARCH::", globalSearchString),
-        success: function (data){
-            if(data.result == undefined){
+        success: function (data) {
+            if (data.result == undefined) {
                 $("#content #tab_" + tempTabId).append('<div id = "globalSearchResults"><p>No results found...</p></div>');
-            }else if(data.result.length == undefined){
+            } else if (data.result.length == undefined) {
                 $("#content #tab_" + tempTabId).append('<div id = "globalSearchResults"><p><a href="#"><img src="' + data.result.thumbnail + '"></a></p></div>');
                 $("#content #tab_" + tempTabId + " a:last").click(function (e) {
                     e.preventDefault();
-                    buildDetailTab(data.result.url,data.result.title,1, '');
+                    buildDetailTab(data.result.url, data.result.title, 1, '');
                 });
             } else {
 //                    $("#content #tab_" + tabId).append('<div id = "globalSearchResults"><p>No results found...</p></div>');
 
-                $.each(data.result,function(key,value){
-                    //console.log(value);
+                $.each(data.result, function(key, value) {
                     //$("#content #tab_" + tabId).append('<div id = "globalSearchResults"><p>+ value +</p></div>');
                     //$("#content #tab_" + tabId).append('<div id = "globalSearchResults"><p>test</p></div>');
                     $("#content #tab_" + tempTabId).append('<div id = "globalSearchResults"><p><a href="#"><img src="' + value.thumbnail + '"></a></p></div>');
                     $("#content #tab_" + tempTabId + " a:last").click(function (e) {
                         e.preventDefault();
-                        buildDetailTab(value.url,value.title,1, '');
+                        buildDetailTab(value.url, value.title, 1, '');
                     });
                 });
             }
@@ -297,7 +333,7 @@ function doGlobalSearch(){
         dataType: "jsonp"
     });
     var t = new TabProperties();
-    t.id=tempTabId;
+    t.id = tempTabId;
     tabPropertiesArray[nrOfTabs] = t;
     addTab(tempTabId, "Search Results");     //
     nrOfTabs++;
@@ -305,7 +341,7 @@ function doGlobalSearch(){
 }
 
 
-function loadCss(){
+function loadCss() {
     loadCssFile(vm_proxy_host_mets + 'js/jquery/css/smoothness/jquery-ui-1.8.5.custom.css');
     loadCssFile(vm_proxy_host_mets + 'css/wireframeShared.css');
     loadCssFile(vm_proxy_host_mets + 'css/wireframeFull.css');
@@ -315,7 +351,19 @@ function loadCss(){
 }
 
 
+function a(breadcrumbs) {
+    $.each(breadcrumbs, function() {
+        var a = $("[id='" + this.title.substring(0, 16) + "']").parent();
+        var c = $("#tree [rel='" + this.index + "']").parent();
+//                var a = $("#tree [rel='" + this.index + "']");
+        var b = this.index;
+        open(c, b);
+    });
+}
+
+
 function openDocument(folder, metsId, title, page) {
+
     $.ajax({
         async: false,
         type: "GET",
@@ -323,68 +371,78 @@ function openDocument(folder, metsId, title, page) {
         data: "eadId=" + vm_ead + "&folderId=" + folder + "&namespace=" + vm_ead_namespace,
         success: function(data) {
 
-            open($("[id=" + data.toc.breadcrumbs[0].title + "]").parent(), data.toc.breadcrumbs[0].index);
-
-
             var breadcrumbs = "";
+            if (data.toc.breadcrumbs != undefined) {
+                $.each(data.toc.breadcrumbs, function(i, val) {
+                    var shortTitle = shortenString(this.title);
+                    if (i != data.toc.breadcrumbs.length - 1) {
+                        breadcrumbs += '<a href="' + shortTitle + '" title="' + this.title + '" class="breadcrumb general" rel="' + this.index + '">' + this.title + '</a> > ';
+                    } else {
+                        breadcrumbs += '<a href="' + shortTitle + '" title="' + this.title + '" class="breadcrumb general" rel="' + this.index + '">' + this.title + '</a>';
+                    }
+                });
 
-            $.each(data.toc.breadcrumbs, function(i, val) {
-                var shortTitle = shortenString(this.title);
-                breadcrumbs += '<a href="' + shortTitle + '" title="' + this.title + '" class="breadcrumb general" rel="' + this.index + '">' + this.title + '</a> > ';
-            });
+                setTimeout(function() {
+                    a(data.toc.breadcrumbs);
+                }, 1000);
 
+            } else {
+
+                breadcrumbs = "";
+            }
             var command = "buildDetailTab('" + metsId + "','" + title + "','" + page + "','" + breadcrumbs + "')";
-            setTimeout(command, 500);
 
-//            buildDetailTab(metsId, title, page, breadcrumbs);
-            setTimeout("vm_startpage = oldvmStartpage;",500);
+            setTimeout(command, 1000);
+            setTimeout("vm_startpage = oldvmStartpage;", 5000);
         },
         timeout: 30000,
-        error:function(x,e){
-         }
-         ,
-         dataType: "jsonp"
+        error:function(x, e) {
+        }
+        ,
+        dataType: "jsonp"
     });
 
 }
 
 
 $.extend({
-  getUrlVars: function(){
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-      hash = hashes[i].split('=');
-      vars.push(hash[0]);
-      vars[hash[0]] = hash[1];
+    getUrlVars: function() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    },
+    getUrlVar: function(name) {
+        return $.getUrlVars()[name];
     }
-    return vars;
-  },
-  getUrlVar: function(name){
-    return $.getUrlVars()[name];
-  }
 });
 
 // Main method
 $(document).ready(function() {
     loadCss();
 
-    $.getScript(vm_proxy_host_mets + 'js/jquery/js/jquery-ui-1.8.5.custom.min.js', function(){
+    $.getScript(vm_proxy_host_mets + 'js/jquery/js/jquery-ui-1.8.5.custom.min.js', function() {
         $('#tree').resizable({
             handles: 'e',
             minWidth: 145,
             maxWidth: 695,
-            stop: function(event,ui){
+            stop: function(event, ui) {
                 $('#tree #root').remove();
                 filetree($('#tree'));
             }
         });
     });
+
+    $.getScript(vm_proxy_host_mets + 'js/imgnavigator/mbImgNavLite.js');
+
+
     $("#vm_content").append('<div id="tree"></div>');
 
     $("#tree").append('<div id="treeTop" style="height: 100px;"></div>');
-
 
 
     $("#vm_content").append('<div id="content"></div>');
@@ -395,33 +453,40 @@ $(document).ready(function() {
     $("#contentTop").append("<div class='title'>" + vm_title + "</div>");
     $("#content").append('<ul id="contentTabs"></ul>');
 
-    $("#content").append('<div id="tab_teasers" class="content"></div>');
+    $("#content").append('<div id="tab_teasers" class="content F"></div>');
 
-    $.getScript(vm_proxy_host_mets + 'js/jqueryFileTree/jqueryFileTree.js',function(){
+    $.getScript(vm_proxy_host_mets + 'js/jqueryFileTree/jqueryFileTree.js', function() {
         filetree($('#tree'));
     });
 
-    $.getScript(vm_proxy_host_mets + 'js/widgetLite.js');
+    $.ajaxSetup({async: false});
+    $.getScript(vm_proxy_host_mets + 'js/widgetLite.js', function() {
+        var document = $.getUrlVar('document');
+        var metsId = $.getUrlVar('metsId');
+        var title = $.getUrlVar('title');
+        var page = $.getUrlVar('page');
 
+        if (document != undefined
+            && metsId != undefined
+            && title != undefined
+            && page != undefined) {
+            if (vm_startpage != undefined) {
+                oldvmStartpage = vm_startpage;
+                vm_startpage = page;
+            } else {
+                vm_startpage = page;
+            }
+
+            var command = "openDocument('" + document + "','" + metsId + "','" + title + "','" + page + "')";
+            setTimeout(command, 300);
+        }
+
+
+    });
+    $.ajaxSetup({async: true});
 
     setTabClickEvents();
 
-    var document = $.getUrlVar('document');
-    var metsId = $.getUrlVar('metsId');
-    var title = $.getUrlVar('title');
-    var page = $.getUrlVar('page');
-
-
-    if ( document != undefined
-        && metsId != undefined
-        && title  != undefined
-        && page   != undefined ) {
-
-        oldvmStartpage = vm_startpage;
-        vm_startpage= page;
-        var command = "openDocument('" + document + "','" + metsId + "','" + title + "','" + page + "')";
-        setTimeout(command, 300);
-    }
 
 });
 
