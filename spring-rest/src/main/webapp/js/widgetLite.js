@@ -8,6 +8,9 @@ var oldNavPosY = 0;
 var overlay;
 var timer;
 
+var ERROR_METS = "An error occurred while reading the METS document. Please validate your METS document.";
+var SERVER404 = "Cannot reach server (HTTP404), server might be down. Please contact support.";
+
 //alert(vm_hide_full_screen_button);
 
 if (typeof(vm_hide_full_screen_button) == "undefined") var vm_hide_full_screen_button;
@@ -20,7 +23,7 @@ if (typeof(vm_number_of_thumbnails_in_overview) == "undefined") var vm_number_of
 vm_number_of_thumbnails_in_overview = checkVariableInteger(vm_number_of_thumbnails_in_overview, 20, 8);
 
 if (typeof(vm_startpage) == "undefined") var vm_startpage;
-vm_startpage = checkVariableString(vm_startpage, "");
+vm_startpage = checkVariableString(vm_startpage, 1);
 
 if (typeof(vm_css) == "undefined") var vm_css;
 vm_css = checkVariableString(vm_css, "");
@@ -199,7 +202,7 @@ function buildWireframeHtml() {
 }
 
 // todo: testen
-function getMetsCode() {
+function getMetsCode(tabProperties) {
     var metsCode = "";
 
     //alert("LAST EAD: " + vm_ead);
@@ -220,11 +223,12 @@ function getMetsCode() {
 //        alert("LAST B " + vm_metsId);
         metsCode = vm_metsId;
     }
-//    alert(metsCode)
     return metsCode;
 }
 
-function getPagingDetailsAndDefaults(tabProperties, callback) {
+
+function getPagingDetailsAndDefaults(tabProperties) {
+
     if (vm_default_thumbnailpage == null) {
         vm_default_thumbnailpage = 1;
     }
@@ -234,6 +238,7 @@ function getPagingDetailsAndDefaults(tabProperties, callback) {
     } else {
         tabProperties.height = $("#img_" + tabProperties.id).height() - 75;
     }
+
     $.ajax({
         type: "GET",
         url: vm_proxy_host_mets + "rest/document?",
@@ -249,6 +254,7 @@ function getPagingDetailsAndDefaults(tabProperties, callback) {
             "&scale.height=" + tabProperties.height +
             "&scale.pageId=" + vm_default_thumbnailpage,
         success: function(data) {
+
             if (!defaultsLoaded) {
                 loadDefaults(data);
             }
@@ -260,13 +266,31 @@ function getPagingDetailsAndDefaults(tabProperties, callback) {
             buildMain(tabProperties);
         },
         timeout: 30000,
-        error:function(x, e) {
+        error:function(jqXHR, textStatus, errorThrown) {
+
+            var serverStatus = jqXHR.status;
+            if (serverStatus == 500) {
+                throwError("METS");
+            } else if (serverStatus == 404) {
+                throwError("SERVER404");
+            }
         },
         dataType: "jsonp"
     });
 }
 
+function throwError(errorcode) {
+    if (errorcode == "METS") {
+        alert(ERROR_METS);
+    } else if (errorcode == "SERVER404") {
+        alert(SERVER404);
+    }
+
+}
+
+
 function buildMain(tabProperties) {
+
     $("#img_" + tabProperties.id).append('<div id="tabBreadcrumb">' + tabProperties.breadcrumb + '</div>');
     $(".breadcrumb").click(function(event) {
         event.preventDefault();
@@ -278,6 +302,7 @@ function buildMain(tabProperties) {
     buildEditButtons(tabProperties);
     buildPager(tabProperties);
 
+
     // ga naar thumbnail overview als vm_startpage parameter niet is gedefinieerd, of '0' of leeg
     // ga anders direct naar de betreffend pagina met showBigImage().
     if (typeof(vm_startpage) == "undefined" || vm_startpage == "0" || vm_startpage == "") {
@@ -287,7 +312,11 @@ function buildMain(tabProperties) {
         tabProperties.page = vm_startpage;
         tabProperties.overview = false;
         //$("#editButtons").show();
-        showBigImage(tabProperties);
+        scaleAndShowBigImage(tabProperties);
+
+        $("#img_" + tabProperties.id + " #overview").children().first().html('Overview');
+
+
     }
     //buildInfoAndLink(tabProperties);
 }
@@ -310,13 +339,15 @@ function buildPager(tabProperties) {
         '<td><img class="sizeSlider" src="' + vm_proxy_host_mets + 'js/jquery/css/smoothness/images/plus.png" alt=""></td></tr>' +
         '</table></div>');
 
-    var pagingTop = vm_height - 60;
+    var pagingTop = vm_height - 40;
     $("#pagingControls").css({top: pagingTop});
 
     $("#img_" + tabProperties.id + " #overview").button({
         text: true
     }).click(function() {
             if (!tabProperties.overview) {
+                removeTranscription(tabProperties);
+
                 tabProperties.overview = true;
                 tabProperties.transcription = false;
                 $("#img_" + tabProperties.id + " #transcriptionOverlay").remove();
@@ -334,7 +365,7 @@ function buildPager(tabProperties) {
                 $("#img_" + tabProperties.id + " #overviewPrev").hide();
                 $("#img_" + tabProperties.id + " #overviewNext").hide();
                 //$("#editButtons").show();
-                showBigImage(tabProperties);
+                scaleAndShowBigImage(tabProperties);
                 $("#img_" + tabProperties.id + " #overview").children().first().html('Overview');
             }
         });
@@ -343,7 +374,7 @@ function buildPager(tabProperties) {
 //        $("#img_" + tabProperties.id + " #overviewNext").button("option", "disabled", false);
         tabProperties.overviewPage -= vm_number_of_thumbnails_in_overview;
         getThumbnailPagerDetails(tabProperties);
-        disablePagerButtons();
+        disablePagerButtons(tabProperties);
     }
 
     buildButton("#img_" + tabProperties.id + " #overviewPrev", "ui-icon-triangle-1-w", funcOverviewPrev);
@@ -352,7 +383,7 @@ function buildPager(tabProperties) {
 //        $("#img_" + tabProperties.id + " #overviewPrev").button("option", "disabled", false);
         tabProperties.overviewPage += vm_number_of_thumbnails_in_overview;
         getThumbnailPagerDetails(tabProperties);
-        disablePagerButtons();
+        disablePagerButtons(tabProperties);
     }
 
     buildButton("#img_" + tabProperties.id + " #overviewNext", "ui-icon-triangle-1-e", funcOverviewNext);
@@ -380,7 +411,7 @@ function buildPager(tabProperties) {
     function funcFirst() {
         tabProperties.firstPage();
         showBigImage(tabProperties);
-        disablePagerButtons();
+        disablePagerButtons(tabProperties);
         if (tabProperties.overlay) showOverlay(tabProperties);
     }
 
@@ -388,8 +419,8 @@ function buildPager(tabProperties) {
 
     function funcPrev() {
         tabProperties.prevPage();
-        showBigImage(tabProperties);
-        disablePagerButtons();
+        scaleAndShowBigImage(tabProperties);
+        disablePagerButtons(tabProperties);
         if (tabProperties.overlay) showOverlay(tabProperties);
     }
 
@@ -398,8 +429,8 @@ function buildPager(tabProperties) {
 
     function funcNext() {
         tabProperties.nextPage();
-        showBigImage(tabProperties);
-        disablePagerButtons();
+        scaleAndShowBigImage(tabProperties);
+        disablePagerButtons(tabProperties);
         if (tabProperties.overlay) showOverlay(tabProperties);
     }
 
@@ -407,8 +438,8 @@ function buildPager(tabProperties) {
 
     function funcLast() {
         tabProperties.lastPage();
-        showBigImage(tabProperties);
-        disablePagerButtons();
+        scaleAndShowBigImage(tabProperties);
+        disablePagerButtons(tabProperties);
         if (tabProperties.overlay) showOverlay(tabProperties);
     }
 
@@ -418,7 +449,7 @@ function buildPager(tabProperties) {
     input.keypress(function(event) {
         if (event.keyCode == '13') { // return button
             tabProperties.page = input.val();
-            showBigImage(tabProperties);
+            scaleAndShowBigImage(tabProperties);
             if (tabProperties.overlay) showOverlay(tabProperties);
         }
     });
@@ -435,7 +466,7 @@ function buildPager(tabProperties) {
         }
     });
 
-    disablePagerButtons();
+    disablePagerButtons(tabProperties);
 }
 
 function buildEditButtons(tabProperties) {
@@ -549,18 +580,13 @@ function buildEditButtons(tabProperties) {
     $("#showTranscription_" + tabProperties.id).button().click(function() {
         if (!tabProperties.transcription) {
             showTranscription(tabProperties);
-            tabProperties.transcription = true;
         } else {
-            tabProperties.height += 150;
-            oldNavPosX = 0;
-            oldNavPosY = 0;
-            showBigImage(tabProperties);
-            $("#img_" + tabProperties.id + " #transcriptionOverlay").remove();
-            tabProperties.transcription = false;
+            removeTranscription(tabProperties);
         }
     });
 
     function funcFullscreen() {
+        $("#img_" + tabProperties.id + " #pagingControls").css({top: 0});
         showOverlay(tabProperties);
     }
 
@@ -667,9 +693,21 @@ function showTranscription(tabProperties) {
     var overlay = $("#img_" + tabProperties.id + " #transcriptionOverlay");
 
     getTranscriptionData();
+    tabProperties.transcription = true;
 }
 
-function getTranscriptionData(){
+function removeTranscription(tabProperties) {
+    if (tabProperties.transcription) {
+        tabProperties.height += 150;
+        oldNavPosX = 0;
+        oldNavPosY = 0;
+        showBigImage(tabProperties);
+        $("#img_" + tabProperties.id + " #transcriptionOverlay").remove();
+        tabProperties.transcription = false;
+    }
+}
+
+function getTranscriptionData() {
     var urlTranscription = vm_proxy_host_mets + "rest/resource/get_transcription_json?" +
         "metsId=" + getMetsCode() +
         "&pageId=" + tabProperties.page;
@@ -683,7 +721,7 @@ function getTranscriptionData(){
 }
 
 function appendTranscription(data) {
-    if(data.transcription.length == 0){
+    if (data.transcription.length == 0) {
         $("#img_" + tabProperties.id + " #transcriptionOverlay").html('No transcription available for this page');
     } else {
         $("#img_" + tabProperties.id + " #transcriptionOverlay").html(data.transcription);
@@ -710,7 +748,7 @@ function getThumbnailPagerDetails(tabProperties) {
             this.tabProperties.thumbnailList = data.document.pager.pages;
             this.tabProperties.overviewStart = data.document.pager.start;
             this.tabProperties.overviewCount = data.document.pager.count;
-            disablePagerButtons();
+            disablePagerButtons(tabProperties);
             makeThumbnailHtml(tabProperties);
         },
         timeout: 30000,
@@ -753,7 +791,8 @@ function makeThumbnailHtml(tabProperties) {
             tabProperties.page = event.data.page + tabProperties.overviewPage; //using event.data prevents closure issues
 //            $("#editButtonsOuter").show();
 //            $("#editButtons").show();
-            showBigImage(tabProperties);
+            scaleAndShowBigImage(tabProperties);
+            $("#img_" + tabProperties.id + " #overview").children().first().html('Overview');
             return false;
         });
     });
@@ -761,12 +800,45 @@ function makeThumbnailHtml(tabProperties) {
 
 }
 
+
+function scaleAndShowBigImage(tabProperties) {
+    $.ajax({
+        type: "GET",
+        url: vm_proxy_host_mets + "rest/document?",
+        data:
+            "metsId=" + getMetsCode() +
+//                "metsId=" + tabProperties.metsId +
+            "&pager.start=1" +
+            "&pager.rows=1" +
+            "&pager=true" +
+            "&defaults=true" +
+            "&scale=true" +
+            "&scale.width=" + vm_width +
+            "&scale.height=" + tabProperties.height +
+            "&scale.pageId=" + tabProperties.page,
+        success: function(data) {
+            tabProperties.zoom = data.document.scale;
+            showBigImage(tabProperties);
+        },
+        timeout: 30000,
+        error:function(jqXHR, textStatus, errorThrown) {
+
+            var serverStatus = jqXHR.status;
+            if (serverStatus == 500) {
+                throwError("METS");
+            } else if (serverStatus == 404) {
+                throwError("SERVER404");
+            }
+        },
+        dataType: "jsonp"
+    });
+}
+
 // todo: Alvast de eerstvolgende n pagina's inladen met async ajax call. Hierdoor gaat bladeren sneller.
 function showBigImage(tabProperties) {
-    if(tabProperties.transcription){
+    if (tabProperties.transcription) {
         getTranscriptionData();
     }
-
 
     $("#img_" + tabProperties.id + " #overviewPrev").hide();
     $("#img_" + tabProperties.id + " #overviewNext").hide();
@@ -780,7 +852,7 @@ function showBigImage(tabProperties) {
     //$("#metaData").show();
     showPagingButtons(tabProperties.id);
 
-    disablePagerButtons();
+    disablePagerButtons(tabProperties);
 
     var curdir = location.href.substring(0, location.href.lastIndexOf('/') + 1);
     var currentTime = new Date();
@@ -846,7 +918,7 @@ function loadDefaults(data) {
     defaultsLoaded = true;
 }
 
-function disablePagerButtons() {
+function disablePagerButtons(tabProperties) {
     if (tabProperties.page == 1) {
         $("#img_" + tabProperties.id + " #pagingFirst").button("option", "disabled", true);
         $("#img_" + tabProperties.id + " #pagingPrevious").button("option", "disabled", true);
@@ -899,8 +971,8 @@ function makeThumbnailOverview(tabProperties) {
     getThumbnailPagerDetails(tabProperties);
 }
 
-function showOverlay() {
-    $("#pagingControls").appendTo("#img_" + tabProperties.id);
+function showOverlay(tabProperties) {
+//    $("#pagingControls").appendTo("#img_" + tabProperties.id);
     $("#vm_content #overlay").remove();
 
     tabProperties.overlay = true;
@@ -929,46 +1001,52 @@ function showOverlay() {
         zIndex: 1111
     });
 
-
-    $("#pagingControls").prependTo("#overlay");
-    $("#pagingControls").draggable();
-    $("#pagingControls").css({top: 0});
-
-    $("#img_" + tabProperties.id + " #pagingControls").delay(2000).hide();
-
-
-    // added 25-11-11
     $("#img_" + tabProperties.id + " #overview").button("option", "disabled", true);
+    $("#fullscreenclose").click(function() {
+        $("#pagingControls").draggable("destroy");
+        $("#pagingControls").insertAfter("#img_" + tabProperties.id + " #editButtons");
 
-    $("#overlay").bind("keypress click mousemove", function(event) {
+        var pagingTop = vm_height - 60;
+        $("#pagingControls").css({top: pagingTop, left: ''});
+        $("#overlay").remove();
 
-        $("#img_" + tabProperties.id + " #pagingControls").show();
+        tabProperties.overlay = false;
 
-        clearTimeout(timer);
-//        $("#pagingControls").stop(true, true);
-        if (event.type == 'click') {
-            $("#pagingControls").draggable("destroy");
-            $("#pagingControls").insertAfter("#img_" + tabProperties.id + " #editButtons");
-
-            var pagingTop = vm_height - 60;
-            $("#pagingControls").css({top: pagingTop, left: ''});
-            $("#overlay").remove();
-
-            tabProperties.overlay = false;
-
-            $("#img_" + tabProperties.id + " #overview").button("option", "disabled", false);
+        $("#img_" + tabProperties.id + " #overview").button("option", "disabled", false);
 //            $("#pagingControls").css({
 //                "width": oldWidth + "px",
 //                "left": (vm_width - oldWidth) / 2 + "px"
 //            });
-            $("#img_" + tabProperties.id + " #overview").show();
-            $(document).unbind("mousemove");
-        } else {
-            timer = setTimeout(function() {
-                $("#img_" + tabProperties.id + " #pagingControls").hide()
-            }, 2000);
-        }
+        $("#img_" + tabProperties.id + " #overview").show();
+        $(document).unbind("mousemove");
     });
+
+
+    $.getScript('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js', function() {
+        $("#img_" + tabProperties.id + " #pagingControls").draggable();
+    });
+
+
+//    $("#img_" + tabProperties.id + " #pagingControls").delay(2000).hide();
+
+
+    // added 25-11-11
+
+
+//    $("#overlay").bind("keypress click mousemove", function(event) {
+//
+//        $("#img_" + tabProperties.id + " #pagingControls").show();
+//
+//        clearTimeout(timer);
+////        $("#pagingControls").stop(true, true);
+//        if (event.type == 'click') {
+//
+//        } else {
+//            timer = setTimeout(function() {
+//                $("#img_" + tabProperties.id + " #pagingControls").hide()
+//            }, 2000);
+//        }
+//    });
 }
 
 // Used for the fullscreen overlay
