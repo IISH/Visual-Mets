@@ -29,8 +29,6 @@ import org.mortbay.jetty.webapp.WebAppContext;
 @Ignore
 public class TestStartUp {
 
-    private static TestStartUp server;
-
     public static void main(String... args) throws Exception {
 
         int port = 8080;
