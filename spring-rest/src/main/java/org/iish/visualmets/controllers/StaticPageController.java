@@ -39,8 +39,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class StaticPageController {
 
-    @Value("#{visualmetsProperties['proxy.host']}")
-    private String proxy_host = "/";
+    @Value("#{visualmetsProperties['proxy.host.mets']}")
+    private String proxy_host_mets = "/";
 
     /**
      * Needed because the web.xml welcome-url to index.html is ignored.
@@ -86,7 +86,7 @@ public class StaticPageController {
         mav.addObject("vm_hide_full_screen_button", vm_hide_full_screen_button);
         mav.addObject("vm_disable_transcription_button", vm_disable_transcription_button);
         mav.addObject("vm_title", vm_title);
-        mav.addObject("proxy_host", proxy_host);
+        mav.addObject("vm_proxy_host_mets", proxy_host_mets);
 
         return mav;
     }
@@ -113,7 +113,7 @@ public class StaticPageController {
         response.setContentType("text/javascript; charset=utf-8");
 
         ModelAndView mav = new ModelAndView(pageName + ".js");
-        mav.addObject("proxy_host", proxy_host);
+        mav.addObject("proxy_host_mets", proxy_host_mets);
 
         return mav;
     }

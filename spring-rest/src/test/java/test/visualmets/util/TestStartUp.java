@@ -39,7 +39,7 @@ public class TestStartUp {
         if (System.getProperty("visualmets") == null)
             System.setProperty("visualmets", "./visualmets.properties");
 
-        server.addHandler(new WebAppContext("./spring-rest/src/main/webapp", "/"));
+        server.addHandler(new WebAppContext("./spring-rest/src/main/webapp", "/mets2"));
 
         server.start();
     }

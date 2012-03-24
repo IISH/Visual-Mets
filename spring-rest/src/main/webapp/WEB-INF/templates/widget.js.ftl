@@ -1,17 +1,15 @@
 <#--Freemarker template-->
 <@compress single_line=false>
 
-<#assign proxy_host = proxy_host/>
-
 document.writeln('<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>');
-document.writeln('<script type="text/javascript" src="js/jquery/js/jquery-ui-1.8.5.custom.min.js"></script>');
+document.writeln('<script type="text/javascript" src="${proxy_host_mets}js/jquery/js/jquery-ui-1.8.5.custom.min.js"></script>');
 document.writeln("<div id='vm_content'></div>");
 function startup() {
     if (typeof $ === 'undefined') {
     } else {
         window.clearInterval(_startup);
         vm_metsId = encodeURIComponent(vm_metsId);
-        vm_proxy_host_mets = '${proxy_host}';
+        vm_proxy_host_mets = '${proxy_host_mets}';
 $.extend({
   getUrlVars: function(){
     var vars = [], hash;
@@ -28,7 +26,7 @@ $.extend({
     return $.getUrlVars()[name];
   }
 });
-        $("#vm_content").after('<script type="text/javascript" src="js/widget_lite_test.js">');
+        $("#vm_content").after('<script type="text/javascript" src="${proxy_host_mets}js/widget_lite_test.js">');
     }
 }
 var _startup = window.setInterval(startup, 500);

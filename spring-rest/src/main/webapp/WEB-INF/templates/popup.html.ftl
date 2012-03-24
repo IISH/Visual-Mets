@@ -23,7 +23,7 @@
 </head>
 
 <body>
-<script type="text/javascript" src="${proxy_host}rest/widget.js"></script>
+<script type="text/javascript" src="${vm_proxy_host_mets}rest/widget.js"></script>
 </body>
 
 </html>
