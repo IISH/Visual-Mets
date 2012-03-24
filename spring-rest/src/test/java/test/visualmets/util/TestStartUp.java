@@ -23,34 +23,24 @@ import org.mortbay.jetty.webapp.WebAppContext;
 * Bootstrap for testing. This way we do not need to build a target.
 * To debug we only need to stop and start this instance.
 * 
-* Created by IntelliJ IDEA.
-* Date: 16-okt-2010
-* Time: 18:56:22
-*
 * @author: Lucien van Wouw <lwo@iisg.nl>
 */
+
 @Ignore
 public class TestStartUp {
+
     private static TestStartUp server;
 
-        public static void main(String... args) throws Exception
-        {
-            server = new TestStartUp();
-            server.Start();
-        }
+    public static void main(String... args) throws Exception {
 
-    private Server Start() throws Exception
-    {
-        int port = 8070;
+        int port = 8080;
         Server server = new Server(port);
 
-        if ( System.getProperty("visualmets") == null )
+        if (System.getProperty("visualmets") == null)
             System.setProperty("visualmets", "./visualmets.properties");
 
         server.addHandler(new WebAppContext("./spring-rest/src/main/webapp", "/"));
 
         server.start();
-
-        return server ;
     }
 }

@@ -1,15 +1,11 @@
 /**
- * Created by IntelliJ IDEA.
- * User: cro
- * Date: 15-8-11
- * Time: 15:01
- * To change this template use File | Settings | File Templates.
+ * author: cro
  */
 
 var tabProperties;
-var oldStartpage=0;
+var oldStartpage = 0;
 
-function loadCssFile(cssFile){
+function loadCssFile(cssFile) {
     $("head").append("<link>");
 
     var css = $("head").children(":last");
@@ -23,7 +19,7 @@ function loadCssFile(cssFile){
 
 }
 
-function loadCss(){
+function loadCss() {
     //alert(vm_proxy_host_mets);
     loadCssFile(vm_proxy_host_mets + 'js/jquery/css/smoothness/jquery-ui-1.8.5.custom.css');
     loadCssFile(vm_proxy_host_mets + 'css/wireframeLite.css');
@@ -32,7 +28,7 @@ function loadCss(){
     loadCssFile(vm_proxy_host_mets + 'js/SmoothDivScroll-1.1/css/smoothDivScroll.css');
     loadCssFile(vm_proxy_host_mets + 'js/jqueryFileTree/jqueryFileTree.css');
     loadCssFile(vm_proxy_host_mets + 'js/imgnavigator/mbImgNav.css');
-    if ( typeof(vm_css) != "undefined" ) {
+    if (typeof(vm_css) != "undefined") {
         loadCssFile(vm_css);
     }
 }
@@ -75,20 +71,19 @@ function checkIfTabPropertiesIsLoaded(counter) {
 }
 
 $.extend({
-  getUrlVars: function(){
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-      hash = hashes[i].split('=');
-      vars.push(hash[0]);
-      vars[hash[0]] = hash[1];
+    getUrlVars: function() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    },
+    getUrlVar: function(name) {
+        return $.getUrlVars()[name];
     }
-    return vars;
-  },
-  getUrlVar: function(name){
-    return $.getUrlVars()[name];
-  }
 });
 
 
@@ -119,7 +114,7 @@ function readyFunctionSecondPart() {
     $("#content").append('<div id="img_' + tabProperties.id + '" class="image">');
     //$("#content").append('<div id="img_' + tabProperties.id + '" class="image">');
 
-   oldStartpage = vm_startpage;
+    oldStartpage = vm_startpage;
     if (vm_widgetLite) {
         var page = parseInt($.getUrlVar('page'));
         if (page != undefined) {
@@ -130,7 +125,7 @@ function readyFunctionSecondPart() {
     }
 
     getPagingDetailsAndDefaults(tabProperties, buildPager);
-    setTimeout("vm_startpage = oldStartpage;",500);
+    setTimeout("vm_startpage = oldStartpage;", 500);
 
 }
 

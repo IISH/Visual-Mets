@@ -15,6 +15,7 @@
  */
 package org.iish.visualmets.controllers;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,13 +38,16 @@ import javax.servlet.http.HttpServletResponse;
 
 public class StaticPageController {
 
+    @Value("#{visualmetsProperties['proxy.host']}")
+    private String proxy_host = "/";
+
     /**
      * Needed because the web.xml welcome-url to index.html is ignored.
      */
     @RequestMapping(value = "/")
     public ModelAndView indexHtml(HttpServletRequest request,
                                   HttpServletResponse response) throws Exception {
-        return getHtmlPage("index.html", request, response ) ;
+        return getHtmlPage("index.html", request, response);
     }
 
     @RequestMapping("/{pageName}.html")
@@ -55,7 +59,7 @@ public class StaticPageController {
 
         response.setContentType("text/html; charset=utf-8");
 
-        ModelAndView mav = new ModelAndView(pageName+".html");
+        ModelAndView mav = new ModelAndView(pageName + ".html");
 
         return mav;
     }
@@ -69,7 +73,8 @@ public class StaticPageController {
 
         response.setContentType("text/javascript; charset=utf-8");
 
-        ModelAndView mav = new ModelAndView(pageName+".js");
+        ModelAndView mav = new ModelAndView(pageName + ".js");
+        mav.addObject("proxy_host", proxy_host);
 
         return mav;
     }

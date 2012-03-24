@@ -6,11 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by IntelliJ IDEA.
- * User: lwo
- * Date: 5/24/11
- * Time: 11:22 AM
- * To change this template use File | Settings | File Templates.
+ * Security
+ * <p/>
+ * Restricts reading of documents to the specified list of domains.
  */
 public class Security {
 

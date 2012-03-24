@@ -119,8 +119,7 @@ public class ControllerDocument {
             // This will be added to the response... here we have a specific image layer... it must be generic.
 
             // ToDo: remove with the USE parameter, rather than hardcoding over here
-            ImageItem imageInfo = null;
-            imageInfo = getImageInfo(eadId, metsId, pageId, "reference image");
+            ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, "reference image");
             // hack voor dora russel (die returneert reference)
             if (imageInfo == null) {
                 imageInfo = getImageInfo(eadId, metsId, pageId, "reference");
@@ -177,7 +176,7 @@ public class ControllerDocument {
             @RequestParam(value = "metsId", required = true) String metsId,
             @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
             @RequestParam(value = "callback", required = false) String callback,
-            HttpServletResponse response) throws Exception, IOException {
+            HttpServletResponse response) throws Exception {
 
         ModelAndView mav = ControllerUtils.createModelAndViewPage("pageInfo", callback, response);
 
