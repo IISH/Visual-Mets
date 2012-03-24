@@ -1022,7 +1022,7 @@ function showOverlay(tabProperties) {
     });
 
 
-    $.getScript('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js', function() {
+    $.getScript('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js', function() {
         $("#img_" + tabProperties.id + " #pagingControls").draggable();
     });
 

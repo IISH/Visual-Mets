@@ -54,14 +54,14 @@ function makeTeasers(data) {
         });
     }
 
-    $.getScript(vm_proxy_host_mets + 'js/SmoothDivScroll-1.1/js/jquery.smoothDivScroll-1.1.js', function() {
-        $("div#docs").smoothDivScroll({
-            scrollWrapper: "div#docsScrollWrapper",
-            autoScroll: "onstart",
-            autoScrollDirection: "left",
-            visibleHotSpots: "always"
-        });
-    });
+//    $.getScript(vm_proxy_host_mets + 'js/SmoothDivScroll-1.1/js/jquery.smoothDivScroll-1.1.js', function() {
+//        $("div#docs").smoothDivScroll({
+//            scrollWrapper: "div#docsScrollWrapper",
+//            autoScroll: "onstart",
+//            autoScrollDirection: "left",
+//            visibleHotSpots: "always"
+//        });
+//    });
 
     $.each(data.toc.folder, function(i, val) {
         var shortTitle = shortenString(this.title);
@@ -97,20 +97,19 @@ function makeTeasers(data) {
             });
         });
 
-        $.getScript(vm_proxy_host_mets + 'js/SmoothDivScroll-1.1/js/jquery.smoothDivScroll-1.1.js', function() {
-            $("div#" + teaserId).smoothDivScroll({
-                scrollWrapper: "div#" + scrollWrapperId,
-                autoScroll: "onstart",
-                autoScrollDirection: "left",
-                visibleHotSpots: "always"
-            });
-        });
+//        $.getScript(vm_proxy_host_mets + 'js/SmoothDivScroll-1.1/js/jquery.smoothDivScroll-1.1.js', function() {
+//            $("div#" + teaserId).smoothDivScroll({
+//                scrollWrapper: "div#" + scrollWrapperId,
+//                autoScroll: "onstart",
+//                autoScrollDirection: "left",
+//                visibleHotSpots: "always"
+//            });
+//        });
     });
 
-    // todo kijken of plaatjes zijn ingeladen ipv timeout.
     setTimeout(function() {
         a();
-    }, 2000);
+    }, 1000);
 
     function a() {
         $.each(data.toc.folder, function(i, val) {

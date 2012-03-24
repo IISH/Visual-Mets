@@ -12,6 +12,8 @@ if( o.loadMessage == undefined ) o.loadMessage = 'Loading...';
 if ( typeof(vm_ead_namespace) == "undefined" ) var vm_ead_namespace;
 vm_ead_namespace = checkVariableString2(vm_ead_namespace, "1");
 
+var dataTemp;
+
 function checkVariableString2(field, defaultValue) {
     if ( typeof(field) == "undefined" ) {
        var field = defaultValue;
@@ -29,6 +31,7 @@ function getJsonData(folder, callback){
         url: vm_proxy_host_mets + "rest/archive/toc2",
         data: "eadId=" + vm_ead + "&folderId=" + folder + "&namespace=" + vm_ead_namespace,
          success: function(data){
+             dataTemp = data;
              callback(data);
          },
          timeout: 30000,
@@ -68,6 +71,8 @@ function showTree(c, folder) {
 
     }
 }
+
+
 
 function open(c, folder){
 //    console.log(c + " " + folder);

@@ -74,8 +74,8 @@ public class ControllerResource {
     @RequestMapping(value = "/resource/thumbnail_image", method = RequestMethod.GET)
     public void getThumbnailImage(
 
-            @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
             @RequestParam(value = "metsId", required = true) String metsId,
+            @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
             @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
             @RequestParam(value = "angle", required = false, defaultValue = "0") Integer angle,
             @RequestParam(value = "width", required = false, defaultValue = "160") Integer width,

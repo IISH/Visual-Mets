@@ -180,7 +180,6 @@
         imageH=$(image).outerHeight();
         imageW=$(image).outerWidth();
 
-        console.log(imageH);
         $(draggableElement).css({
 //            position: "absolute"
             marginLeft: "auto",

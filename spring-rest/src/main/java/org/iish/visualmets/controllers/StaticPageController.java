@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,15 +46,54 @@ public class StaticPageController {
      * Needed because the web.xml welcome-url to index.html is ignored.
      */
     @RequestMapping(value = "/")
-    public ModelAndView indexHtml(HttpServletRequest request,
-                                  HttpServletResponse response) throws Exception {
-        return getHtmlPage("index.html", request, response);
+    public ModelAndView indexHtml(HttpServletResponse response) throws Exception {
+        return getHtmlPage("index.html", response);
+    }
+
+    /**
+     * Received the values needed for building an html page that calls the widget.
+     *
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/popup.html")
+    public ModelAndView getPopupPage(
+            @RequestParam(value = "vm_metsId", required = true) String vm_metsId,
+            @RequestParam(value = "vm_widgetLite", required = false, defaultValue = "true") String vm_widgetLite,
+            @RequestParam(value = "vm_default_thumbnailpage", required = false, defaultValue = "1") String vm_default_thumbnailpage,
+            @RequestParam(value = "vm_width", required = false, defaultValue = "1024") String vm_width,
+            @RequestParam(value = "vm_height", required = false, defaultValue = "600") String vm_height,
+            @RequestParam(value = "vm_startpage", required = false, defaultValue = "0") String vm_startpage,
+            @RequestParam(value = "vm_number_of_thumbnails_in_overview", required = false, defaultValue = "20") String vm_number_of_thumbnails_in_overview,
+            @RequestParam(value = "vm_hide_full_screen_button", required = false, defaultValue = "1") String vm_hide_full_screen_button,
+            @RequestParam(value = "vm_disable_transcription_button", required = false, defaultValue = "1") String vm_disable_transcription_button,
+            @RequestParam(value = "vm_title", required = false, defaultValue = "") String vm_title,
+            HttpServletResponse response
+    ) throws Exception {
+
+        response.setContentType("text/html; charset=utf-8");
+
+        ModelAndView mav = new ModelAndView("popup.html");
+        // Can we make a map of the RequestParam with their defaults ?
+        mav.addObject("vm_metsId", vm_metsId);
+        mav.addObject("vm_widgetLite", vm_widgetLite);
+        mav.addObject("vm_default_thumbnailpage", vm_default_thumbnailpage);
+        mav.addObject("vm_width", vm_width);
+        mav.addObject("vm_height", vm_height);
+        mav.addObject("vm_startpage", vm_startpage);
+        mav.addObject("vm_number_of_thumbnails_in_overview", vm_number_of_thumbnails_in_overview);
+        mav.addObject("vm_hide_full_screen_button", vm_hide_full_screen_button);
+        mav.addObject("vm_disable_transcription_button", vm_disable_transcription_button);
+        mav.addObject("vm_title", vm_title);
+        mav.addObject("proxy_host", proxy_host);
+
+        return mav;
     }
 
     @RequestMapping("/{pageName}.html")
     public ModelAndView getHtmlPage(
             @PathVariable("pageName") String pageName,
-            HttpServletRequest request,
             HttpServletResponse response
     ) throws Exception {
 
@@ -67,7 +107,6 @@ public class StaticPageController {
     @RequestMapping("/{pageName}.js")
     public ModelAndView getJsPage(
             @PathVariable("pageName") String pageName,
-            HttpServletRequest request,
             HttpServletResponse response
     ) throws Exception {
 

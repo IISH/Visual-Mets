@@ -34,7 +34,6 @@
 			startAtElementId: ""
 		},
 		_create: function() {
-		
 			// Set variables
 			var self = this, o = this.options, el = this.element;
 			
