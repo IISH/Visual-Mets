@@ -26,11 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /*
-* Used for online API testing
-* 
-* Created by IntelliJ IDEA.
-* Date: 16-okt-2010
-* Time: 14:38:06
+* StaticPageController
 *
 * @author: Lucien van Wouw <lwo@iisg.nl>
 */
@@ -59,16 +55,16 @@ public class StaticPageController {
      */
     @RequestMapping("/popup.html")
     public ModelAndView getPopupPage(
-            @RequestParam(value = "vm_metsId", required = true) String vm_metsId,
-            @RequestParam(value = "vm_widgetLite", required = false, defaultValue = "true") String vm_widgetLite,
-            @RequestParam(value = "vm_default_thumbnailpage", required = false, defaultValue = "1") String vm_default_thumbnailpage,
-            @RequestParam(value = "vm_width", required = false, defaultValue = "1024") String vm_width,
-            @RequestParam(value = "vm_height", required = false, defaultValue = "600") String vm_height,
-            @RequestParam(value = "vm_startpage", required = false, defaultValue = "0") String vm_startpage,
-            @RequestParam(value = "vm_number_of_thumbnails_in_overview", required = false, defaultValue = "20") String vm_number_of_thumbnails_in_overview,
-            @RequestParam(value = "vm_hide_full_screen_button", required = false, defaultValue = "1") String vm_hide_full_screen_button,
-            @RequestParam(value = "vm_disable_transcription_button", required = false, defaultValue = "1") String vm_disable_transcription_button,
-            @RequestParam(value = "vm_title", required = false, defaultValue = "") String vm_title,
+            @RequestParam(value = "metsId", required = true) String metsId,
+            @RequestParam(value = "widgetLite", required = false, defaultValue = "true") String widgetLite,
+            @RequestParam(value = "default_thumbnailpage", required = false, defaultValue = "1") String default_thumbnailpage,
+            @RequestParam(value = "width", required = false, defaultValue = "1024") String width,
+            @RequestParam(value = "height", required = false, defaultValue = "600") String height,
+            @RequestParam(value = "startpage", required = false, defaultValue = "0") String startpage,
+            @RequestParam(value = "number_of_thumbnails_in_overview", required = false, defaultValue = "20") String number_of_thumbnails_in_overview,
+            @RequestParam(value = "hide_full_screen_button", required = false, defaultValue = "1") String hide_full_screen_button,
+            @RequestParam(value = "disable_transcription_button", required = false, defaultValue = "1") String disable_transcription_button,
+            @RequestParam(value = "title", required = false, defaultValue = "") String title,
             HttpServletResponse response
     ) throws Exception {
 
@@ -76,17 +72,17 @@ public class StaticPageController {
 
         ModelAndView mav = new ModelAndView("popup.html");
         // Can we make a map of the RequestParam with their defaults ?
-        mav.addObject("vm_metsId", vm_metsId);
-        mav.addObject("vm_widgetLite", vm_widgetLite);
-        mav.addObject("vm_default_thumbnailpage", vm_default_thumbnailpage);
-        mav.addObject("vm_width", vm_width);
-        mav.addObject("vm_height", vm_height);
-        mav.addObject("vm_startpage", vm_startpage);
-        mav.addObject("vm_number_of_thumbnails_in_overview", vm_number_of_thumbnails_in_overview);
-        mav.addObject("vm_hide_full_screen_button", vm_hide_full_screen_button);
-        mav.addObject("vm_disable_transcription_button", vm_disable_transcription_button);
-        mav.addObject("vm_title", vm_title);
-        mav.addObject("vm_proxy_host_mets", proxy_host_mets);
+        mav.addObject("metsId", metsId);
+        mav.addObject("widgetLite", widgetLite);
+        mav.addObject("default_thumbnailpage", default_thumbnailpage);
+        mav.addObject("width", width);
+        mav.addObject("height", height);
+        mav.addObject("startpage", startpage);
+        mav.addObject("number_of_thumbnails_in_overview", number_of_thumbnails_in_overview);
+        mav.addObject("hide_full_screen_button", hide_full_screen_button);
+        mav.addObject("disable_transcription_button", disable_transcription_button);
+        mav.addObject("title", title);
+        mav.addObject("proxy_host_mets", proxy_host_mets);
 
         return mav;
     }
@@ -99,9 +95,7 @@ public class StaticPageController {
 
         response.setContentType("text/html; charset=utf-8");
 
-        ModelAndView mav = new ModelAndView(pageName + ".html");
-
-        return mav;
+        return new ModelAndView(pageName + ".html");
     }
 
     @RequestMapping("/{pageName}.js")
@@ -122,8 +116,7 @@ public class StaticPageController {
     public ModelAndView ErrorPageHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         response.setContentType("text/html; charset=utf-8");
-        ModelAndView mav = new ModelAndView("error.html");
 
-        return mav;
+        return new ModelAndView("error.html");
     }
 }

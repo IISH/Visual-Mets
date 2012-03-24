@@ -1,3 +1,5 @@
+<#--Freemarker template-->
+<@compress single_line=false>
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -6,24 +8,25 @@
 
 <head>
     <meta http-equiv="content-type" content="text/xml; charset=utf-8">
-    <title>${vm_title}</title>
-    <base href="${proxy_host}"/>
+    <title>${title}</title>
     <script type="text/javascript">
-        var vm_metsId = '${vm_metsId}';
+        var vm_metsId = '${metsId}';
         var vm_widgetLite = true;
-        var vm_default_thumbnailpage = '${vm_default_thumbnailpage}';
-        var vm_width = '${vm_width}';
-        var vm_height = '${vm_height}';
-        var vm_startpage = '${vm_startpage}';
-        var vm_number_of_thumbnails_in_overview = ${vm_number_of_thumbnails_in_overview};
-        var vm_hide_full_screen_button = ${vm_hide_full_screen_button};
-        var vm_disable_transcription_button = ${vm_disable_transcription_button};
-        var vm_title = '${vm_title}';
+        var vm_default_thumbnailpage = '${default_thumbnailpage}';
+        var vm_width = '${width}';
+        var vm_height = '${height}';
+        var vm_startpage = '${startpage}';
+        var vm_number_of_thumbnails_in_overview = ${number_of_thumbnails_in_overview};
+        var vm_hide_full_screen_button = ${hide_full_screen_button};
+        var vm_disable_transcription_button = ${disable_transcription_button};
+        var vm_title = '${title}';
     </script>
 </head>
 
 <body>
-<script type="text/javascript" src="${vm_proxy_host_mets}rest/widget.js"></script>
+<script type="text/javascript" src="${proxy_host_mets}rest/widget.js"></script>
 </body>
 
 </html>
+
+</@compress>
