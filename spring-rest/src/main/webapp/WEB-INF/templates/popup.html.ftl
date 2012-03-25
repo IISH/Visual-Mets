@@ -27,6 +27,8 @@
 
 <body>
 
+<h1>${title}</h1>
+
 <script type="text/javascript" src="${proxy_host_mets}rest/widget.js"></script>
 
 <div id="embed">
