@@ -26,7 +26,9 @@ $.extend({
     return $.getUrlVars()[name];
   }
 });
-        $("#vm_content").after('<script type="text/javascript" src="${proxy_host_mets}js/widget_lite_test.js">');
+
+
+$.getScript("${proxy_host_mets}js/widget_lite.js");
     }
 }
 var _startup = window.setInterval(startup, 500);
