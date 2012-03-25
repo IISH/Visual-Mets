@@ -37,36 +37,6 @@ function loadCss() {
     }
 }
 
-// Main method
-
-function checkIfTabPropertiesIsLoaded(counter) {
-    if (tabProperties == undefined) {
-        setTimeout(function() {
-            checkIfTabPropertiesIsLoaded(counter + 1);
-        }, 50);
-
-    } else {
-        readyFunctionSecondPart();
-    }
-}
-
-$.extend({
-    getUrlVars: function() {
-        var vars = [], hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for (var i = 0; i < hashes.length; i++) {
-            hash = hashes[i].split('=');
-            vars.push(hash[0]);
-            vars[hash[0]] = hash[1];
-        }
-        return vars;
-    },
-    getUrlVar: function(name) {
-        return $.getUrlVars()[name];
-    }
-});
-
-
 function readyFunctionSecondPart() {
     tabProperties = new TabProperties();
     tabProperties.id = 1;
@@ -108,25 +78,7 @@ function readyFunctionSecondPart() {
     setTimeout("vm_startpage = oldStartpage;", 500);
 }
 
-$(function () {
-    $.ajaxSetup
-        ({
-            xhr: function() {
-                if ($.browser.msie) {
-                    return new ActiveXObject("Microsoft.XMLHTTP");
-                }
-                else {
-                    return new XMLHttpRequest();
-                }
-            }
-        })
-});
-
 loadCss();
-$.getScript(vm_proxy_host_mets + 'js/jquery/js/jquery-ui-1.8.5.custom.min.js');
-$.ajaxSetup({async: false});
-$.getScript(vm_proxy_host_mets + 'js/widgetLite.js'); // PROBLEEM
-checkIfTabPropertiesIsLoaded(1);
-$.ajaxSetup({async: true});
+readyFunctionSecondPart();
 
 
