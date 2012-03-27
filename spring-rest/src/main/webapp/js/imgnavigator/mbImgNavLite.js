@@ -242,7 +242,7 @@
                     display: "block",
                     opacity: "1",
                     position: "absolute",
-                    left: "611px",
+                    left: "726px",
                     top: "-5px"
                 });
 
