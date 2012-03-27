@@ -75,7 +75,6 @@ function showTree(c, folder) {
 
 
 function open(c, folder){
-//    console.log(c + " " + folder);
     if( c.hasClass('directory') ) {
         if( c.hasClass('collapsed') ) {
             // Expand
@@ -96,14 +95,16 @@ function open(c, folder){
 function bindTree(t) {
     $(t).find('li a').bind(o.folderEvent, function() {
         if( $(this).parent().hasClass('directory') ) {
+
             if( $(this).parent().hasClass('collapsed') ) {
+
                 // Expand
                 if( !o.multiFolder ) {
                     $(this).parent().parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
                     $(this).parent().parent().find('LI.directory').removeClass('expanded').addClass('collapsed');
+
                 }
                 $(this).parent().find('UL').remove(); // cleanup
-
                 showTree( $(this).parent(), escape($(this).attr('rel') ) );
                 $(this).parent().removeClass('collapsed').addClass('expanded');
                 $(".jqueryFileTree").find('LI.nochildren-expanded').removeClass('nochildren-expanded').addClass('nochildren');
@@ -113,8 +114,10 @@ function bindTree(t) {
                 showTree($(this).parent(), escape($(this).attr('rel') ) );
             }
         } else {
+
             $('.jqueryFileTree').find('.nochildren-expanded').removeClass('nochildren-expanded').addClass('nochildren');
             $(this).parent().removeClass('nochildren').addClass('nochildren-expanded');
+
             getJsonData($(this).attr('rel'),makeTeasers);
         }
         return false;

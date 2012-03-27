@@ -20,7 +20,7 @@ UL.jqueryFileTree A {
 	display: block;
 	padding: 0px 19px;
     outline: none;
-	
+
 }
 
 UL.jqueryFileTree A:hover {
@@ -28,11 +28,23 @@ UL.jqueryFileTree A:hover {
 }
 
 /* Core Styles */
-.jqueryFileTree LI.directory { background: url(images/directory-nochildren.png) left top no-repeat; }
-.jqueryFileTree LI.expanded { background: url(images/folder_open_new.png) left top no-repeat; }
-.jqueryFileTree LI.nochildren { background: url(images/directory-nochildren.png) left top no-repeat; }
-.jqueryFileTree LI.nochildren-expanded { background: url(images/folder_open_new.png) left top no-repeat; }
+.jqueryFileTree LI.directory {
+    background: url(images/directory-nochildren.png) left top no-repeat;
+}
 
+.jqueryFileTree LI.expanded {
+    background: url(images/folder_open_new.png) left top no-repeat;
+
+
+}
+
+.jqueryFileTree LI.nochildren {
+    background: url(images/directory-nochildren.png) left top no-repeat;
+}
+
+.jqueryFileTree LI.nochildren-expanded {
+    background: url(images/folder_open_new.png) left top no-repeat;
+}
 
 .jqueryFileTree LI.file { background: url(images/file.png) left top no-repeat; }
 .jqueryFileTree LI.wait { background: url(images/spinner.gif) left top no-repeat; }
