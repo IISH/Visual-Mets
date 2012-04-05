@@ -4,7 +4,7 @@
     height: 24px;
     padding: 1px;
     position: relative;
-    /*top: 107px;*/
+    top: -13px;
     width: 695px;
     z-index: 10;
     margin-left: auto;
@@ -23,6 +23,7 @@
     position: absolute;
     top: 573px;
     z-index: 70;
+
 }
 
 
