@@ -339,7 +339,7 @@ function buildPager(tabProperties) {
         '<td><img class="sizeSlider" src="' + vm_proxy_host_mets + 'js/jquery/css/smoothness/images/plus.png" alt=""></td></tr>' +
         '</table></div>');
 
-    var pagingTop = vm_height - 60;
+    var pagingTop = vm_height - 40;
     $("#pagingControls").css({top: pagingTop});
 
     $("#img_" + tabProperties.id + " #overview").button({
