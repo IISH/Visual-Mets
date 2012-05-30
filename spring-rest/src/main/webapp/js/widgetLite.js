@@ -1027,6 +1027,8 @@ function showOverlay(tabProperties) {
     });
 
 
+
+
 //    $("#img_" + tabProperties.id + " #pagingControls").delay(2000).hide();
 
 
