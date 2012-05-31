@@ -771,7 +771,7 @@ function makeThumbnailHtml(tabProperties) {
     $("#img_" + tabProperties.id + " #navArea").remove();
     $("#img_" + tabProperties.id + " #thumbs").remove();
 
-    $("#content #img_" + tabProperties.id).append('<div id = "thumbs"></div>');
+    $("#img_" + tabProperties.id + " #pagingControls").before('<div id = "thumbs"></div>');
 
     $.each(tabProperties.thumbnailList.page, function (i, v) {
         var thumbnailurl = this.thumbnail_url;
