@@ -75,7 +75,7 @@
 
             imageContainer = $(imgNav).find(".imageContainer");
             $(imageContainer).css({
-                padding: "5px",
+                padding: "5px 0",
                 overflow:"hidden",
                 position: "relative",
                 width:this.options.areaWidth + "px",
@@ -240,7 +240,7 @@
                 $(nav).css({
                     border: "1px solid black",
                     display: "block",
-                    opacity: "1",
+                    opacity: "1.0",
                     position: "absolute",
                     left: "611px",
                     top: "-5px"
@@ -253,13 +253,13 @@
                 $(navLocator).css({
                     top: oldNavPosY,
                     left: oldNavPosX,
-                    zIndex: 6,
+                    zIndex: 10000,
                     position: "absolute",
                     border : imgNav.options.draggerStyle,
                     backgroundColor: $.browser.msie ? "white" : "transparent",
                     opacity: $.browser.msie ? .5 : 1
                 });
-                $.getScript('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js', function() {
+                $.getScript(vm_proxy_host_mets + 'js/jquery/js/jquery-ui-1.8.5.custom.min.js', function() {
 
                     //$(navLocator).bind("dblclick",function(){fitonScreen();});
                     $(navLocator).draggable({
@@ -299,6 +299,8 @@
                 $(nav).append("<image class='navigationThumb'>");
 //        navigationThumb= $(imgNav).find(".navigationThumb");
                 navigationThumb = $(nav).find(".navigationThumb");
+                $(navigationThumb).css({opacity: "1.0"})
+
                 $(navigationThumb).attr("src", u);
                 $(navigationThumb).bind("dblclick", function() {
                     fitonScreen();

@@ -339,8 +339,8 @@ function buildPager(tabProperties) {
         '<td><img class="sizeSlider" src="' + vm_proxy_host_mets + 'js/jquery/css/smoothness/images/plus.png" alt=""></td></tr>' +
         '</table></div>');
 
-    var pagingTop = vm_height - 40;
-    $("#pagingControls").css({top: pagingTop});
+//    var pagingTop = vm_height - 40;
+//    $("#pagingControls").css({top: 0});
 
     $("#img_" + tabProperties.id + " #overview").button({
         text: true
@@ -866,9 +866,9 @@ function showBigImage(tabProperties) {
         "&width=" + vm_width +
         "&height=" + tabProperties.height +
         "&random=" + currentTime.getTime() + Math.ceil(Math.random() * 1000); // SOLUTION FOR MS REFRESH BUG
-    //$("#content").append('<div id="img_' + tabProperties.id + '" class="image">');
+
     if ($("#img_" + tabProperties.id + " #navArea").length == 0) {
-        $("#img_" + tabProperties.id).append('<div class="imageMain" id="imageMain_' + tabProperties.id + '"></div>');
+        $("#img_" + tabProperties.id + " #editButtons").after('<div class="imageMain" id="imageMain_' + tabProperties.id + '"></div>');
         $("#imageMain_" + tabProperties.id).append('<div id = "navArea"><div style = "display:none;" class = "imagesContainer {navPosition:\'BR\', navWidth: 100}">');
     } else {
         //$("#img_" + tabProperties.id ).append('<div id="test" style="top:110px; position:absolute;"></div>');
@@ -1006,8 +1006,8 @@ function showOverlay(tabProperties) {
         $("#pagingControls").draggable("destroy");
         $("#pagingControls").insertAfter("#img_" + tabProperties.id + " #editButtons");
 
-        var pagingTop = vm_height - 60;
-        $("#pagingControls").css({top: pagingTop, left: ''});
+//        var pagingTop = vm_height - 60;
+        $("#pagingControls").css({top: 0, left: ''});
         $("#overlay").remove();
 
         tabProperties.overlay = false;

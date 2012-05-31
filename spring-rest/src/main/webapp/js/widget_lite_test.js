@@ -103,13 +103,13 @@ function readyFunctionSecondPart() {
     // var vm_width = 700;
     // var vm_height = 600;
     $('body').css({
-        width : vm_width - 2 + 'px',
-        height : vm_height - 2 + 'px'
+        width : vm_width + 'px',
+        height : vm_height + 'px'
     });
 
     $('#vm_content').css({
-        width : vm_width + 'px',
-        height : vm_height + 'px'
+        width : vm_width - 2 + 'px',
+        height : vm_height - 2 + 'px'
     });
 
     canvasWidth = vm_width;
