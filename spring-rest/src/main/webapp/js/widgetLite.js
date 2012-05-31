@@ -785,7 +785,7 @@ function makeThumbnailHtml(tabProperties) {
         $("#img_" + tabProperties.id + " #thumbs").append('<a href="#" class="general"><img class="overviewThumbnail" src="'
             + this.thumbnail_url
             + '&zoom=' + size + '"/></a>');
-        $("#img_" + tabProperties.id + " a:last").bind('click', {page: i}, function(event) {
+        $("#img_" + tabProperties.id + " #thumbs a:last").bind('click', {page: i}, function(event) {
             event.preventDefault();
             tabProperties.overview = false;
             tabProperties.page = event.data.page + tabProperties.overviewPage; //using event.data prevents closure issues
