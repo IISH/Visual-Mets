@@ -12,10 +12,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Chris
- * Date: 3/14/11
- * Time: 4:58 PM
+ * Author: Christian Roosendaal
  */
 public class MetsMaker {
     METS mets;
@@ -25,7 +22,14 @@ public class MetsMaker {
     String outputDirectory;
     String objId;
 
+    String pageColumnName;
+    String pidColumnName;
+
+
+
     int nrOfMets = 0;
+    int pidColumnNr;
+    int pageColumnNr;
 
     // column nummers beginnen bij 0
     private static int ARCHIVE_URL_COLUMN = 2;
@@ -34,7 +38,10 @@ public class MetsMaker {
     private static int THUMBNAIL_URL_COLUMN = 5;
     private static int OCR_COLUMN = 6;
 
-    public MetsMaker(String inputDir, String baseUrl, String outputDirectory, String objId) {
+    private static final String PID_COLUMN_DEFAULT = "PID";
+    private static final String CSV_SEPARATOR = ",";
+
+    public MetsMaker(String inputDir, String baseUrl, String outputDirectory, String objId, String pidColumn) {
         if (!(Character.toString(baseUrl.charAt(baseUrl.length() - 1)).equals("/"))) {
             baseUrl = baseUrl.concat("/");
         }
@@ -49,6 +56,12 @@ public class MetsMaker {
 
         System.out.println("Object id: " + objId);
         this.objId = objId;
+
+        if(pidColumn.isEmpty()){
+            this.pidColumnName = PID_COLUMN_DEFAULT;
+        } else {
+            this.pidColumnName = pidColumn;
+        }
 
         pageArrayList = new ArrayList<Page>();
 
@@ -68,6 +81,21 @@ public class MetsMaker {
         }
     }
 
+    public void parseColumns(String header) {
+        String[] columnNames = header.split(CSV_SEPARATOR);
+
+        for (int i = 0; i < columnNames.length; i++) {
+
+            if (columnNames[i].equals(pidColumnName)) {
+                pidColumnNr = i;
+            } else if (columnNames[i].equals(pageColumnName)) {
+                pageColumnNr = i;
+            }
+
+        }
+
+    }
+
     public void openDirAndCreateMets(String inputDir) throws METSException, SAXException {
         System.out.println("Input directory: " + inputDir);
         java.io.File directory = new java.io.File(inputDir);
@@ -80,9 +108,9 @@ public class MetsMaker {
         };
 
         String[] textFiles = directory.list(filter);
-        for(String file : textFiles){
+        for (String file : textFiles) {
             System.out.println("Processing file: " + file);
-            readFileAndCreateMets(inputDir + "\\" + file, file.replace(".txt", ""));
+            readFileAndCreateMets(inputDir + "/" + file, file.replace(".txt", ""));
             this.nrOfMets++;
         }
     }
@@ -96,10 +124,15 @@ public class MetsMaker {
             BufferedReader input = new BufferedReader(new FileReader(inputFile));
             try {
                 String line;
+
+                parseColumns(input.readLine()); // skip first line containing column headers
+
+
                 while ((line = input.readLine()) != null) {
-                    String[] split = line.split("\t");
+                    String[] split = line.split(CSV_SEPARATOR);
+
                     folder = split[1];
-                    if(!folder.equals(prevFolder) && !prevFolder.isEmpty()){
+                    if (!folder.equals(prevFolder) && !prevFolder.isEmpty()) {
                         createMets(output, prevFolder, baseName);
                         output.setLength(0);
                         this.nrOfMets++;
@@ -111,9 +144,9 @@ public class MetsMaker {
                 }
                 createMets(output, folder, baseName);
                 output.setLength(0);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 input.close();
             }
         } catch (IOException ex) {
@@ -141,7 +174,7 @@ public class MetsMaker {
     /*  ToDo: wat moet er in header LABEL, PROFILE en OBJID?
     */
     public void createMetsHeader() throws METSException {
-        if ( this.objId.equals("") ) {
+        if (this.objId.equals("")) {
             mets.setObjID("Auto-generated content");
         } else {
             mets.setObjID(this.objId);
@@ -167,7 +200,7 @@ public class MetsMaker {
         Agent agentCreator = mh.newAgent();
         agentCreator.setRole("CREATOR");
         agentCreator.setType("INDIVIDUAL");
-        agentCreator.setName("Lucien van Wouw");
+        agentCreator.setName("");
         mh.addAgent(agentCreator);
 
         Agent agentPreservation = mh.newAgent();
@@ -203,9 +236,8 @@ public class MetsMaker {
             String referenceId;
             String thumbnailId;
             String ocrId;
-
-            String[] columns = line.split("\t");
-            seq = Integer.parseInt(columns[PAGE_NUMBER_COLUMN]);
+            String[] columns = line.split(CSV_SEPARATOR);
+            seq = Integer.parseInt(columns[pageColumnNr]);
             archiveId = "A" + seq;
             referenceId = "B" + seq;
             thumbnailId = "C" + seq;
@@ -224,7 +256,7 @@ public class MetsMaker {
             FLocat fl = f.newFLocat();
             fl.setLocType("URL");
             fl.setType("simple");
-            archiveImageUrl = this.baseUrl + columns[ARCHIVE_URL_COLUMN];
+            archiveImageUrl = this.baseUrl + columns[pidColumnNr] + "?locatt=view:master";
             archiveImageUrl = archiveImageUrl.replace("\"", "");
             fl.setHref(archiveImageUrl);
 
@@ -242,7 +274,7 @@ public class MetsMaker {
             FLocat fl2 = f2.newFLocat();
             fl2.setLocType("URL");
             fl2.setType("simple");
-            referenceImageUrl = this.baseUrl + columns[REFERENCE_URL_COLUMN];
+            referenceImageUrl = this.baseUrl + columns[pidColumnNr] + "?locatt=view:level2";
             referenceImageUrl = referenceImageUrl.replace("\"", "");
             fl2.setHref(referenceImageUrl);
 
@@ -260,7 +292,7 @@ public class MetsMaker {
             FLocat fl3 = f3.newFLocat();
             fl3.setLocType("URL");
             fl3.setType("simple");
-            thumbnailImageUrl = this.baseUrl + columns[THUMBNAIL_URL_COLUMN];
+            thumbnailImageUrl = this.baseUrl + columns[pidColumnNr] + "?locatt=view:level2";
             thumbnailImageUrl = thumbnailImageUrl.replace("\"", "");
             fl3.setHref(thumbnailImageUrl);
             f3.addFLocat(fl3);
@@ -268,7 +300,7 @@ public class MetsMaker {
 
             // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
-            if ( columns.length >= 7 ) {
+            if (columns.length >= 7) {
                 ocrUrl = this.baseUrl + columns[OCR_COLUMN];
                 ocrUrl = ocrUrl.replace("\"", "");
 
@@ -313,7 +345,7 @@ public class MetsMaker {
 
         sm.addDiv(innerDiv);
 
-        for(Page page : pageArrayList){
+        for (Page page : pageArrayList) {
             Div pageDiv = innerDiv.newDiv();
             pageDiv.setType("page");
             pageDiv.setLabel("page " + page.seq);
@@ -332,7 +364,7 @@ public class MetsMaker {
             thumbnailFp.setFileID(page.thumbnailId);
             pageDiv.addFptr(thumbnailFp);
 
-            if ( page.columns >= 7 ) {
+            if (page.columns >= 7) {
                 Fptr ocrFp = innerDiv.newFptr();
                 ocrFp.setFileID(page.ocrId);
                 pageDiv.addFptr(ocrFp);
