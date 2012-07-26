@@ -708,15 +708,37 @@ function removeTranscription(tabProperties) {
 }
 
 function getTranscriptionData() {
-    var urlTranscription = vm_proxy_host_mets + "rest/resource/get_transcription_json?" +
-        "metsId=" + getMetsCode() +
-        "&pageId=" + tabProperties.page;
+//    var urlTranscription = vm_proxy_host_mets + "rest/resource/get_transcription_json?" +
+//        "metsId=" + getMetsCode() +
+//        "&pageId=" + tabProperties.page;
+//
+//    $.ajax({
+//        url: urlTranscription,
+//        dataType: 'jsonp',
+//        jsonpCallback: 'appendTranscription'
+//    });
+
+    var currentTime = new Date();
+    var imageUrl = "http://integratievisualmets.iisg.nl/mets2/rest/resource/reference_image?" +
+            "metsId=" + getMetsCode() +
+            "&pageId=" + tabProperties.page;
 
     $.ajax({
-        url: urlTranscription,
+        type: 'GET',
+        url: 'http://195.169.122.205/cgi-bin/offline/ocr.cgi?',
+
         dataType: 'jsonp',
-        jsonpCallback: 'appendTranscription'
-    });
+        data: 'url=' + encodeURIComponent(imageUrl) + '&param=textonly',
+        success: function(data){
+
+//            if (data.text.length == 0) {
+//                $("#img_" + tabProperties.id + " #transcriptionOverlay").html('No transcription available for this page');
+//            } else {
+                $("#img_" + tabProperties.id + " #transcriptionOverlay").html(data.text);
+//            }
+        }
+
+    })
 
 }
 

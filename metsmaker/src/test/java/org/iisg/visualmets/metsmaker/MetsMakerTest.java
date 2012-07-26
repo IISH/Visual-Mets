@@ -36,10 +36,25 @@ public class MetsMakerTest {
     }
 
     @Test
-    public void test1(){
+    public void testWithMetsHeaderFile(){
         getResources();
 
-        MetsMaker metsMaker = new MetsMaker(testdataLocation,"http://hdl.handle.net",testdataLocation,"test","PID");
+        String testFile = testdataLocation + File.separator + "withMetsHeader" + File.separator + "test.csv";
+        MetsMaker metsMaker = new MetsMaker(testFile,"http://hdl.handle.net",testdataLocation,"test","PID", "", "");
+
+
+        // todo: getfilemap met metsReader, zie verderop in de visual mets code. Dan testen of te verwachten strings bestaan.
+
+        // todo: mets.validate() runnen en checken of de geproduceerde mets validated is.
+
+    }
+
+    @Test
+    public void testWithoutMetsHeaderFile(){
+        getResources();
+
+        String testFile = testdataLocation + File.separator + "withoutMetsHeader" + File.separator + "test.csv";
+        MetsMaker metsMaker = new MetsMaker(testFile,"http://hdl.handle.net",testdataLocation,"test","PID", "", "");
 
 
     }

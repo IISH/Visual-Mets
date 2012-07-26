@@ -10,7 +10,7 @@ import java.util.Map;
 public class Console {
 
     private static final String[] EXPECT = {
-            "-inputFolder",
+            "-inputFile",
             "-outputFolder",
             "-baseUrl"
     };
@@ -24,16 +24,22 @@ public class Console {
         for (String key : EXPECT) {
             if (!map.containsKey(key)) {
                 System.out.println("Expected case sensitive parameter: " + key + "\n");
-                System.out.println("Example: java -jar metsmaker-1.0.jar -inputFolder \"C:\\inputfolder\" " +
+                System.out.println("Example: java -jar metsmaker-1.0.jar -inputFile \"C:\\inputfile\" " +
                                    " -outputFolder \"C:\\outputfolder\" -baseUrl \"http://www.example.org/\"" +
                                    " [-objId 123456789] ");
 
-                System.out.println("Optional parameters: -pidColumn [pid column header] -objId [object Id]" );
+                System.out.println("Optional parameters: -pidColumn [pid column header] -objId [object Id] -objectColumn [object column header] -pageColumn [page column header] ");
 
                 System.exit(-1);
             }
         }
 
-        MetsMaker conversion = new MetsMaker(map.get("-inputFolder"), map.get("-baseUrl"), map.get("-outputFolder"), map.get("-objId"), map.get("-pidColumn"));
+        MetsMaker conversion = new MetsMaker(   map.get("-inputFile"),
+                                                map.get("-baseUrl"),
+                                                map.get("-outputFolder"),
+                                                map.get("-objId"),
+                                                map.get("-pidColumn"),
+                                                map.get("-objectColumn"),
+                                                map.get("-pageColumn")  );
     }
 }

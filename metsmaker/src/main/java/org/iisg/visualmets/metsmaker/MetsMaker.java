@@ -3,8 +3,15 @@ package org.iisg.visualmets.metsmaker;
 
 import au.edu.apsr.mtk.base.*;
 import au.edu.apsr.mtk.base.File;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,16 +27,19 @@ public class MetsMaker {
     ArrayList<Page> pageArrayList;
     String baseUrl;
     String outputDirectory;
+    String inputFile;
     String objId;
 
     String pageColumnName;
+    String objectColumnName;
     String pidColumnName;
 
-
+    java.io.File metsheaderfile;
 
     int nrOfMets = 0;
     int pidColumnNr;
     int pageColumnNr;
+    int objectColumnNr;
 
     // column nummers beginnen bij 0
     private static int ARCHIVE_URL_COLUMN = 2;
@@ -39,29 +49,43 @@ public class MetsMaker {
     private static int OCR_COLUMN = 6;
 
     private static final String PID_COLUMN_DEFAULT = "PID";
+    private static final String PAGE_COLUMN_DEFAULT = "volgnr";
+    private static final String OBJECT_COLUMN_DEFAULT = "objnr";
     private static final String CSV_SEPARATOR = ",";
+    private static final String METS_HEADER_FILENAME = "metsheader.xml";
 
-    public MetsMaker(String inputDir, String baseUrl, String outputDirectory, String objId, String pidColumn) {
+    public MetsMaker(String inputFile, String baseUrl, String outputDirectory, String objId, String pidColumn, String pageColumn, String objectColumn) {
         if (!(Character.toString(baseUrl.charAt(baseUrl.length() - 1)).equals("/"))) {
             baseUrl = baseUrl.concat("/");
         }
-        System.out.println("Base url: " + baseUrl);
         this.baseUrl = baseUrl;
+        this.objId = objId;
+        this.inputFile = inputFile;
 
-        if (!(Character.toString(outputDirectory.charAt(outputDirectory.length() - 1)).equals("/"))) {
+        if (!(Character.toString(outputDirectory.charAt(outputDirectory.length() - 1)).equals("/")) &&
+            !(Character.toString(outputDirectory.charAt(outputDirectory.length() - 1)).equals("\\"))  ) {
             outputDirectory = outputDirectory.concat("/");
         }
-        System.out.println("Output directory: " + outputDirectory);
         this.outputDirectory = outputDirectory;
-
-        System.out.println("Object id: " + objId);
-        this.objId = objId;
 
         if(pidColumn.isEmpty()){
             this.pidColumnName = PID_COLUMN_DEFAULT;
         } else {
             this.pidColumnName = pidColumn;
         }
+
+        if(pageColumn.isEmpty()){
+            this.pageColumnName = PAGE_COLUMN_DEFAULT;
+        } else {
+            this.pageColumnName = pageColumn;
+        }
+
+        if(objectColumn.isEmpty()){
+            this.objectColumnName = OBJECT_COLUMN_DEFAULT;
+        } else {
+            this.objectColumnName = objectColumn;
+        }
+
 
         pageArrayList = new ArrayList<Page>();
 
@@ -72,8 +96,14 @@ public class MetsMaker {
         }
         mets = mw.getMETSObject();
 
+
+        System.out.println("Output directory: " + outputDirectory);
+        System.out.println("Base url: " + baseUrl);
+        System.out.println("Object id: " + objId);
+
+
         try {
-            openDirAndCreateMets(inputDir);
+            readFileAndCreateMets();
         } catch (METSException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -90,35 +120,21 @@ public class MetsMaker {
                 pidColumnNr = i;
             } else if (columnNames[i].equals(pageColumnName)) {
                 pageColumnNr = i;
+            } else if (columnNames[i].equals(objectColumnName)){
+                objectColumnNr = i;
             }
 
         }
 
     }
 
-    public void openDirAndCreateMets(String inputDir) throws METSException, SAXException {
-        System.out.println("Input directory: " + inputDir);
-        java.io.File directory = new java.io.File(inputDir);
 
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(java.io.File dir, String name) {
-                return (name.endsWith(".txt"));
-            }
-        };
-
-        String[] textFiles = directory.list(filter);
-        for (String file : textFiles) {
-            System.out.println("Processing file: " + file);
-            readFileAndCreateMets(inputDir + "/" + file, file.replace(".txt", ""));
-            this.nrOfMets++;
-        }
-    }
-
-    public void readFileAndCreateMets(String inputFile, String baseName) throws METSException, SAXException {
+    public void readFileAndCreateMets() throws METSException, SAXException {
         String prevFolder = "";
         String folder = "";
         StringBuilder output = new StringBuilder();
+        java.io.File f = new java.io.File(inputFile);
+        String baseName = f.getName();
 
         try {
             BufferedReader input = new BufferedReader(new FileReader(inputFile));
@@ -127,13 +143,12 @@ public class MetsMaker {
 
                 parseColumns(input.readLine()); // skip first line containing column headers
 
-
                 while ((line = input.readLine()) != null) {
                     String[] split = line.split(CSV_SEPARATOR);
 
-                    folder = split[1];
+                    folder = split[objectColumnNr];
                     if (!folder.equals(prevFolder) && !prevFolder.isEmpty()) {
-                        createMets(output, prevFolder, baseName);
+                        createMets(output, baseName);
                         output.setLength(0);
                         this.nrOfMets++;
                     }
@@ -142,7 +157,7 @@ public class MetsMaker {
                     line += "\n";
                     output.append(line);
                 }
-                createMets(output, folder, baseName);
+                createMets(output, baseName);
                 output.setLength(0);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -154,15 +169,16 @@ public class MetsMaker {
         }
     }
 
-    public void createMets(StringBuilder document, String folder, String baseName) throws METSException, IOException, SAXException {
+    public void createMets(StringBuilder document, String baseName) throws METSException, IOException, SAXException {
         mw = new METSWrapper();
         mets = mw.getMETSObject();
 
-        System.out.println("counter: " + this.nrOfMets);
         java.io.File output_file = new java.io.File(outputDirectory + baseName + "_" + this.nrOfMets + ".xml");
+        System.out.println("Creating METS file " + output_file);
         FileOutputStream output = new FileOutputStream(output_file);
-        System.out.println(folder);
+
         createMetsHeader();
+
         createFileSec(document.toString());
         createStructMap();
         pageArrayList.clear();
@@ -171,9 +187,59 @@ public class MetsMaker {
         output.close();
     }
 
-    /*  ToDo: wat moet er in header LABEL, PROFILE en OBJID?
-    */
+    public boolean metsHeaderFileExists(){
+        java.io.File file = new java.io.File(inputFile);
+        metsheaderfile = new java.io.File(file.getParentFile() + java.io.File.separator + METS_HEADER_FILENAME);
+
+        return metsheaderfile.exists();
+
+    }
+
+    public void extractDataFromMetsHeaderFile(StringBuilder archivist, StringBuilder creator, StringBuilder preservation){
+
+        try {
+            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+
+            Document doc = docBuilder.parse(metsheaderfile);
+            doc.getDocumentElement().normalize();
+            NodeList nodeList = doc.getElementsByTagName("agent");
+
+            for(int i = 0 ; i < nodeList.getLength() ; i++){
+
+                Element element = (Element)nodeList.item(i);
+                String attribute = element.getAttribute("ROLE");
+                Node n = element.getFirstChild();
+
+                if(attribute.equals("CREATOR") ){
+                    creator.append(n.getTextContent());
+                } else if (attribute.equals("ARCHIVIST") ) {
+                    archivist.append(n.getTextContent());
+                } else if (attribute.equals("PRESERVATION") ){
+                    preservation.append(n.getTextContent());
+                }
+            }
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     public void createMetsHeader() throws METSException {
+        StringBuilder archivist = new StringBuilder();
+        StringBuilder creator = new StringBuilder();
+        StringBuilder preservation = new StringBuilder();
+
+        if(metsHeaderFileExists()){
+            extractDataFromMetsHeaderFile(archivist, creator, preservation);
+        }
+
         if (this.objId.equals("")) {
             mets.setObjID("Auto-generated content");
         } else {
@@ -194,19 +260,19 @@ public class MetsMaker {
         Agent agentArchivist = mh.newAgent();
         agentArchivist.setRole("ARCHIVIST");
         agentArchivist.setType("INDIVIDUAL");
-        agentArchivist.setName("Jack Hofman");
+        agentArchivist.setName(archivist.toString());
         mh.addAgent(agentArchivist);
 
         Agent agentCreator = mh.newAgent();
         agentCreator.setRole("CREATOR");
         agentCreator.setType("INDIVIDUAL");
-        agentCreator.setName("");
+        agentCreator.setName(creator.toString());
         mh.addAgent(agentCreator);
 
         Agent agentPreservation = mh.newAgent();
         agentPreservation.setRole("PRESERVATION");
         agentPreservation.setType("ORGANIZATION");
-        agentPreservation.setName("International Institute for Social History");
+        agentPreservation.setName(preservation.toString());
         mh.addAgent(agentPreservation);
 
         mets.setMetsHdr(mh);
@@ -292,7 +358,7 @@ public class MetsMaker {
             FLocat fl3 = f3.newFLocat();
             fl3.setLocType("URL");
             fl3.setType("simple");
-            thumbnailImageUrl = this.baseUrl + columns[pidColumnNr] + "?locatt=view:level2";
+            thumbnailImageUrl = this.baseUrl + columns[pidColumnNr] + "?locatt=view:level3";
             thumbnailImageUrl = thumbnailImageUrl.replace("\"", "");
             fl3.setHref(thumbnailImageUrl);
             f3.addFLocat(fl3);
