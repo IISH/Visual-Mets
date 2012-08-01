@@ -9,6 +9,13 @@
             <artifactId>metsapi</artifactId>
             <version>1.5</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <parent>
@@ -55,5 +62,6 @@
             <url>https://diwoto.iisg.nl/maven/</url>
         </repository>
     </repositories>
+
 
 </project>
