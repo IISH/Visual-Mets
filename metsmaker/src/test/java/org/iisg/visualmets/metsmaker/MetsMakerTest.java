@@ -1,9 +1,12 @@
 package org.iisg.visualmets.metsmaker;
 
-import org.junit.BeforeClass;
+import au.edu.apsr.mtk.base.METSException;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -15,54 +18,29 @@ import java.net.URL;
  */
 
 
-
 public class MetsMakerTest {
 
-
     public String testdataLocation;
+    private static String proxy = "http://hdl.handle.net";
 
 
-    @BeforeClass
-    public static void setUp() throws ClassNotFoundException {
-        //
-
-
-    }
-
-    public void getResources(){
+    public void getResources() {
         URL url = getClass().getResource("/");
         testdataLocation = url.getFile() + "data" + File.separator;
         System.out.println(testdataLocation);
     }
 
     @Test
-    public void testWithMetsHeaderFile(){
+    public void testWithMetsHeaderFile() throws METSException, IOException, SAXException, ParserConfigurationException {
         getResources();
-
-        String testFile = testdataLocation + File.separator + "withMetsHeader" + File.separator + "test.csv";
-        MetsMaker metsMaker = new MetsMaker(testFile,"http://hdl.handle.net",testdataLocation,"test","PID", "", "");
-
-
-        // todo: getfilemap met metsReader, zie verderop in de visual mets code. Dan testen of te verwachten strings bestaan.
-
-        // todo: mets.validate() runnen en checken of de geproduceerde mets validated is.
-
+        String testFile = testdataLocation + File.separator + "withMetsHeader" + File.separator + "withMetsHeader.csv";
+        new MetsMaker("12345", testFile, proxy, testdataLocation, "PID", "", "");
     }
 
     @Test
-    public void testWithoutMetsHeaderFile(){
+    public void testWithoutMetsHeaderFile() throws METSException, IOException, SAXException, ParserConfigurationException {
         getResources();
-
-        String testFile = testdataLocation + File.separator + "withoutMetsHeader" + File.separator + "test.csv";
-        MetsMaker metsMaker = new MetsMaker(testFile,"http://hdl.handle.net",testdataLocation,"test","PID", "", "");
-
-
+        String testFile = testdataLocation + File.separator + "withoutMetsHeader" + File.separator + "withoutMetsHeader.csv";
+        new MetsMaker("12345", testFile, proxy, testdataLocation, "PID", "", "");
     }
-
-
-
-
-
-
-
 }

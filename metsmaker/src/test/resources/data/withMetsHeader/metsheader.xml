@@ -1,1 +1,13 @@
-<metsHdr CREATEDATE="2012-07-26T11:44:08Z" LASTMODDATE="2012-07-26T11:44:08Z"><agent ROLE="ARCHIVIST" TYPE="INDIVIDUAL"><name>Jack Hofman</name></agent><agent ROLE="CREATOR" TYPE="INDIVIDUAL"><name>John Doe</name></agent><agent ROLE="PRESERVATION" TYPE="ORGANIZATION"><name>International Institute for Social History</name></agent></metsHdr>
+<mets xmlns="http://www.loc.gov/METS/" PROFILE="http://www.loc.gov/standards/mets/profiles/00000003.xml">
+    <metsHdr>
+        <agent ROLE="ARCHIVIST" TYPE="INDIVIDUAL">
+            <name>John Doe</name>
+        </agent>
+        <agent ROLE="CREATOR" TYPE="INDIVIDUAL">
+            <name>Jane Doe</name>
+        </agent>
+        <agent ROLE="PRESERVATION" TYPE="ORGANIZATION">
+            <name>Some organization</name>
+        </agent>
+    </metsHdr>
+</mets>
