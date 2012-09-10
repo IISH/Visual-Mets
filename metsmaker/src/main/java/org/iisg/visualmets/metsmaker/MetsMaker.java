@@ -287,7 +287,7 @@ public class MetsMaker {
         fs.addFileGrp(archive);
         fs.addFileGrp(reference);
         fs.addFileGrp(thumbnail);
-        fs.addFileGrp(ocr);
+        //fs.addFileGrp(ocr);
 
         mets.setFileSec(fs);
     }
