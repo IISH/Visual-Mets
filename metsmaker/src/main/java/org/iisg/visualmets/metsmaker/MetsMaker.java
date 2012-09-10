@@ -77,6 +77,9 @@ public class MetsMaker {
         pageArrayList = new ArrayList<Page>();
         System.out.println("Output directory: " + outputDirectory);
         System.out.println("Proxy url: " + proxy);
+        System.out.println("pidColumnName: " + pidColumnName);
+        System.out.println("pageColumnName: " + pageColumnName);
+        System.out.println("objectColumnName: " + objectColumnName);
 
         readFileAndCreateMets();
     }
