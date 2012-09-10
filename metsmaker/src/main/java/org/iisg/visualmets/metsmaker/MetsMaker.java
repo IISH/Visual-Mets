@@ -56,19 +56,19 @@ public class MetsMaker {
         }
         this.outputDirectory = outputDirectory;
 
-        if (pidColumn.isEmpty()) {
+        if (pidColumn == null || pidColumn.isEmpty()) {
             this.pidColumnName = PID_COLUMN_DEFAULT;
         } else {
             this.pidColumnName = pidColumn;
         }
 
-        if (pageColumn.isEmpty()) {
+        if ( pageColumn == null || pageColumn.isEmpty()) {
             this.pageColumnName = PAGE_COLUMN_DEFAULT;
         } else {
             this.pageColumnName = pageColumn;
         }
 
-        if (objectColumn.isEmpty()) {
+        if (objectColumn == null || objectColumn.isEmpty()) {
             this.objectColumnName = OBJECT_COLUMN_DEFAULT;
         } else {
             this.objectColumnName = objectColumn;
@@ -207,14 +207,14 @@ public class MetsMaker {
 
             au.edu.apsr.mtk.base.File f = archive.newFile();
             f.setID(archiveId);
-            f.setMIMEType("image/jpeg");
+            f.setMIMEType("image/tiff");
             f.setSeq(String.valueOf(seq));
             f.setGroupID(String.valueOf(seq));
 
             // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
             FLocat fl = f.newFLocat();
-            fl.setLocType("URL");
+            fl.setLocType("HANDLE");
             fl.setType("simple");
             archiveImageUrl = this.proxy + columns[pidColumnNr] + "?locatt=view:master";
             archiveImageUrl = archiveImageUrl.replace("\"", "");
@@ -232,7 +232,7 @@ public class MetsMaker {
             f2.setGroupID(String.valueOf(seq));
 
             FLocat fl2 = f2.newFLocat();
-            fl2.setLocType("URL");
+            fl2.setLocType("HANDLE");
             fl2.setType("simple");
             referenceImageUrl = this.proxy + columns[pidColumnNr] + "?locatt=view:level2";
             referenceImageUrl = referenceImageUrl.replace("\"", "");
@@ -250,7 +250,7 @@ public class MetsMaker {
             f3.setGroupID(String.valueOf(seq));
 
             FLocat fl3 = f3.newFLocat();
-            fl3.setLocType("URL");
+            fl3.setLocType("HANDLE");
             fl3.setType("simple");
             thumbnailImageUrl = this.proxy + columns[pidColumnNr] + "?locatt=view:level3";
             thumbnailImageUrl = thumbnailImageUrl.replace("\"", "");
@@ -271,7 +271,7 @@ public class MetsMaker {
                 f4.setGroupID(String.valueOf(seq));
 
                 FLocat fl4 = f4.newFLocat();
-                fl4.setLocType("URL");
+                fl4.setLocType("HANDLE");
                 fl4.setType("simple");
                 fl4.setHref(ocrUrl);
                 f4.addFLocat(fl4);

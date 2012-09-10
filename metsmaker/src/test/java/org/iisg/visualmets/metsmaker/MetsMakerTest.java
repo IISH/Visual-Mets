@@ -34,13 +34,13 @@ public class MetsMakerTest {
     public void testWithMetsHeaderFile() throws METSException, IOException, SAXException, ParserConfigurationException {
         getResources();
         String testFile = testdataLocation + File.separator + "withMetsHeader" + File.separator + "withMetsHeader.csv";
-        new MetsMaker("12345", testFile, proxy, testdataLocation, "PID", "", "");
+        new MetsMaker("12345", testFile, proxy, testdataLocation, "PID", null, null);
     }
 
     @Test
     public void testWithoutMetsHeaderFile() throws METSException, IOException, SAXException, ParserConfigurationException {
         getResources();
         String testFile = testdataLocation + File.separator + "withoutMetsHeader" + File.separator + "withoutMetsHeader.csv";
-        new MetsMaker("12345", testFile, proxy, testdataLocation, "PID", "", "");
+        new MetsMaker("12345", testFile, proxy, testdataLocation, "PID", null, null);
     }
 }
