@@ -149,7 +149,7 @@ public class MetsMaker {
 
         File parent = new File(outputDirectory);
         final String objId = parent.getName() + "." + folder;
-        mw.getMETSObject().setObjID(na + "/" + objId);
+        mw.getMETSObject().setObjID("hdl:" + na + "/" + objId);
         File output_file = new File(parent, objId + ".xml");
         System.out.println("Creating METS file " + output_file.getAbsoluteFile());
         FileOutputStream output = new FileOutputStream(output_file);

@@ -1,7 +1,7 @@
 package org.iisg.visualmets.metsmaker;
 
 /**
-* Author: Christian Roosendaal
+ * Author: Christian Roosendaal
  */
 
 import au.edu.apsr.mtk.base.METSException;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Console {
+public class MetsMakerConsole {
 
     private static final String[] EXPECT = {
             "-inputFile",
@@ -29,9 +29,9 @@ public class Console {
         for (String key : EXPECT) {
             if (!map.containsKey(key)) {
                 System.out.println("Expected case sensitive parameter: " + key + "\n");
-                System.out.println("Example: java -jar metsmaker-1.0.jar -inputFile \"C:\\inputfile\" " +
-                                   " -outputFolder \"C:\\outputfolder\" -proxy \"http://www.example.org/\"" +
-                                   " [-objId 123456789] ");
+                System.out.println("Example: java -jar metsmaker.jar -inputFile \"C:\\inputfile\" " +
+                        " -outputFolder \"C:\\outputfolder\" -proxy \"http://www.example.org/\"" +
+                        " [-objId 123456789] ");
 
                 System.out.println("Optional parameters: -pidColumn [pid column header] -objId [object Id] -objectColumn [object column header] -pageColumn [page column header] ");
 
@@ -39,12 +39,12 @@ public class Console {
             }
         }
 
-        MetsMaker conversion = new MetsMaker(   map.get("-na"),
-                    map.get("-inputFile"),
-                                                map.get("-proxy"),
-                                                map.get("-outputFolder"),
-                                                map.get("-pidColumn"),
-                                                map.get("-objectColumn"),
-                                                map.get("-pageColumn")  );
+        MetsMaker conversion = new MetsMaker(map.get("-na"),
+                map.get("-inputFile"),
+                map.get("-proxy"),
+                map.get("-outputFolder"),
+                map.get("-pidColumn"),
+                map.get("-objectColumn"),
+                map.get("-pageColumn"));
     }
 }
