@@ -44,7 +44,7 @@ public class MetsMakerConsole {
                 map.get("-proxy"),
                 map.get("-outputFolder"),
                 map.get("-pidColumn"),
-                map.get("-objectColumn"),
-                map.get("-pageColumn"));
+                map.get("-pageColumn"),
+                map.get("-objectColumn"));
     }
 }

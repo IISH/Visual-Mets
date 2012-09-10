@@ -75,11 +75,13 @@ public class MetsMaker {
         }
 
         pageArrayList = new ArrayList<Page>();
-        System.out.println("Output directory: " + outputDirectory);
-        System.out.println("Proxy url: " + proxy);
-        System.out.println("pidColumnName: " + pidColumnName);
-        System.out.println("pageColumnName: " + pageColumnName);
-        System.out.println("objectColumnName: " + objectColumnName);
+        System.out.println("Output directory: " + this.outputDirectory);
+        System.out.println("Proxy url: " + this.proxy);
+        System.out.println("pidColumnName: " + this.pidColumnName);
+        System.out.println("pageColumnName: " + this.pageColumnName);
+        System.out.println("objectColumnName: " + this.objectColumnName);
+        System.out.println("na: " + this.na);
+        System.out.println("inputFile: " + this.inputFile);
 
         readFileAndCreateMets();
     }
