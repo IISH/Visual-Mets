@@ -72,13 +72,4 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>diwoto.iisg.nl</id>
-            <name>IISH maven repository</name>
-            <url>https://diwoto.iisg.nl/maven/</url>
-        </repository>
-    </repositories>
-
-
 </project>

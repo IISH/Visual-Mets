@@ -48,6 +48,18 @@ limitations under the License.
             <id>m2</id>
             <url>http://download.java.net/maven/2/</url>
         </repository>
+        <repository>
+            <id>project-repro</id>
+            <name>lib-maven-repository</name>
+            <url>file://${basedir}/../repo</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
     </repositories>
 
     <modules>
@@ -56,8 +68,12 @@ limitations under the License.
     </modules>
 
     <organization>
-        <name>IISH - International Institute for Social History</name>
-        <url>www.iisg.nl</url>
+        <name>IISH - International Institute for Social History. Social History Services</name>
+        <url>www.socialhistory.org</url>
     </organization>
+
+    <properties>
+        <spring-version>3.1.0.RELEASE</spring-version>
+    </properties>
 
 </project>

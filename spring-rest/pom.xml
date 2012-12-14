@@ -17,13 +17,21 @@
 
         <plugins>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat6-maven-plugin</artifactId>
-                <version>2.0-beta-1</version>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.26</version>
                 <configuration>
-                    <port>8080</port>
+                    <contextPath>/rest</contextPath>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
                     <systemProperties>
-                        <visualmets>../visualmets.properties</visualmets>
+                        <systemProperty>
+                            <name>visualmets</name>
+                            <value>../visualmets.properties</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>jetty.port</name>
+                            <value>8080</value>
+                        </systemProperty>
                     </systemProperties>
                 </configuration>
             </plugin>
@@ -34,13 +42,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.0.7.RELEASE</version>
+            <version>${spring-version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>3.0.7.RELEASE</version>
+            <version>${spring-version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -72,7 +80,6 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.16</version>
         </dependency>
-
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
@@ -86,13 +93,5 @@
         </dependency>
 
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>diwoto.iisg.nl</id>
-            <name>IISH maven repository</name>
-            <url>https://diwoto.iisg.nl/maven/</url>
-        </repository>
-    </repositories>
 
 </project>

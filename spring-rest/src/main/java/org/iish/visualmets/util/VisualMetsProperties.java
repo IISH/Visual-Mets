@@ -64,8 +64,8 @@ public class VisualMetsProperties extends Properties {
             log.fatal(
                     "Configuration not available!\n" +
                             "Solutions:\n" +
-                            "1) Start the JVM with parameter -Dvisual-mets.properties=/path/to/"+systemProperty+".properties\n" +
-                            "2) Set the environment variable 'visual-mets' to /path/to/"+systemProperty+".properties"
+                            "1) Start the JVM with parameter -Dvisualmets.properties=/path/to/"+systemProperty+".properties\n" +
+                            "2) Set the environment variable 'visualmets' to /path/to/"+systemProperty+".properties"
             );
             System.exit(1);
         }
