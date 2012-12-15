@@ -13,19 +13,19 @@
  *
  */
 
-(function($) {
+(function ($) {
     jQuery.fn.imageNavigator = function (options) {
 
         return this.each(function () {
 
             this.options = {
-                tabProperties: null,
-                areaWidth: 500,
+                tabProperties:null,
+                areaWidth:500,
                 areaHeight:500,
                 defaultnavWidth:150,
                 draggerStyle:"2px dotted red",
                 navOpacity:1.0,
-                loaderUrl: vm_proxy_host_mets + "css/images/loading.gif",
+                loaderUrl:vm_proxy_host_mets + "css/images/loading.gif",
                 additionalContent:"",
                 imageUrl:"sadfsadf"
             };
@@ -41,7 +41,7 @@
             var additionalContent, draggableElement, applContainer, image, imageW, imageH, imageContainer, imageContainerW, imageContainerH, navLocator, navigationThumb, navigationThumbW, navigationThumbH, nav, navW, navH, image_isHoriz, cont_isHoriz, ratio, actualIdx = 0, onScreen = false, navCoordinateX, navCoordinateY;
 
             $(imgNav).css({
-                width : imgNav.options.areaWidth
+                width:imgNav.options.areaWidth
             });
 
             var images = $(imgNav).find(".imagesContainer");
@@ -49,7 +49,7 @@
 
             if ($.metadata) {
                 $.metadata.setType("class");
-                $(images).each(function() {
+                $(images).each(function () {
                     if ($(this).metadata().imageUrl) $(this).attr("imageUrl", $(this).metadata().imageUrl);
                     if ($(this).metadata().navPosition) $(this).attr("navPosition", $(this).metadata().navPosition);
                     if ($(this).metadata().navWidth) $(this).attr("navWidth", $(this).metadata().navWidth);
@@ -75,9 +75,9 @@
 
             imageContainer = $(imgNav).find(".imageContainer");
             $(imageContainer).css({
-                padding: "5px 0",
+                padding:"5px 0",
                 overflow:"hidden",
-                position: "relative",
+                position:"relative",
                 width:this.options.areaWidth + "px",
                 height:this.options.areaHeight + "px"
             });
@@ -98,7 +98,7 @@
                 if (applContainer) {
                     $(applContainer).remove();
                 }
-                $(titles).each(function(i) {
+                $(titles).each(function (i) {
                     if (i == actualIdx)
                         $(this).addClass("selected");
                     else
@@ -109,7 +109,9 @@
                 imageObj.src = null;
                 u = u + "?rdm=" + Math.random();
                 imageObj.src = u;
-                imageObj.onload =function(){buildnav(u);};
+                imageObj.onload = function () {
+                    buildnav(u);
+                };
                 imageObj.onerror = imageFailed;
                 //$("#loader").fadeIn(500);
             }
@@ -122,10 +124,10 @@
                 imageContainerW = $(imageContainer).width();
                 imageContainerH = $(imageContainer).height();
 
-                $("#loader").fadeOut(500, function() {
+                $("#loader").fadeOut(500, function () {
                     canClick = true;
                 });
-                $(titles).bind("click", function() {
+                $(titles).bind("click", function () {
                     return true;
                 });
 //        $(imageContainer).hover(function(){
@@ -154,15 +156,15 @@
                 $(draggableElement).append("<image class='navImage'>");
                 image = $(draggableElement).find(".navImage");
 
-                $(image).mouseover(function() {
-                    $(image).css({cursor: "url(" + vm_proxy_host_mets + "css/images/openhand.png), url(" + vm_proxy_host_mets + "css/images/openhand.cur),e-resize"});
+                $(image).mouseover(function () {
+                    $(image).css({cursor:"url(" + vm_proxy_host_mets + "css/images/openhand.png), url(" + vm_proxy_host_mets + "css/images/openhand.cur),e-resize"});
                     //$(image).css({cursor: "url(../../images/cursors/grab.gif), url(../../images/cursors/openhand.cur),e-resize"});
                 });
-                $(image).mousedown(function() {
-                    $(image).css({cursor: "url(" + vm_proxy_host_mets + "css/images/closedhand.png), url(" + vm_proxy_host_mets + "css/images/closedhand.cur),e-resize"});
+                $(image).mousedown(function () {
+                    $(image).css({cursor:"url(" + vm_proxy_host_mets + "css/images/closedhand.png), url(" + vm_proxy_host_mets + "css/images/closedhand.cur),e-resize"});
                 });
-                $(image).mouseup(function() {
-                    $(image).css({cursor: "url(" + vm_proxy_host_mets + "css/images/openhand.png), url(" + vm_proxy_host_mets + "css/images/openhand.cur),e-resize"});
+                $(image).mouseup(function () {
+                    $(image).css({cursor:"url(" + vm_proxy_host_mets + "css/images/openhand.png), url(" + vm_proxy_host_mets + "css/images/openhand.cur),e-resize"});
                     //$(image).css({cursor: "url(../../images/cursors/grab.gif), url(../../images/cursors/openhand.cur),e-resize"});
                 });
 
@@ -192,9 +194,9 @@
 //        } else {
 
                 $(draggableElement).css({
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    width: imageW + 'px'
+                    marginLeft:"auto",
+                    marginRight:"auto",
+                    width:imageW + 'px'
                 });
 //        }
                 //$(image).fadeIn(1000, function(){
@@ -218,12 +220,12 @@
                 var y2 = $(imageContainer).offset().top;
 
                 $(draggableElement).draggable({
-                    containment:[x1,y1,x2,y2],
-                    start:function() {
+                    containment:[x1, y1, x2, y2],
+                    start:function () {
                         $(nav).hide();
                         $(draggableElement).css({cursor:"move"});
                     },
-                    stop:function(e, ui) {
+                    stop:function (e, ui) {
                         refreshThumbPos(ui.position.left, ui.position.top);
 
                         $(draggableElement).css({cursor:"default"});
@@ -238,12 +240,12 @@
                 nav = $(applContainer).find(".nav");
 
                 $(nav).css({
-                    border: "1px solid black",
-                    display: "block",
-                    opacity: "1.0",
-                    position: "absolute",
-                    left: "611px",
-                    top: "-5px"
+                    border:"1px solid black",
+                    display:"block",
+                    opacity:"1.0",
+                    position:"absolute",
+                    left:"611px",
+                    top:"-5px"
                 });
 
                 //ZONE SELECTOR
@@ -251,28 +253,28 @@
 //        navLocator= $(imgNav).find("#navLocator");      **
                 navLocator = $(nav).find("#navLocator");
                 $(navLocator).css({
-                    top: oldNavPosY,
-                    left: oldNavPosX,
-                    zIndex: 10000,
-                    position: "absolute",
-                    border : imgNav.options.draggerStyle,
-                    backgroundColor: $.browser.msie ? "white" : "transparent",
-                    opacity: $.browser.msie ? .5 : 1
+                    top:oldNavPosY,
+                    left:oldNavPosX,
+                    zIndex:10000,
+                    position:"absolute",
+                    border:imgNav.options.draggerStyle,
+                    backgroundColor:$.browser.msie ? "white" : "transparent",
+                    opacity:$.browser.msie ? .5 : 1
                 });
-                $.getScript(vm_proxy_host_mets + 'js/jquery/js/jquery-ui-1.8.5.custom.min.js', function() {
+                $.getScript(vm_proxy_host_mets + 'js/jquery/js/jquery-ui-1.8.5.custom.min.js', function () {
 
                     //$(navLocator).bind("dblclick",function(){fitonScreen();});
                     $(navLocator).draggable({
-                        containment: 'parent',
-                        start:function() {
+                        containment:'parent',
+                        start:function () {
                             $(navLocator).css({cursor:"move"});
                         },
-                        drag:function(e, ui) {
+                        drag:function (e, ui) {
                             oldNavPosX = ui.position.left;
                             oldNavPosY = ui.position.top;
                             refreshImagePos(ui.position.left, ui.position.top);
                         },
-                        stop:function(ui) {
+                        stop:function (ui) {
                             $(navLocator).css({cursor:"default"});
                         }
                     });
@@ -290,7 +292,7 @@
                     if ($(image).outerHeight() < imgNav.options.areaHeight && $(image).outerWidth() < imgNav.options.areaWidth) {
                         //$(nav).remove();
                         $(draggableElement).draggable("option", "disabled", true);
-                        $(draggableElement).css({opacity : 1.0});
+                        $(draggableElement).css({opacity:1.0});
                         $(image).unbind();
                     }
                 });
@@ -299,19 +301,28 @@
                 $(nav).append("<image class='navigationThumb'>");
 //        navigationThumb= $(imgNav).find(".navigationThumb");
                 navigationThumb = $(nav).find(".navigationThumb");
-                $(navigationThumb).css({opacity: "1.0"})
+                $(navigationThumb).css({opacity:"1.0"})
 
                 $(navigationThumb).attr("src", u);
-                $(navigationThumb).bind("dblclick", function() {
+                $(navigationThumb).bind("dblclick", function () {
                     fitonScreen();
                 });
 
                 image_isHoriz = imageH < imageW;
                 cont_isHoriz = imageContainerH < imageContainerW;
                 ratio = imageH / navH;
+
+                if ($(image).height() == 0) {
+                    $(navigationThumb).load(function () {
+                        loadnav();
+                    })
+                }
+                else loadnav();
+            }
+
+            function loadnav() {
                 resetAllValue();
                 refreshImagePos(oldNavPosX, oldNavPosY);
-
                 if (options.tabProperties.showNav) {
                     $(nav).show();
                 } else {
@@ -344,7 +355,7 @@
                     $(navLocator).css("left", 0);
                     $(draggableElement).css("top", 0);
                     $(draggableElement).css("left", 0);
-                    $(draggableElement).bind("mousemove", imgNav.doNothing = function() {
+                    $(draggableElement).bind("mousemove", imgNav.doNothing = function () {
                         return false;
                     });
                     $(additionalContent).hide();
@@ -484,7 +495,7 @@
                 imageContainer.oldW = $(imageContainer).css("width");
                 imageContainer.oldH = $(imageContainer).css("height");
                 imageContainer.style.width = $(window).outerWidth();
-                $(window).bind("resize", function() {
+                $(window).bind("resize", function () {
                     fullScreen();
                 });
                 resetAllValue();
@@ -496,7 +507,7 @@
 
     jQuery.fn.extend(
         {
-            getMouseX : function (e) {
+            getMouseX:function (e) {
                 var mouseX;
                 if ($.browser.msie) {
                     mouseX = event.clientX + document.body.scrollLeft;
@@ -508,7 +519,7 @@
                 }
                 return mouseX;
             },
-            getMouseY : function (e) {
+            getMouseY:function (e) {
                 var mouseY;
                 if ($.browser.msie) {
                     mouseY = event.clientY + document.body.scrollTop;

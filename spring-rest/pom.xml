@@ -21,7 +21,7 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.26</version>
                 <configuration>
-                    <contextPath>/rest</contextPath>
+                    <contextPath>/</contextPath>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <systemProperties>
                         <systemProperty>
