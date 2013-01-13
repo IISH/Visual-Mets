@@ -12,7 +12,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import javax.imageio.ImageIO;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -24,13 +23,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -57,7 +54,7 @@ public class MtrReader implements DocumentDao {
         dbf.setIgnoringComments(true);
         dbf.setNamespaceAware(true);
         dbf.setValidating(false);
-    }
+        }
 
     @Override
     public ImageItem getUrl(String eadId, String metsId, int pageId, String use) throws Exception, ParserConfigurationException {
