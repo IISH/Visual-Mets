@@ -8,24 +8,22 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * FormPreview
  */
-public class FormPreview implements Observer {
+public class FormPreview extends JFrame implements Observer {
     private JTable table1;
     private JPanel panel1;
     private JTextField textField1;
     private JButton goButton;
-    private JTextField addTextField;
     private JTextField downloadFolder;
-    private JButton button1;
     private JPanel buttonsPanel;
     private JButton pauseButton;
     private JButton resumeButton;
@@ -46,19 +44,29 @@ public class FormPreview implements Observer {
 
     // Flag for whether or not table selection is being cleared.
     private boolean clearing;
+    private Properties headers;
 
-    public FormPreview() {
+    public FormPreview(Properties headers) {
+
+        this.headers = headers;
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+
         goButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (verifyUrl(textField1.getText())) {
                     clearDownloads();
                     try {
-                        final Download download = new Download(textField1.getText(), downloadFolder.getText(), Download.DOWNLOADING, true);
+                        final Download download = new Download(textField1.getText(), downloadFolder.getText(), Download.DOWNLOADING, null, self().headers);
                         download.addObserver(self());
                         tableModel.addDownload(download);
                     } catch (MalformedURLException ee) {
                         error(ee.getMessage());
-                        return;
                     }
                 } else {
                     error("Invalid Download URL");
@@ -68,12 +76,6 @@ public class FormPreview implements Observer {
 
         tableModel = new DownloadsTableModel();
         table1.setModel(tableModel);
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionAdd();
-            }
-        });
         pauseButton.addActionListener(new ActionListener() {
 
             @Override
@@ -105,7 +107,12 @@ public class FormPreview implements Observer {
                 actionFolderSelect();
             }
         });
-
+        downloadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                downloadFileGrp((String) grpUse.getSelectedItem(), Download.DOWNLOADING);
+            }
+        });
         // Allow only one row at a time to be selected.
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -124,10 +131,11 @@ public class FormPreview implements Observer {
                                                                     tableSelectionChanged();
                                                                 }
                                                             });
-        downloadButton.addActionListener(new ActionListener() {
+
+        grpUse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                loadMets((String) grpUse.getSelectedItem());
+                if (grpUse.isEnabled()) downloadFileGrp((String) grpUse.getSelectedItem(), Download.PAUSED);
             }
         });
     }
@@ -142,7 +150,7 @@ public class FormPreview implements Observer {
 
     private void actionFolderSelect() {
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setCurrentDirectory(new java.io.File(downloadFolder.getText()));
         chooser.setDialogTitle("select folder");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
@@ -150,9 +158,9 @@ public class FormPreview implements Observer {
         if (result == 0) downloadFolder.setText(chooser.getSelectedFile().getAbsolutePath());
     }
 
-    private void loadMets(String use) {
+    private void downloadFileGrp(String use, int status) {
 
-        if ( mets == null ) return;
+        if (mets == null) return;
 
         List<String> uses;
         try {
@@ -162,33 +170,37 @@ public class FormPreview implements Observer {
             return;
         }
 
-        grpUse.removeAll();
         grpUse.setEnabled(false);
+        grpUse.removeAllItems();
         for (String _use : uses) {
             grpUse.addItem(_use);
         }
 
         if (uses.contains(use)) {
-            List<String> urls;
+            Map<Integer, String> urls;
             try {
                 urls = metsService.getURLs(mets, use);
             } catch (METSException e) {
                 error(e.getMessage());
                 return;
             }
-            for (String href : urls) {
+
+            clearDownloads();
+
+            for (Integer order : urls.keySet()) {
+                String href = urls.get(order);
                 try {
                     tableModel.addDownload(new Download(href, downloadFolder.getText() + "/" +
                             metsFile.getName().substring(0, metsFile.getName().length() - 4) + "/" +
-                            use, Download.DOWNLOADING, true));
+                            use, status, String.format("%05d", order), self().headers));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        grpUse.setEnabled(true);
         grpUse.setSelectedItem(use);
+        grpUse.setEnabled(true);
     }
 
     private void error(String msg) {
@@ -202,6 +214,7 @@ public class FormPreview implements Observer {
     }
 
     // Add a new download.
+/*
     private void actionAdd() {
         if (verifyUrl(addTextField.getText())) {
             final URL url;
@@ -210,12 +223,13 @@ public class FormPreview implements Observer {
             } catch (MalformedURLException e) {
                 return;
             }
-            tableModel.addDownload(new Download(url, downloadFolder.getText(), Download.PAUSED, true));
+            tableModel.addDownload(new Download(url, downloadFolder.getText(), Download.DOWNLOADING, null));
             addTextField.setText(""); // reset add text field
         } else {
             error("Invalid Download URL");
         }
     }
+*/
 
     // Verify download URL.
     private boolean verifyUrl(String url) {
@@ -244,9 +258,12 @@ public class FormPreview implements Observer {
     set the selected download and register to
     receive notifications from it. */
         if (!clearing) {
-            selectedDownload =
-                    tableModel.getDownload(table1.getSelectedRow());
-            selectedDownload.addObserver(FormPreview.this);
+            final int selectedRow = table1.getSelectedRow();
+            if (selectedRow != -1) {
+                selectedDownload =
+                        tableModel.getDownload(selectedRow);
+                selectedDownload.addObserver(FormPreview.this);
+            }
             updateButtons();
         }
     }
@@ -322,32 +339,20 @@ observers of any changes. */
     public void update(Observable o, Object arg) {
         // Update buttons if the selected download has changed.
         final Download download = (Download) o;
-        if (selectedDownload != null && selectedDownload.equals(download)) updateButtons();
-        if (download.getStatus() == Download.COMPLETE && download.getFilename().getName().endsWith(".xml") ) {
+        if (selectedDownload != null && selectedDownload.equals(download)) {
+            updateButtons();
+        } else if (download.getStatus() == Download.COMPLETE) {
             try {
                 mets = metsService.load(download.getFilename());
                 metsFile = download.getFilename();
             } catch (Exception e) {
                 error(e.getMessage());
             }
-            if (mets != null) loadMets(MetsService.USE_THUMBNAIL_IMAGE);
+            downloadFileGrp(MetsService.USE_THUMBNAIL_IMAGE, Download.PAUSED);
         }
     }
 
-    /*private class ImageRenderer implements TableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel label = new JLabel();
-            if (value != null && value instanceof ImageIcon) {
-                label.setHorizontalAlignment(JLabel.LEFT);
-                label.setVerticalAlignment(JLabel.TOP);
-                label.setIcon(new ImageIcon(((ImageIcon) value).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-            }
-            return label;
-        }
-    }*/
-
-    public FormPreview self() {
+    private FormPreview self() {
         return this;
     }
 }

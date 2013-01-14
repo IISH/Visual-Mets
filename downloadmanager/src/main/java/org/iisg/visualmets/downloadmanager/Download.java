@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Observable;
+import java.util.Properties;
 
 // This class downloads a file from a URL.
 final class Download extends Observable implements Runnable {
@@ -31,11 +32,18 @@ final class Download extends Observable implements Runnable {
     public static final int CANCELLED = 3;
     public static final int ERROR = 4;
 
-    public static final int FILE_TYPE_METS = 0;
-    public static final int FILE_TYPE_THUMBNAIL = 1;
-    public static final int FILE_TYPE_ANY = 2;
-
     public String downloadFolder; // download folder
+    private Properties headers;
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    private String order;
 
     public File getFilename() {
         return filename;
@@ -52,32 +60,26 @@ final class Download extends Observable implements Runnable {
     private long downloaded; // number of bytes downloaded
     private int status; // current status of download
 
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
-    private boolean checked;
-
-    public Download(String href, String downloadFolder, int status, boolean checked) throws MalformedURLException {
-        start(new URL(href), downloadFolder, status, checked);
+    public Download(String href, String downloadFolder, int status, String order, Properties headers) throws MalformedURLException {
+        start(new URL(href), downloadFolder, status, order, headers);
     }
 
     // Constructor for Download.
-    public Download(URL url, String downloadFolder, int status, boolean checked) {
-        start(url, downloadFolder, status, checked);
+    public Download(URL url, String downloadFolder, int status, String order, Properties headers) {
+        start(url, downloadFolder, status, order, headers);
     }
 
-    private void start(URL url, String downloadFolder, int status, boolean checked) {
+    private void start(URL url, String downloadFolder, int status, String order, Properties headers) {
         this.url = url;
         size = -1;
         downloaded = 0;
         this.status = status;
         this.downloadFolder = downloadFolder;
-        this.setChecked(checked);
+        if (order == null) {
+            order = url.getFile().substring(url.getFile().lastIndexOf("/") + 1);
+        }
+        this.order = order;
+        this.headers = headers;
 
         // Begin the download.
         download();
@@ -135,17 +137,15 @@ final class Download extends Observable implements Runnable {
     }
 
     // Get file name portion of URL. If it has no known extension... we add one based on the ContentType
-    private void setFileName(URL url, String contentType) throws IOException, MimeTypeException, TikaException {
-        final String tmp1 = url.getFile();
-        String tmp2 = tmp1.substring(tmp1.lastIndexOf('/') + 1);
-        if (tmp1.contains(".")) {
-            setFilename(folder(tmp2));
+    private void setFilenameWithExtension(String contentType) throws IOException, MimeTypeException, TikaException {
+        if (order.contains(".")) {
+            setFilename(folder(order));
         } else {
             final MimeType mimeType = TikaConfig.getDefaultConfig().getMimeRepository().forName(contentType);
             if (mimeType == null || !mimeType.getName().contains("/")) {
-                setFilename(folder(tmp2));
+                setFilename(folder(order));
             } else
-                setFilename(folder(tmp2 + "." + mimeType.getName().substring(mimeType.getName().lastIndexOf("/") + 1)));
+                setFilename(folder(order + "." + mimeType.getName().substring(mimeType.getName().lastIndexOf("/") + 1)));
         }
     }
 
@@ -169,6 +169,11 @@ final class Download extends Observable implements Runnable {
             connection.setRequestProperty("Range",
                     "bytes=" + downloaded + "-");
 
+            for (String key : headers.stringPropertyNames()) {
+                String value = headers.getProperty(key);
+                if (value != null) connection.addRequestProperty(key, value);
+            }
+
             // Connect to server.
             connection.connect();
 
@@ -190,7 +195,7 @@ final class Download extends Observable implements Runnable {
                 stateChanged();
             }
 
-            setFileName(url, connection.getContentType());
+            setFilenameWithExtension(connection.getContentType());
             if (downloaded == 0 && getFilename().length() == size) {
                 downloaded = size;
                 status = COMPLETE;
@@ -198,9 +203,11 @@ final class Download extends Observable implements Runnable {
             } else {
                 // Open file and seek to the end of it.
                 downloaded = getFilename().length();
-                file = new RandomAccessFile(getFilename(), "rw");
-                file.seek(downloaded);
-                stream = connection.getInputStream();
+                if (downloaded != size) {
+                    file = new RandomAccessFile(getFilename(), "rw");
+                    file.seek(downloaded);
+                    stream = connection.getInputStream();
+                }
             }
 
             while (status == DOWNLOADING) {
@@ -248,6 +255,8 @@ final class Download extends Observable implements Runnable {
                 } catch (Exception e) {
                 }
             }
+
+            if (getFilename().length() == 0) getFilename().delete();
         }
     }
 

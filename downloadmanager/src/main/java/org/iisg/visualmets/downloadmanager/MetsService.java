@@ -21,9 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -114,7 +112,7 @@ public final class MetsService {
         return xpath.compile(xquery);
     }
 
-    public List<String> getURLs(METS mets, String use) throws METSException {
+    public Map<Integer,String> getURLs(METS mets, String use) throws METSException {
 
         List<StructMap> physical = mets.getStructMapByType("physical");
         final StructMap map = physical.get(0);
@@ -124,15 +122,17 @@ public final class MetsService {
         final FileGrp fileGrp = fileGrpByUse.get(0);
 
         final List<Div> divs = map.getDivs().get(0).getDivs("page");
-        final List<String> thumbs = new ArrayList(divs.size());
+        final Map<Integer,String> thumbs = new HashMap<Integer, String>(divs.size());
+        int count = 0 ;
         for (Div div : divs) {
             final List<Fptr> fptrs = div.getFptrs();
             for (Fptr fptr : fptrs) {
                 final String fileID = fptr.getFileID();
                 final au.edu.apsr.mtk.base.File file = fileGrp.getFile(fileID);
                 if (file != null) {
+                    count++;
                     final FLocat fLocat = file.getFLocats().get(0);
-                    thumbs.add(fLocat.getHref());
+                    thumbs.put(count, fLocat.getHref());
                 }
             }
         }

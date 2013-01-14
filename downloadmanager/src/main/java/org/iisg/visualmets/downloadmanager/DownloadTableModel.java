@@ -1,8 +1,12 @@
 package org.iisg.visualmets.downloadmanager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -12,10 +16,10 @@ class DownloadsTableModel extends AbstractTableModel
         implements Observer {
 
     // These are the names for the table's columns.
-    private static final String[] columnNames = {"Preview", "Select", "URL", "Size", "Progress", "Status"};
+    private static final String[] columnNames = {"Preview", "URL", "Size", "Progress", "Status"};
 
     // These are the classes for each column's values.
-    private static final Class[] columnClasses = {ImageIcon.class, Checkbox.class, String.class,
+    private static final Class[] columnClasses = {ImageIcon.class, String.class,
             String.class, JProgressBar.class, String.class};
 
     // The table's list of downloads.
@@ -71,24 +75,37 @@ class DownloadsTableModel extends AbstractTableModel
 
         Download download = downloadList.get(row);
         switch (col) {
-            case 0: // Icon
-                if (download.getStatus() == Download.COMPLETE)
-                    return new ImageIcon((new ImageIcon(download.getFilename().getAbsolutePath())).getImage().getScaledInstance(-1, 105, Image.SCALE_SMOOTH));
-            case 1: // Select
-                return new JCheckBox("", download.isChecked());
-            case 2: // URL
+            case 10: // Icon. We expect the preview image to be in the parent folder/preview/[filename.pmg]
+                if (download.getFilename() == null) return "";
+                int i = download.getFilename().getName().indexOf(".");
+                String filename = (i == -1) ? download.getFilename().getName() : download.getFilename().getName().substring(0, i);
+                File preview = new File(download.getFilename().getParentFile().getParentFile(), "preview/" + filename + ".png");
+                if (preview.exists()) {
+                    return new ImageIcon(preview.getAbsolutePath());
+                } else if (download.getStatus() == Download.COMPLETE) {
+                    if (!preview.getParentFile().exists()) preview.getParentFile().mkdirs();
+                    try {
+                        final Image scaledInstance = ImageIO.read(download.getFilename()).getScaledInstance(-1, 105, Image.SCALE_SMOOTH);
+                        final BufferedImage bufferedImage = new BufferedImage(scaledInstance.getWidth(null), scaledInstance.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                        bufferedImage.getGraphics().drawImage(scaledInstance, 0, 0, null);
+                        ImageIO.write(bufferedImage, "png", preview);
+                        return new ImageIcon(bufferedImage);
+                    } catch (IOException e) {
+                        return "";
+                    }
+                }
+            case 1: // URL
                 return download.getUrl();
-            case 3: // Size
+            case 2: // Size
                 long size = download.getSize();
                 return (size == -1) ? "" : Long.toString(size);
-            case 4: // Progress
+            case 3: // Progress
                 return download.getProgress();
-            case 5: // Status
+            case 4: // Status
                 return Download.STATUSES[download.getStatus()];
         }
         return "";
     }
-
 
     /* Update is called when a Download notifies its
 observers of any changes */

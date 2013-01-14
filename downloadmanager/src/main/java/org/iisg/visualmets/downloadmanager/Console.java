@@ -1,30 +1,26 @@
 package org.iisg.visualmets.downloadmanager;
 
-import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * ToDo: instantiate via spring
  */
 public class Console {
 
-    public Console() {
-        final JFrame frame = new JFrame("FormPreview");
-        frame.setContentPane(new FormPreview().getPanel());
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        // Handle window closing events.
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-        frame.setVisible(true);
-    }
+    public static void main(String[] args) throws IOException {
 
-    public static void main(String[] args) {
-        new Console();
+        final Properties headers = new Properties();
+        final File file = new File("./downloadmanager.txt");
+        if (file.exists()) headers.load(new FileInputStream(file));
+
+        final FormPreview frame = new FormPreview(headers);
+        frame.setContentPane(frame.getPanel());
+        frame.setTitle("Download Manager");
+        frame.pack();
+        frame.setVisible(true);
     }
 
 }
