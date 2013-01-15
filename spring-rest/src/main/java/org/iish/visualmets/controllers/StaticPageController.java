@@ -112,6 +112,18 @@ public class StaticPageController {
         return mav;
     }
 
+    @RequestMapping("/{pageName}.jnlp")
+    public ModelAndView getJNLP(@PathVariable("pageName") String pageName,
+                                @RequestParam(value = "metsId", required = false) String metsId,
+                                HttpServletResponse response) {
+        response.setContentType("application/x-java-jnlp-file; charset=utf-8");
+
+        ModelAndView mav = new ModelAndView(pageName + ".jnlp");
+        mav.addObject("metsId", metsId) ;
+        mav.addObject("pageName", pageName) ;
+        return mav;
+    }
+
     @RequestMapping("/error.html")
     public ModelAndView ErrorPageHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
 

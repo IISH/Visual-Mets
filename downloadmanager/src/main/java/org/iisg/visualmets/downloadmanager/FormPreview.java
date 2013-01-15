@@ -3,22 +3,26 @@ package org.iisg.visualmets.downloadmanager;
 import au.edu.apsr.mtk.base.METS;
 import au.edu.apsr.mtk.base.METSException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.*;
 
 /**
  * FormPreview
  */
-public class FormPreview extends JFrame implements Observer {
+public class FormPreview implements Observer {
     private JTable table1;
     private JPanel panel1;
     private JTextField textField1;
@@ -37,6 +41,7 @@ public class FormPreview extends JFrame implements Observer {
 
     final MetsService metsService = new MetsService();
     METS mets;
+
     File metsFile;
 
     // Currently selected download.
@@ -46,17 +51,9 @@ public class FormPreview extends JFrame implements Observer {
     private boolean clearing;
     private Properties headers;
 
-    public FormPreview(Properties headers) {
+    public FormPreview(Properties headers, String metsId) {
 
         this.headers = headers;
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-
         goButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (verifyUrl(textField1.getText())) {
@@ -110,7 +107,7 @@ public class FormPreview extends JFrame implements Observer {
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                downloadFileGrp((String) grpUse.getSelectedItem(), Download.DOWNLOADING);
+                downloadFileGrp((String) grpUse.getSelectedItem(), Download.PAUSED);
             }
         });
         // Allow only one row at a time to be selected.
@@ -123,7 +120,7 @@ public class FormPreview extends JFrame implements Observer {
 
         // Set table's row height large enough to fit JProgressBar.
         table1.setRowHeight(105);
-//        table1.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
+        table1.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
 
         table1.getSelectionModel().addListSelectionListener(new
                                                             ListSelectionListener() {
@@ -138,6 +135,8 @@ public class FormPreview extends JFrame implements Observer {
                 if (grpUse.isEnabled()) downloadFileGrp((String) grpUse.getSelectedItem(), Download.PAUSED);
             }
         });
+
+        textField1.setText(metsId);
     }
 
     private void clearDownloads() {
@@ -199,6 +198,9 @@ public class FormPreview extends JFrame implements Observer {
             }
         }
 
+        // Kickstart the first download
+        if (tableModel.getRowCount() != 0) tableModel.getDownload(0).resume();
+
         grpUse.setSelectedItem(use);
         grpUse.setEnabled(true);
     }
@@ -208,28 +210,6 @@ public class FormPreview extends JFrame implements Observer {
                 msg, "Error",
                 JOptionPane.ERROR_MESSAGE);
     }
-
-    public JPanel getPanel() {
-        return this.panel1;
-    }
-
-    // Add a new download.
-/*
-    private void actionAdd() {
-        if (verifyUrl(addTextField.getText())) {
-            final URL url;
-            try {
-                url = new URL(addTextField.getText());
-            } catch (MalformedURLException e) {
-                return;
-            }
-            tableModel.addDownload(new Download(url, downloadFolder.getText(), Download.DOWNLOADING, null));
-            addTextField.setText(""); // reset add text field
-        } else {
-            error("Invalid Download URL");
-        }
-    }
-*/
 
     // Verify download URL.
     private boolean verifyUrl(String url) {
@@ -355,4 +335,39 @@ observers of any changes. */
     private FormPreview self() {
         return this;
     }
+
+    public Container getMainPanel() {
+        return panel1;
+    }
+
+    private class ImageRenderer implements TableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+            JLabel label = new JLabel();
+            Download download = tableModel.getDownload(row);
+            if (value != null && value instanceof String && ((String) value).length() != 0) {
+                if (download.getFilename() == null) return null;
+                int i = download.getFilename().getName().indexOf(".");
+                String filename = (i == -1) ? download.getFilename().getName() : download.getFilename().getName().substring(0, i);
+                File preview = new File(download.getFilename().getParentFile().getParentFile(), "preview/" + filename + ".png");
+                if (preview.exists()) {
+                    label.setIcon(new ImageIcon(preview.getAbsolutePath()));
+                } else if (download.getStatus() == Download.COMPLETE) {
+                    if (!preview.getParentFile().exists()) preview.getParentFile().mkdirs();
+                    try {
+                        final Image scaledInstance = ImageIO.read(download.getFilename()).getScaledInstance(-1, 105, Image.SCALE_SMOOTH);
+                        final BufferedImage bufferedImage = new BufferedImage(scaledInstance.getWidth(null), scaledInstance.getHeight(null), BufferedImage.TYPE_INT_RGB);
+                        bufferedImage.getGraphics().drawImage(scaledInstance, 0, 0, null);
+                        ImageIO.write(bufferedImage, "png", preview);
+                        label.setIcon(new ImageIcon(bufferedImage));
+                    } catch (IOException e) {
+                    }
+                }
+            }
+            return label;
+        }
+    }
+
+
 }

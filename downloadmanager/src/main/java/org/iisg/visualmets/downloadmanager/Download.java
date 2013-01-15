@@ -1,12 +1,6 @@
 package org.iisg.visualmets.downloadmanager;
 
-import org.apache.tika.config.TikaConfig;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.mime.MimeType;
-import org.apache.tika.mime.MimeTypeException;
-
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
@@ -137,7 +131,7 @@ final class Download extends Observable implements Runnable {
     }
 
     // Get file name portion of URL. If it has no known extension... we add one based on the ContentType
-    private void setFilenameWithExtension(String contentType) throws IOException, MimeTypeException, TikaException {
+    /*private void setFilenameWithExtension(String contentType) throws IOException, MimeTypeException, TikaException {
         if (order.contains(".")) {
             setFilename(folder(order));
         } else {
@@ -147,6 +141,10 @@ final class Download extends Observable implements Runnable {
             } else
                 setFilename(folder(order + "." + mimeType.getName().substring(mimeType.getName().lastIndexOf("/") + 1)));
         }
+    }*/
+
+    private void setFilenameWithExtension(String contentType){
+
     }
 
     private File folder(String filename) {

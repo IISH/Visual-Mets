@@ -1,12 +1,7 @@
 package org.iisg.visualmets.downloadmanager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -75,11 +70,13 @@ class DownloadsTableModel extends AbstractTableModel
 
         Download download = downloadList.get(row);
         switch (col) {
-            case 10: // Icon. We expect the preview image to be in the parent folder/preview/[filename.pmg]
-                if (download.getFilename() == null) return "";
+            case 0: // Icon. We expect the preview image to be in the parent folder/preview/[filename.pmg]
+
+                /*if (download.getFilename() == null) return "";
                 int i = download.getFilename().getName().indexOf(".");
                 String filename = (i == -1) ? download.getFilename().getName() : download.getFilename().getName().substring(0, i);
                 File preview = new File(download.getFilename().getParentFile().getParentFile(), "preview/" + filename + ".png");
+
                 if (preview.exists()) {
                     return new ImageIcon(preview.getAbsolutePath());
                 } else if (download.getStatus() == Download.COMPLETE) {
@@ -93,7 +90,8 @@ class DownloadsTableModel extends AbstractTableModel
                     } catch (IOException e) {
                         return "";
                     }
-                }
+                }*/
+
             case 1: // URL
                 return download.getUrl();
             case 2: // Size
@@ -110,9 +108,20 @@ class DownloadsTableModel extends AbstractTableModel
     /* Update is called when a Download notifies its
 observers of any changes */
     public void update(Observable o, Object arg) {
-        int index = downloadList.indexOf(o);
+        final Download download = (Download) o;
+        int index = downloadList.indexOf(download);
         // Fire table row update notification to table.
         fireTableRowsUpdated(index, index);
+
+        if (download.getStatus() == Download.COMPLETE || download.getStatus() == Download.ERROR) {
+            // If there are any other requests in the queue, that are paused and have no progression... we start these.
+            for (Download d : downloadList) {
+                if (d.getStatus() == Download.PAUSED && d.getProgress() == 0) {
+                    d.resume();
+                    return;
+                }
+            }
+        }
     }
 
 }
