@@ -20,6 +20,16 @@ class DownloadsTableModel extends AbstractTableModel
     // The table's list of downloads.
     private ArrayList<Download> downloadList = new ArrayList<Download>();
 
+    public boolean isAutoDownload() {
+        return autoDownload;
+    }
+
+    public void setAutoDownload(boolean autoDownload) {
+        this.autoDownload = autoDownload;
+    }
+
+    private boolean autoDownload = false;
+
     // Add a new download to the table.
     public void addDownload(Download download) {
 
@@ -70,28 +80,8 @@ class DownloadsTableModel extends AbstractTableModel
 
         Download download = downloadList.get(row);
         switch (col) {
-            case 0: // Icon. We expect the preview image to be in the parent folder/preview/[filename.pmg]
-
-                /*if (download.getFilename() == null) return "";
-                int i = download.getFilename().getName().indexOf(".");
-                String filename = (i == -1) ? download.getFilename().getName() : download.getFilename().getName().substring(0, i);
-                File preview = new File(download.getFilename().getParentFile().getParentFile(), "preview/" + filename + ".png");
-
-                if (preview.exists()) {
-                    return new ImageIcon(preview.getAbsolutePath());
-                } else if (download.getStatus() == Download.COMPLETE) {
-                    if (!preview.getParentFile().exists()) preview.getParentFile().mkdirs();
-                    try {
-                        final Image scaledInstance = ImageIO.read(download.getFilename()).getScaledInstance(-1, 105, Image.SCALE_SMOOTH);
-                        final BufferedImage bufferedImage = new BufferedImage(scaledInstance.getWidth(null), scaledInstance.getHeight(null), BufferedImage.TYPE_INT_RGB);
-                        bufferedImage.getGraphics().drawImage(scaledInstance, 0, 0, null);
-                        ImageIO.write(bufferedImage, "png", preview);
-                        return new ImageIcon(bufferedImage);
-                    } catch (IOException e) {
-                        return "";
-                    }
-                }*/
-
+            case 0: // Handled in a separate thread.
+                break;
             case 1: // URL
                 return download.getUrl();
             case 2: // Size
@@ -100,27 +90,32 @@ class DownloadsTableModel extends AbstractTableModel
             case 3: // Progress
                 return download.getProgress();
             case 4: // Status
-                return Download.STATUSES[download.getStatus()];
+                if (download.getStatus() == Download.ERROR) {
+                    return download.getErrorMessage();
+                } else
+                    return Download.STATUSES[download.getStatus()];
         }
         return "";
     }
 
-    /* Update is called when a Download notifies its
-observers of any changes */
+    /*
+    Update is called when a Download notifies its observers of any changes
+*/
     public void update(Observable o, Object arg) {
         final Download download = (Download) o;
         int index = downloadList.indexOf(download);
         // Fire table row update notification to table.
         fireTableRowsUpdated(index, index);
 
-        if (download.getStatus() == Download.COMPLETE || download.getStatus() == Download.ERROR) {
+        if (autoDownload && (download.getStatus() == Download.COMPLETE || download.getStatus() == Download.ERROR || download.getStatus() == Download.SKIPPED)) {
             // If there are any other requests in the queue, that are paused and have no progression... we start these.
+
+            Download candidate = null;
             for (Download d : downloadList) {
-                if (d.getStatus() == Download.PAUSED && d.getProgress() == 0) {
-                    d.resume();
-                    return;
-                }
+                if (d.getStatus() == Download.DOWNLOADING) return;
+                if (d.getStatus() == Download.PENDING && candidate == null) candidate = d;
             }
+            if (candidate != null) candidate.resume();
         }
     }
 

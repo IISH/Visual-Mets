@@ -17,7 +17,7 @@ final class Download extends Observable implements Runnable {
 
     // These are the status names.
     public static final String STATUSES[] = {"Downloading",
-            "Paused", "Complete", "Cancelled", "Error"};
+            "Paused", "Complete", "Cancelled", "Error", "Skipped", "Pending"};
 
     // These are the status codes.
     public static final int DOWNLOADING = 0;
@@ -25,9 +25,21 @@ final class Download extends Observable implements Runnable {
     public static final int COMPLETE = 2;
     public static final int CANCELLED = 3;
     public static final int ERROR = 4;
+    public static final int SKIPPED = 5;
+    public static final int PENDING = 6;
 
     public String downloadFolder; // download folder
     private Properties headers;
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    private String errorMessage;
 
     public String getOrder() {
         return order;
@@ -76,7 +88,11 @@ final class Download extends Observable implements Runnable {
         this.headers = headers;
 
         // Begin the download.
-        download();
+        if (status == PENDING) {
+            stateChanged();
+        } else {
+            download();
+        }
     }
 
     // Get this download's URL.
@@ -118,8 +134,21 @@ final class Download extends Observable implements Runnable {
         stateChanged();
     }
 
+    // Skip this download.
+    public void skip() {
+        status = SKIPPED;
+        stateChanged();
+    }
+
+    // Skip this download.
+    public void pending() {
+        status = PENDING;
+        stateChanged();
+    }
+
     // Mark this download as having an error.
-    private void error() {
+    private void error(String errorMessage) {
+        setErrorMessage(errorMessage);
         status = ERROR;
         stateChanged();
     }
@@ -131,20 +160,12 @@ final class Download extends Observable implements Runnable {
     }
 
     // Get file name portion of URL. If it has no known extension... we add one based on the ContentType
-    /*private void setFilenameWithExtension(String contentType) throws IOException, MimeTypeException, TikaException {
+    private void setFilenameWithExtension(String contentType) {
         if (order.contains(".")) {
             setFilename(folder(order));
         } else {
-            final MimeType mimeType = TikaConfig.getDefaultConfig().getMimeRepository().forName(contentType);
-            if (mimeType == null || !mimeType.getName().contains("/")) {
-                setFilename(folder(order));
-            } else
-                setFilename(folder(order + "." + mimeType.getName().substring(mimeType.getName().lastIndexOf("/") + 1)));
+            setFilename(folder(order + "." + MimeType.forName(contentType)));
         }
-    }*/
-
-    private void setFilenameWithExtension(String contentType){
-
     }
 
     private File folder(String filename) {
@@ -155,6 +176,7 @@ final class Download extends Observable implements Runnable {
 
     // Download file.
     public void run() {
+
         RandomAccessFile file = null;
         InputStream stream = null;
 
@@ -177,13 +199,16 @@ final class Download extends Observable implements Runnable {
 
             // Make sure response code is in the 200 range.
             if (connection.getResponseCode() / 100 != 2) {
-                error();
+                if (connection.getResponseCode() == 416) {
+                    getFilename().delete();
+                }
+                error("The response code " + connection.getResponseCode() + " is not in the 200 range. Select resume to retry.");
             }
 
             // Check for valid content length.
             int contentLength = connection.getContentLength();
             if (contentLength < 1) {
-                error();
+                error("Invalid content length");
             }
 
             /* Set the size for this download if it
@@ -194,18 +219,17 @@ final class Download extends Observable implements Runnable {
             }
 
             setFilenameWithExtension(connection.getContentType());
+            file = new RandomAccessFile(getFilename(), "rw");
+            stream = connection.getInputStream();
+
             if (downloaded == 0 && getFilename().length() == size) {
                 downloaded = size;
-                status = COMPLETE;
+                status = SKIPPED;
                 stateChanged();
             } else {
                 // Open file and seek to the end of it.
-                downloaded = getFilename().length();
-                if (downloaded != size) {
-                    file = new RandomAccessFile(getFilename(), "rw");
-                    file.seek(downloaded);
-                    stream = connection.getInputStream();
-                }
+                if (downloaded == 0) downloaded = getFilename().length();
+                file.seek(downloaded);
             }
 
             while (status == DOWNLOADING) {
@@ -235,18 +259,19 @@ final class Download extends Observable implements Runnable {
                 status = COMPLETE;
                 stateChanged();
             }
-        } catch (Exception e) {
-            error();
-        } finally {
-            // Close file.
-            if (file != null) {
-                try {
-                    file.close();
-                } catch (Exception e) {
-                }
+
+            if (status == CANCELLED) {
+                getFilename().delete();
             }
 
-            // Close connection to server.
+        } catch (Exception e) {
+            error(e.getMessage());
+            if (getFilename() != null) {
+                downloaded = 0;
+                status = ERROR;
+                getFilename().delete();
+            }
+        } finally {
             if (stream != null) {
                 try {
                     stream.close();
@@ -254,8 +279,16 @@ final class Download extends Observable implements Runnable {
                 }
             }
 
-            if (getFilename().length() == 0) getFilename().delete();
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (Exception e) {
+                }
+            }
+
+            if (getFilename() != null && getFilename().length() == 0) getFilename().delete();
         }
+
     }
 
     // Notify observers that this download's status has changed.

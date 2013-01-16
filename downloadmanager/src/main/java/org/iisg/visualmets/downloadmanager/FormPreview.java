@@ -3,17 +3,13 @@ package org.iisg.visualmets.downloadmanager;
 import au.edu.apsr.mtk.base.METS;
 import au.edu.apsr.mtk.base.METSException;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -36,6 +32,10 @@ public class FormPreview implements Observer {
     private JButton selectButton;
     private JComboBox grpUse;
     private JButton downloadButton;
+    private JButton pauseButton1;
+    private JButton startResumeButton;
+    private JButton cancelButton1;
+    private JButton clearButton1;
 
     private DownloadsTableModel tableModel;
 
@@ -107,7 +107,17 @@ public class FormPreview implements Observer {
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                downloadFileGrp((String) grpUse.getSelectedItem(), Download.PAUSED);
+                tableModel.setAutoDownload(!tableModel.isAutoDownload());
+                if (tableModel.isAutoDownload()) {
+                    downloadFileGrp((String) grpUse.getSelectedItem(), Download.PENDING, true);
+                } else {
+                    for (int i = 0; i < tableModel.getRowCount(); i++) {
+                        final Download download = tableModel.getDownload(i);
+                        if (download.getStatus() == Download.DOWNLOADING)
+                            download.pause();
+                    }
+                    downloadButton.setText("Resume download");
+                }
             }
         });
         // Allow only one row at a time to be selected.
@@ -120,6 +130,7 @@ public class FormPreview implements Observer {
 
         // Set table's row height large enough to fit JProgressBar.
         table1.setRowHeight(105);
+        table1.getColumnModel().getColumn(0).setMaxWidth(105);
         table1.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
 
         table1.getSelectionModel().addListSelectionListener(new
@@ -132,16 +143,18 @@ public class FormPreview implements Observer {
         grpUse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (grpUse.isEnabled()) downloadFileGrp((String) grpUse.getSelectedItem(), Download.PAUSED);
+                if (grpUse.isEnabled()) downloadFileGrp((String) grpUse.getSelectedItem(), Download.PENDING, false);
             }
         });
 
         textField1.setText(metsId);
+        downloadFolder.setText(System.getProperty("user.home", ".") + File.separator + "visualmets");
     }
 
     private void clearDownloads() {
         clearing = true;
         while (tableModel.getRowCount() != 0) {
+            tableModel.getDownload(0).cancel();
             tableModel.clearDownload(0);
         }
         clearing = false;
@@ -157,9 +170,16 @@ public class FormPreview implements Observer {
         if (result == 0) downloadFolder.setText(chooser.getSelectedFile().getAbsolutePath());
     }
 
-    private void downloadFileGrp(String use, int status) {
+    private void downloadFileGrp(String use, int status, boolean startDownload) {
 
         if (mets == null) return;
+
+        tableModel.setAutoDownload(startDownload);
+        if (startDownload) {
+            downloadButton.setText("Pause download");
+        } else {
+            downloadButton.setText("Start download");
+        }
 
         List<String> uses;
         try {
@@ -199,7 +219,7 @@ public class FormPreview implements Observer {
         }
 
         // Kickstart the first download
-        if (tableModel.getRowCount() != 0) tableModel.getDownload(0).resume();
+        if (startDownload && tableModel.getRowCount() != 0) tableModel.getDownload(0).resume();
 
         grpUse.setSelectedItem(use);
         grpUse.setEnabled(true);
@@ -288,6 +308,8 @@ currently selected download's status. */
                     clearButton.setEnabled(false);
                     break;
                 case Download.PAUSED:
+                case Download.PENDING:
+                    resumeButton.setText ( selectedDownload.getStatus() == Download.PENDING ? "Start" : "Resume");
                     pauseButton.setEnabled(false);
                     resumeButton.setEnabled(true);
                     cancelButton.setEnabled(true);
@@ -321,14 +343,14 @@ observers of any changes. */
         final Download download = (Download) o;
         if (selectedDownload != null && selectedDownload.equals(download)) {
             updateButtons();
-        } else if (download.getStatus() == Download.COMPLETE) {
+        } else if (download.getStatus() == Download.COMPLETE || download.getStatus() == Download.SKIPPED) {
             try {
                 mets = metsService.load(download.getFilename());
                 metsFile = download.getFilename();
             } catch (Exception e) {
                 error(e.getMessage());
             }
-            downloadFileGrp(MetsService.USE_THUMBNAIL_IMAGE, Download.PAUSED);
+            downloadFileGrp(MetsService.USE_THUMBNAIL_IMAGE, Download.PENDING, false);
         }
     }
 
@@ -339,35 +361,5 @@ observers of any changes. */
     public Container getMainPanel() {
         return panel1;
     }
-
-    private class ImageRenderer implements TableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-
-            JLabel label = new JLabel();
-            Download download = tableModel.getDownload(row);
-            if (value != null && value instanceof String && ((String) value).length() != 0) {
-                if (download.getFilename() == null) return null;
-                int i = download.getFilename().getName().indexOf(".");
-                String filename = (i == -1) ? download.getFilename().getName() : download.getFilename().getName().substring(0, i);
-                File preview = new File(download.getFilename().getParentFile().getParentFile(), "preview/" + filename + ".png");
-                if (preview.exists()) {
-                    label.setIcon(new ImageIcon(preview.getAbsolutePath()));
-                } else if (download.getStatus() == Download.COMPLETE) {
-                    if (!preview.getParentFile().exists()) preview.getParentFile().mkdirs();
-                    try {
-                        final Image scaledInstance = ImageIO.read(download.getFilename()).getScaledInstance(-1, 105, Image.SCALE_SMOOTH);
-                        final BufferedImage bufferedImage = new BufferedImage(scaledInstance.getWidth(null), scaledInstance.getHeight(null), BufferedImage.TYPE_INT_RGB);
-                        bufferedImage.getGraphics().drawImage(scaledInstance, 0, 0, null);
-                        ImageIO.write(bufferedImage, "png", preview);
-                        label.setIcon(new ImageIcon(bufferedImage));
-                    } catch (IOException e) {
-                    }
-                }
-            }
-            return label;
-        }
-    }
-
 
 }
