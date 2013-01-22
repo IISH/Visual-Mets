@@ -18,7 +18,7 @@ import java.util.Properties;
 /**
  * DownloadManager
  */
-public class _DownLoadManager extends JApplet {
+public class DownloadManager extends JApplet {
 
     @Override
     public void init() {
@@ -80,7 +80,7 @@ public class _DownLoadManager extends JApplet {
 
         final KeyStore keystore = KeyStore.getInstance("jks");
 
-        keystore.load(_DownLoadManager.class.getResourceAsStream("/client-keystore"), null);
+        keystore.load(DownloadManager.class.getResourceAsStream("/client-keystore"), null);
         //URL url = new URL(codebase + "client-keystore.jks");
         //keystore.load(url.openStream(), null);
 
