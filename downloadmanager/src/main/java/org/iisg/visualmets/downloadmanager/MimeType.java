@@ -40,4 +40,7 @@ public class MimeType {
         return extension;
     }
 
+    public static boolean knownExtension(String extension) {
+        return getMimeRepository().containsValue(extension) ;
+    }
 }

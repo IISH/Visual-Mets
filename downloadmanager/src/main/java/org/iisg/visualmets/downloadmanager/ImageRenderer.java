@@ -24,9 +24,6 @@ public class ImageRenderer implements TableCellRenderer {
             String filename = (i == -1) ? download.getFilename().getName() : download.getFilename().getName().substring(0, i);
             File preview = new File(download.getFilename().getParentFile().getParentFile(), "preview/" + filename + ".png");
             if (preview.exists() && preview.length() != 0) {
-                if (preview.getAbsolutePath().contains("Russel_010_0004")) {
-                    String s = null;
-                }
                 label.setIcon(new ImageIcon(preview.getAbsolutePath()));
             } else if (download.getStatus() == Download.COMPLETE || download.getStatus() == Download.SKIPPED) {
                 if (!preview.getParentFile().exists()) preview.getParentFile().mkdirs();

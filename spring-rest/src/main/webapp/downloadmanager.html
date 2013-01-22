@@ -33,18 +33,18 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="en-US">
-  <head>
+<head>
     <title>Download manager</title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-  </head>
-  <body>
-    <noscript>A browser with JavaScript enabled is required for this page to operate properly.</noscript>
-    <h1>Download manager</h1>
-    <script src="http://www.java.com/js/deployJava.js"></script>
-    <script>
-            var attributes = { archive:'downloadmanager.jar',  width:800, height:600} ;
-            var parameters = {jnlp_href: 'app/launch.jnlp'} ;
-            deployJava.runApplet(attributes, parameters, '1.4');
-        </script>
-  </body>
+</head>
+<body>
+<noscript>A browser with JavaScript enabled is required for this page to operate properly.</noscript>
+<h1>Download manager</h1>
+<script src="http://www.java.com/js/deployJava.js"></script>
+<script>
+    var attributes = { archive:'downloadmanager.jar', width:800, height:600};
+    var parameters = { code:'org.iisg.visualmets.downloadmanager.DownloadManager', jnlp_href:'app/launch.jnlp'};
+    deployJava.runApplet(attributes, parameters, '1.6');
+</script>
+</body>
 </html>

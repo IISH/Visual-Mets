@@ -11,24 +11,32 @@ class DownloadsTableModel extends AbstractTableModel
         implements Observer {
 
     // These are the names for the table's columns.
-    private static final String[] columnNames = {"Preview", "URL", "Size", "Progress", "Status"};
+    private static final String[] columnNames = {"Preview", "Label", "URL", "Size", "Progress", "Status"};
 
     // These are the classes for each column's values.
-    private static final Class[] columnClasses = {ImageIcon.class, String.class,
+    private static final Class[] columnClasses = {JLabel.class, String.class, String.class,
             String.class, JProgressBar.class, String.class};
 
     // The table's list of downloads.
     private ArrayList<Download> downloadList = new ArrayList<Download>();
 
-    public boolean isAutoDownload() {
-        return autoDownload;
+    private int progress;
+    private JProgressBar progressBar1;
+
+    public int getStatus() {
+        return status;
     }
 
-    public void setAutoDownload(boolean autoDownload) {
-        this.autoDownload = autoDownload;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    private boolean autoDownload = false;
+    private int status;
+
+    public DownloadsTableModel(JProgressBar progressBar1) {
+        this.progressBar1 = progressBar1;  // not sure how to have a listener
+    }
+
 
     // Add a new download to the table.
     public void addDownload(Download download) {
@@ -50,7 +58,6 @@ class DownloadsTableModel extends AbstractTableModel
     // Remove a download from the list.
     public void clearDownload(int row) {
         downloadList.remove(row);
-
         // Fire table row deletion notification to table.
         fireTableRowsDeleted(row, row);
     }
@@ -80,16 +87,18 @@ class DownloadsTableModel extends AbstractTableModel
 
         Download download = downloadList.get(row);
         switch (col) {
-            case 0: // Handled in a separate thread.
+            case 0: // Handled by a separate thread.
                 break;
-            case 1: // URL
+            case 1: // page label
+                return download.getLabel();
+            case 2: // URL
                 return download.getUrl();
-            case 2: // Size
+            case 3: // Size
                 long size = download.getSize();
                 return (size == -1) ? "" : Long.toString(size);
-            case 3: // Progress
+            case 4: // Progress
                 return download.getProgress();
-            case 4: // Status
+            case 5: // Status
                 if (download.getStatus() == Download.ERROR) {
                     return download.getErrorMessage();
                 } else
@@ -107,16 +116,65 @@ class DownloadsTableModel extends AbstractTableModel
         // Fire table row update notification to table.
         fireTableRowsUpdated(index, index);
 
-        if (autoDownload && (download.getStatus() == Download.COMPLETE || download.getStatus() == Download.ERROR || download.getStatus() == Download.SKIPPED)) {
-            // If there are any other requests in the queue, that are paused and have no progression... we start these.
+        progressBar1.setMaximum(getRowCount());
 
+        final int s = download.getStatus();
+
+        if (s == Download.COMPLETE || s == Download.SKIPPED)
+            progress++;
+        else if (s == Download.CANCELLED)
+            progress--;
+        progressBar1.setValue(progress);
+
+        if (getStatus() == Download.DOWNLOADING && (s == Download.COMPLETE || s == Download.ERROR || s == Download.SKIPPED)) {
             Download candidate = null;
             for (Download d : downloadList) {
                 if (d.getStatus() == Download.DOWNLOADING) return;
                 if (d.getStatus() == Download.PENDING && candidate == null) candidate = d;
             }
-            if (candidate != null) candidate.resume();
+            if (candidate != null) candidate.resume(); // Start the next download
         }
     }
 
+    public void resume() {
+        setStatus(Download.DOWNLOADING);
+        for (int i = 0; i < getRowCount(); i++) {
+            final Download download = getDownload(i);
+            if (download.getStatus() == Download.PENDING || download.getStatus() == Download.PAUSED) {
+                download.resume();
+                break;
+            }
+        }
+    }
+
+    public void pause() {
+        setStatus(Download.PAUSED);
+        for (int i = 0; i < getRowCount(); i++) {
+            final Download download = getDownload(i);
+            if (download.getStatus() == Download.DOWNLOADING)
+                download.pause();
+        }
+    }
+
+    public void cancel() {
+        setStatus(Download.CANCELLED);
+        for (int i = 0; i < getRowCount(); i++) {
+            final Download download = getDownload(i);
+            if (download.getStatus() == Download.DOWNLOADING
+                    || download.getStatus() == Download.PAUSED) {
+                download.cancel();
+            }
+        }
+    }
+
+    public void clear(boolean all) {
+        final int rowCount = getRowCount();
+        for (int i = rowCount - 1; i > -1; i--) {
+            final Download download = getDownload(i);
+            if (all || (download.getStatus() == Download.COMPLETE || download.getStatus() == Download.SKIPPED)) {
+                download.cancel();
+                clearDownload(i);
+            }
+        }
+    }
 }

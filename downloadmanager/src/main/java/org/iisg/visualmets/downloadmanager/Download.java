@@ -17,7 +17,7 @@ final class Download extends Observable implements Runnable {
 
     // These are the status names.
     public static final String STATUSES[] = {"Downloading",
-            "Paused", "Complete", "Cancelled", "Error", "Skipped", "Pending"};
+            "Paused", "Complete", "Cancelled", "Error", "Complete", "Pending"};
 
     // These are the status codes.
     public static final int DOWNLOADING = 0;
@@ -30,6 +30,7 @@ final class Download extends Observable implements Runnable {
 
     public String downloadFolder; // download folder
     private Properties headers;
+    private String label;
 
     public String getErrorMessage() {
         return errorMessage;
@@ -66,17 +67,9 @@ final class Download extends Observable implements Runnable {
     private long downloaded; // number of bytes downloaded
     private int status; // current status of download
 
-    public Download(String href, String downloadFolder, int status, String order, Properties headers) throws MalformedURLException {
-        start(new URL(href), downloadFolder, status, order, headers);
-    }
-
-    // Constructor for Download.
-    public Download(URL url, String downloadFolder, int status, String order, Properties headers) {
-        start(url, downloadFolder, status, order, headers);
-    }
-
-    private void start(URL url, String downloadFolder, int status, String order, Properties headers) {
-        this.url = url;
+    public Download(String href, String label, String downloadFolder, int status, String order, Properties headers) throws MalformedURLException {
+        this.url = new URL(href);
+        this.label = label;
         size = -1;
         downloaded = 0;
         this.status = status;
@@ -89,7 +82,7 @@ final class Download extends Observable implements Runnable {
 
         // Begin the download.
         if (status == PENDING) {
-            stateChanged();
+            pending();
         } else {
             download();
         }
@@ -159,17 +152,25 @@ final class Download extends Observable implements Runnable {
         thread.start();
     }
 
-    // Get file name portion of URL. If it has no known extension... we add one based on the ContentType
+    /**
+     * setFilenameWithExtension
+     *
+     * @param contentType The ICAN mimetype
+     *                    <p/>
+     *                    Place a known ( to the OS ) extension in order for it to render it.
+     *                    If it has no known extension... we add one based on the ContentType.
+     */
     private void setFilenameWithExtension(String contentType) {
-        if (order.contains(".")) {
-            setFilename(folder(order));
-        } else {
+        final int beginIndex = order.lastIndexOf(".");
+        if (beginIndex == -1 || !MimeType.knownExtension(order.substring(beginIndex + 1))) {
             setFilename(folder(order + "." + MimeType.forName(contentType)));
+        } else {
+            setFilename(folder(order));
         }
     }
 
     private File folder(String filename) {
-        final File folder = new File(downloadFolder);
+        final File folder = new File(downloadFolder + "/");
         folder.mkdirs();
         return new File(folder, filename);
     }
@@ -295,5 +296,9 @@ final class Download extends Observable implements Runnable {
     private void stateChanged() {
         setChanged();
         notifyObservers();
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

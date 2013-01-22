@@ -15,7 +15,7 @@
     </resources>
     <application-desc
             name="Mets Download manager"
-            main-class="org.iisg.visualmets.downloadmanager.DownLoadManager"
+            main-class="org.iisg.visualmets.downloadmanager.DownloadManager"
             width="300"
             height="300">
         <#if metsId?has_content>

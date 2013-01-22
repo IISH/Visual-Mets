@@ -4,8 +4,7 @@ import au.edu.apsr.mtk.base.METS;
 import au.edu.apsr.mtk.base.METSException;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,20 +21,20 @@ public class FormPreview implements Observer {
     private JTable table1;
     private JPanel panel1;
     private JTextField textField1;
-    private JButton goButton;
     private JTextField downloadFolder;
     private JPanel buttonsPanel;
-    private JButton pauseButton;
-    private JButton resumeButton;
-    private JButton cancelButton;
-    private JButton clearButton;
+    private JButton pauseSelectedButton;
+    private JButton resumeSelectedButton;
+    private JButton cancelSelectedButton;
+    private JButton clearSelectedButton;
     private JButton selectButton;
     private JComboBox grpUse;
-    private JButton downloadButton;
-    private JButton pauseButton1;
-    private JButton startResumeButton;
-    private JButton cancelButton1;
-    private JButton clearButton1;
+    private JButton loadMetsButton;
+    private JButton pauseGroupButton;
+    private JButton resumeGroupButton;
+    private JButton cancelGroupButton;
+    private JButton clearGroupButton;
+    private JProgressBar progressBar1;
 
     private DownloadsTableModel tableModel;
 
@@ -54,48 +53,32 @@ public class FormPreview implements Observer {
     public FormPreview(Properties headers, String metsId) {
 
         this.headers = headers;
-        goButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (verifyUrl(textField1.getText())) {
-                    clearDownloads();
-                    try {
-                        final Download download = new Download(textField1.getText(), downloadFolder.getText(), Download.DOWNLOADING, null, self().headers);
-                        download.addObserver(self());
-                        tableModel.addDownload(download);
-                    } catch (MalformedURLException ee) {
-                        error(ee.getMessage());
-                    }
-                } else {
-                    error("Invalid Download URL");
-                }
-            }
-        });
 
-        tableModel = new DownloadsTableModel();
+        tableModel = new DownloadsTableModel(progressBar1);
         table1.setModel(tableModel);
-        pauseButton.addActionListener(new ActionListener() {
+        pauseSelectedButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                actionPause();
+                actionSelectedPause();
             }
         });
-        resumeButton.addActionListener(new ActionListener() {
+        resumeSelectedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actionResume();
+                actionSelectedResume();
             }
         });
-        cancelButton.addActionListener(new ActionListener() {
+        cancelSelectedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actionCancel();
+                actionSelectedCancel();
             }
         });
-        clearButton.addActionListener(new ActionListener() {
+        clearSelectedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actionClear();
+                actionSelectedClear();
             }
         });
         selectButton.addActionListener(new ActionListener() {
@@ -104,22 +87,7 @@ public class FormPreview implements Observer {
                 actionFolderSelect();
             }
         });
-        downloadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tableModel.setAutoDownload(!tableModel.isAutoDownload());
-                if (tableModel.isAutoDownload()) {
-                    downloadFileGrp((String) grpUse.getSelectedItem(), Download.PENDING, true);
-                } else {
-                    for (int i = 0; i < tableModel.getRowCount(); i++) {
-                        final Download download = tableModel.getDownload(i);
-                        if (download.getStatus() == Download.DOWNLOADING)
-                            download.pause();
-                    }
-                    downloadButton.setText("Resume download");
-                }
-            }
-        });
+
         // Allow only one row at a time to be selected.
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -128,9 +96,12 @@ public class FormPreview implements Observer {
         renderer.setStringPainted(true); // show progress text
         table1.setDefaultRenderer(JProgressBar.class, renderer);
 
+
         // Set table's row height large enough to fit JProgressBar.
-        table1.setRowHeight(105);
-        table1.getColumnModel().getColumn(0).setMaxWidth(105);
+        int dim = 105;
+        table1.setRowHeight(dim);
+        table1.getColumnModel().getColumn(0).setMinWidth(dim);
+        table1.getColumnModel().getColumn(0).setMaxWidth(dim);
         table1.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
 
         table1.getSelectionModel().addListSelectionListener(new
@@ -143,22 +114,60 @@ public class FormPreview implements Observer {
         grpUse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (grpUse.isEnabled()) downloadFileGrp((String) grpUse.getSelectedItem(), Download.PENDING, false);
+                if (grpUse.isEnabled()) downloadFileGrp((String) grpUse.getSelectedItem());
             }
         });
 
         textField1.setText(metsId);
         downloadFolder.setText(System.getProperty("user.home", ".") + File.separator + "visualmets");
+        loadMetsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionLoadMets();
+            }
+        });
+        resumeGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionGroupResume();
+            }
+        });
+        clearGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionGroupClear(false);
+            }
+        });
+        pauseGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionGroupPause();
+            }
+        });
+        cancelGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionGroupCancel();
+            }
+        });
     }
 
-    private void clearDownloads() {
-        clearing = true;
-        while (tableModel.getRowCount() != 0) {
-            tableModel.getDownload(0).cancel();
-            tableModel.clearDownload(0);
+
+    private void actionLoadMets() {
+        if (verifyUrl(textField1.getText())) {
+            actionGroupCancel();
+            try {
+                final Download download = new Download(textField1.getText(), null, downloadFolder.getText(), Download.DOWNLOADING, null, headers);
+                download.addObserver(this);
+                tableModel.addDownload(download);
+            } catch (MalformedURLException ee) {
+                error(ee.getMessage());
+            }
+        } else {
+            error("Invalid Download URL");
         }
-        clearing = false;
     }
+
 
     private void actionFolderSelect() {
         JFileChooser chooser = new JFileChooser();
@@ -170,16 +179,10 @@ public class FormPreview implements Observer {
         if (result == 0) downloadFolder.setText(chooser.getSelectedFile().getAbsolutePath());
     }
 
-    private void downloadFileGrp(String use, int status, boolean startDownload) {
+    private void downloadFileGrp(String use) {
 
         if (mets == null) return;
-
-        tableModel.setAutoDownload(startDownload);
-        if (startDownload) {
-            downloadButton.setText("Pause download");
-        } else {
-            downloadButton.setText("Start download");
-        }
+        actionGroupClear(true);
 
         List<String> uses;
         try {
@@ -189,40 +192,39 @@ public class FormPreview implements Observer {
             return;
         }
 
-        grpUse.setEnabled(false);
-        grpUse.removeAllItems();
-        for (String _use : uses) {
-            grpUse.addItem(_use);
+        if (grpUse.getItemCount() == 0) {
+            grpUse.setEnabled(false);
+            for (String _use : uses) {
+                grpUse.addItem(_use);
+            }
         }
 
         if (uses.contains(use)) {
-            Map<Integer, String> urls;
+            Map<Integer, String[]> urls;
             try {
-                urls = metsService.getURLs(mets, use);
+                urls = metsService.getURLs(mets, use, headers.size()==0);
             } catch (METSException e) {
                 error(e.getMessage());
                 return;
             }
 
-            clearDownloads();
-
             for (Integer order : urls.keySet()) {
-                String href = urls.get(order);
+                String[] hrefLabel = urls.get(order);
                 try {
-                    tableModel.addDownload(new Download(href, downloadFolder.getText() + "/" +
+                    tableModel.addDownload(new Download(hrefLabel[0], hrefLabel[1], downloadFolder.getText() + "/" +
                             metsFile.getName().substring(0, metsFile.getName().length() - 4) + "/" +
-                            use, status, String.format("%05d", order), self().headers));
+                            use, Download.PENDING, String.format("%05d", order), headers));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        // Kickstart the first download
-        if (startDownload && tableModel.getRowCount() != 0) tableModel.getDownload(0).resume();
-
         grpUse.setSelectedItem(use);
         grpUse.setEnabled(true);
+
+        tableModel.setStatus(Download.PENDING);
+        updateGroupButtons();
     }
 
     private void error(String msg) {
@@ -264,76 +266,143 @@ public class FormPreview implements Observer {
                         tableModel.getDownload(selectedRow);
                 selectedDownload.addObserver(FormPreview.this);
             }
-            updateButtons();
+            updateSelectedButtonsAndMenu();
         }
     }
 
-    // Pause the selected download.
-    private void actionPause() {
+    private void actionGroupClear(boolean all) {
+        clearing = true;
+        tableModel.clear(all);
+        clearing = false;
+        updateGroupButtons();
+    }
+
+    private void actionGroupCancel() {
+        clearing = true;
+        tableModel.cancel();
+        clearing = false;
+        updateGroupButtons();
+    }
+
+    private void actionGroupPause() {
+        tableModel.pause();
+        updateGroupButtons();
+    }
+
+    private void actionGroupResume() {
+        tableModel.resume();
+        updateGroupButtons();
+    }
+
+    private void actionSelectedPause() {
         selectedDownload.pause();
-        updateButtons();
+        updateSelectedButtonsAndMenu();
     }
 
     // Resume the selected download.
-    private void actionResume() {
+    private void actionSelectedResume() {
         selectedDownload.resume();
-        updateButtons();
+        updateSelectedButtonsAndMenu();
     }
 
     // Cancel the selected download.
-    private void actionCancel() {
+    private void actionSelectedCancel() {
         selectedDownload.cancel();
-        updateButtons();
+        updateSelectedButtonsAndMenu();
     }
 
     // Clear the selected download.
-    private void actionClear() {
+    private void actionSelectedClear() {
         clearing = true;
         tableModel.clearDownload(table1.getSelectedRow());
         clearing = false;
         selectedDownload = null;
-        updateButtons();
+        updateSelectedButtonsAndMenu();
     }
 
     /* Update each button's state based off of the
 currently selected download's status. */
-    private void updateButtons() {
+    private void updateSelectedButtonsAndMenu() {
         if (selectedDownload != null) {
             int status = selectedDownload.getStatus();
             switch (status) {
                 case Download.DOWNLOADING:
-                    pauseButton.setEnabled(true);
-                    resumeButton.setEnabled(false);
-                    cancelButton.setEnabled(true);
-                    clearButton.setEnabled(false);
+                    pauseSelectedButton.setEnabled(true);
+                    resumeSelectedButton.setEnabled(false);
+                    cancelSelectedButton.setEnabled(true);
+                    clearSelectedButton.setEnabled(false);
                     break;
                 case Download.PAUSED:
+                    pauseSelectedButton.setEnabled(false);
+                    resumeSelectedButton.setEnabled(true);
+                    cancelSelectedButton.setEnabled(true);
+                    clearSelectedButton.setEnabled(false);
+                    break;
                 case Download.PENDING:
-                    resumeButton.setText ( selectedDownload.getStatus() == Download.PENDING ? "Start" : "Resume");
-                    pauseButton.setEnabled(false);
-                    resumeButton.setEnabled(true);
-                    cancelButton.setEnabled(true);
-                    clearButton.setEnabled(false);
+                    pauseSelectedButton.setEnabled(false);
+                    resumeSelectedButton.setEnabled(true);
+                    cancelSelectedButton.setEnabled(false);
+                    clearSelectedButton.setEnabled(false);
                     break;
                 case Download.ERROR:
-                    pauseButton.setEnabled(false);
-                    resumeButton.setEnabled(true);
-                    cancelButton.setEnabled(false);
-                    clearButton.setEnabled(true);
+                    pauseSelectedButton.setEnabled(false);
+                    resumeSelectedButton.setEnabled(true);
+                    cancelSelectedButton.setEnabled(false);
+                    clearSelectedButton.setEnabled(true);
                     break;
                 default: // COMPLETE or CANCELLED
-                    pauseButton.setEnabled(false);
-                    resumeButton.setEnabled(false);
-                    cancelButton.setEnabled(false);
-                    clearButton.setEnabled(true);
+                    pauseSelectedButton.setEnabled(false);
+                    resumeSelectedButton.setEnabled(false);
+                    cancelSelectedButton.setEnabled(false);
+                    clearSelectedButton.setEnabled(true);
             }
+            resumeSelectedButton.setText(status == Download.PENDING ? "Start" : "Resume");
         } else {
             // No download is selected in table.
-            pauseButton.setEnabled(false);
-            resumeButton.setEnabled(false);
-            cancelButton.setEnabled(false);
-            clearButton.setEnabled(false);
+            pauseSelectedButton.setEnabled(false);
+            resumeSelectedButton.setEnabled(false);
+            cancelSelectedButton.setEnabled(false);
+            clearSelectedButton.setEnabled(false);
         }
+
+    }
+
+    private void updateGroupButtons() {
+        final int status = tableModel.getStatus();
+        switch (status) {
+            case Download.PENDING:
+                pauseGroupButton.setEnabled(false);
+                resumeGroupButton.setEnabled(true);
+                cancelGroupButton.setEnabled(false);
+                clearGroupButton.setEnabled(false);
+
+                break;
+            case Download.DOWNLOADING:
+                pauseGroupButton.setEnabled(true);
+                resumeGroupButton.setEnabled(false);
+                cancelGroupButton.setEnabled(true);
+                clearGroupButton.setEnabled(true);
+                break;
+            case Download.PAUSED:
+                pauseGroupButton.setEnabled(false);
+                resumeGroupButton.setEnabled(true);
+                cancelGroupButton.setEnabled(true);
+                clearGroupButton.setEnabled(true);
+                break;
+            case Download.COMPLETE:
+                pauseGroupButton.setEnabled(false);
+                resumeGroupButton.setEnabled(false);
+                cancelGroupButton.setEnabled(false);
+                clearGroupButton.setEnabled(true);
+                break;
+            case Download.CANCELLED:
+                pauseGroupButton.setEnabled(false);
+                resumeGroupButton.setEnabled(false);
+                cancelGroupButton.setEnabled(false);
+                clearGroupButton.setEnabled(false);
+                break;
+        }
+        resumeGroupButton.setText(status == Download.PENDING ? "Start" : "Resume");
     }
 
     /* Update is called when a Download notifies its
@@ -342,7 +411,7 @@ observers of any changes. */
         // Update buttons if the selected download has changed.
         final Download download = (Download) o;
         if (selectedDownload != null && selectedDownload.equals(download)) {
-            updateButtons();
+            updateSelectedButtonsAndMenu();
         } else if (download.getStatus() == Download.COMPLETE || download.getStatus() == Download.SKIPPED) {
             try {
                 mets = metsService.load(download.getFilename());
@@ -350,16 +419,11 @@ observers of any changes. */
             } catch (Exception e) {
                 error(e.getMessage());
             }
-            downloadFileGrp(MetsService.USE_THUMBNAIL_IMAGE, Download.PENDING, false);
+            downloadFileGrp(MetsService.USE_THUMBNAIL_IMAGE);
         }
-    }
-
-    private FormPreview self() {
-        return this;
     }
 
     public Container getMainPanel() {
         return panel1;
     }
-
 }
