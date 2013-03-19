@@ -112,6 +112,7 @@ public class StaticPageController {
         return mav;
     }
 
+/*
     @RequestMapping("/{pageName}.jnlp")
     public ModelAndView getJNLP(@PathVariable("pageName") String pageName,
                                 @RequestParam(value = "metsId", required = false) String metsId,
@@ -123,6 +124,7 @@ public class StaticPageController {
         mav.addObject("pageName", pageName) ;
         return mav;
     }
+*/
 
     @RequestMapping("/error.html")
     public ModelAndView ErrorPageHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {

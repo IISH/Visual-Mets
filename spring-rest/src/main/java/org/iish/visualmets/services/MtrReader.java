@@ -60,10 +60,10 @@ public class MtrReader implements DocumentDao {
     public ImageItem getUrl(String eadId, String metsId, int pageId, String use) throws Exception, ParserConfigurationException {
 
         final METS mets = loadMetsDocument(metsId);
-        final FileGrp fileGrp = mets.getFileSec().getFileGrpByUse(use).get(0);
+        List<FileGrp> fileGrpByUse = mets.getFileSec().getFileGrpByUse(use);
+        final FileGrp fileGrp = fileGrpByUse.get(0);
         final StructMap map = mets.getStructMapByType("physical").get(0);
 
-        //todox
         final au.edu.apsr.mtk.base.File file = getFileId(map, fileGrp, pageId);
         ImageItem imageInfo = null;
         if ( file != null) {
@@ -81,7 +81,7 @@ public class MtrReader implements DocumentDao {
 
     private au.edu.apsr.mtk.base.File getFileId(StructMap map, FileGrp fileGrp, int pageId) throws METSException {
 
-        final List<Div> divs = map.getDivs().get(0).getDivs("page");
+        final List<Div> divs = map.getDivs().get(0).getDivs();
         for (Div div : divs) {
             if (div.getOrder().equals(String.valueOf(pageId))) {
                 final List<Fptr> fptrs = div.getFptrs();
@@ -114,7 +114,7 @@ public class MtrReader implements DocumentDao {
 
         List<StructMap> physical = mets.getStructMapByType("physical");
         final StructMap map = physical.get(0);
-        final List<Div> divs = map.getDivs().get(0).getDivs("page"); // ToDo: this assumes rather a lot about the METS structure.
+        final List<Div> divs = map.getDivs().get(0).getDivs(); // ToDo: this assumes rather a lot about the METS structure.
         int documentCount = divs.size();
         pagerItem.setCount(documentCount);
 
@@ -159,7 +159,7 @@ public class MtrReader implements DocumentDao {
         pagerItem.setRows(rows);
 
         final StructMap map = mets.getStructMapByType("physical").get(0);
-        final List<Div> divs = map.getDivs().get(0).getDivs("page"); // ToDo: this assumes rather a lot about the METS structure.
+        final List<Div> divs = map.getDivs().get(0).getDivs(); // ToDo: this assumes rather a lot about the METS structure.
         int documentCount = divs.size();
         pagerItem.setCount(documentCount);
 

@@ -124,7 +124,7 @@ public final class MetsService {
 
         final FileGrp fileGrp = fileGrpByUse.get(0);
 
-        final List<Div> divs = map.getDivs().get(0).getDivs("page");
+        final List<Div> divs = map.getDivs().get(0).getDivs();
         final Map<Integer, String[]> thumbs = new HashMap<Integer, String[]>(divs.size());
         int count = 0;
         for (Div div : divs) {
@@ -136,6 +136,7 @@ public final class MetsService {
                     count++;
                     String label = div.getLabel();
                     if (label == null) label = div.getOrderLabel();
+                    if ( label == null ) label = String.valueOf(count);
                     final FLocat fLocat = file.getFLocats().get(0);
                     String direct = null;
                     if (unsecure || fLocat.getLocType().equalsIgnoreCase("URL") || fLocat.getLocType().equalsIgnoreCase("OTHER")) {

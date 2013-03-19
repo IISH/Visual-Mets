@@ -125,13 +125,9 @@ public class ControllerDocument {
                 imageInfo = getImageInfo(eadId, metsId, pageId, "reference");
             }
 
-//todoxxx
             logger.debug("URL: " + imageInfo.getUrl().toString());
-
             BufferedImage img = ImageIO.read(new URL(imageInfo.getUrl().toString()));
-
             int scl = imageTransformation.getScale(img.getWidth(), img.getHeight(), scaleWidth, scaleHeight, 100);
-
             mav.addObject("image_width", img.getWidth());
             mav.addObject("image_height", img.getHeight());
             mav.addObject("canvas_width", scaleWidth);

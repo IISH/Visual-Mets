@@ -28,6 +28,10 @@ final class Download extends Observable implements Runnable {
     public static final int SKIPPED = 5;
     public static final int PENDING = 6;
 
+    public String getDownloadFolder() {
+        return downloadFolder;
+    }
+
     public String downloadFolder; // download folder
     private Properties headers;
     private String label;

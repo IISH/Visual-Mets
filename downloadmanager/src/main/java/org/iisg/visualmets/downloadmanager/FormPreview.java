@@ -4,10 +4,13 @@ import au.edu.apsr.mtk.base.METS;
 import au.edu.apsr.mtk.base.METSException;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,8 +38,14 @@ public class FormPreview implements Observer {
     private JButton cancelGroupButton;
     private JButton clearGroupButton;
     private JProgressBar progressBar1;
+    final JMenuItem pauseMenuItem = new JMenuItem("Pause");
+    final JMenuItem resumeMenuItem = new JMenuItem("Resume");
+    final JMenuItem cancelMenuItem = new JMenuItem("Cancel");
+    final JMenuItem clearMenuItem = new JMenuItem("Clear");
 
     private DownloadsTableModel tableModel;
+
+    private JPopupMenu contextMenu = new JPopupMenu();
 
     final MetsService metsService = new MetsService();
     METS mets;
@@ -63,7 +72,22 @@ public class FormPreview implements Observer {
                 actionSelectedPause();
             }
         });
+
+        pauseMenuItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionSelectedPause();
+            }
+        });
         resumeSelectedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionSelectedResume();
+            }
+        });
+        resumeMenuItem.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 actionSelectedResume();
@@ -75,7 +99,21 @@ public class FormPreview implements Observer {
                 actionSelectedCancel();
             }
         });
+        cancelMenuItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionSelectedCancel();
+            }
+        });
         clearSelectedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionSelectedClear();
+            }
+        });
+        clearMenuItem.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 actionSelectedClear();
@@ -88,6 +126,20 @@ public class FormPreview implements Observer {
             }
         });
 
+        table1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    final Point p = e.getPoint();
+                    int r = table1.rowAtPoint(p);
+                    if (r >= 0 && r < table1.getRowCount()) {
+                        table1.setRowSelectionInterval(r, r);
+                        contextMenu.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            }
+        }
+        );
+
         // Allow only one row at a time to be selected.
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -95,7 +147,6 @@ public class FormPreview implements Observer {
         ProgressRenderer renderer = new ProgressRenderer(0, 100);
         renderer.setStringPainted(true); // show progress text
         table1.setDefaultRenderer(JProgressBar.class, renderer);
-
 
         // Set table's row height large enough to fit JProgressBar.
         int dim = 105;
@@ -109,7 +160,9 @@ public class FormPreview implements Observer {
                                                                 public void valueChanged(ListSelectionEvent e) {
                                                                     tableSelectionChanged();
                                                                 }
-                                                            });
+                                                            })
+
+        ;
 
         grpUse.addActionListener(new ActionListener() {
             @Override
@@ -202,7 +255,7 @@ public class FormPreview implements Observer {
         if (uses.contains(use)) {
             Map<Integer, String[]> urls;
             try {
-                urls = metsService.getURLs(mets, use, headers.size()==0);
+                urls = metsService.getURLs(mets, use, headers.size() == 0);
             } catch (METSException e) {
                 error(e.getMessage());
                 return;
@@ -323,6 +376,8 @@ public class FormPreview implements Observer {
     /* Update each button's state based off of the
 currently selected download's status. */
     private void updateSelectedButtonsAndMenu() {
+        contextMenu.removeAll();
+
         if (selectedDownload != null) {
             int status = selectedDownload.getStatus();
             switch (status) {
@@ -331,32 +386,41 @@ currently selected download's status. */
                     resumeSelectedButton.setEnabled(false);
                     cancelSelectedButton.setEnabled(true);
                     clearSelectedButton.setEnabled(false);
+                    contextMenu.add(pauseMenuItem);
+                    contextMenu.add(cancelMenuItem);
                     break;
                 case Download.PAUSED:
                     pauseSelectedButton.setEnabled(false);
                     resumeSelectedButton.setEnabled(true);
                     cancelSelectedButton.setEnabled(true);
                     clearSelectedButton.setEnabled(false);
+                    contextMenu.add(resumeMenuItem);
+                    contextMenu.add(cancelMenuItem);
                     break;
                 case Download.PENDING:
                     pauseSelectedButton.setEnabled(false);
                     resumeSelectedButton.setEnabled(true);
                     cancelSelectedButton.setEnabled(false);
                     clearSelectedButton.setEnabled(false);
+                    contextMenu.add(resumeMenuItem);
                     break;
                 case Download.ERROR:
                     pauseSelectedButton.setEnabled(false);
                     resumeSelectedButton.setEnabled(true);
                     cancelSelectedButton.setEnabled(false);
                     clearSelectedButton.setEnabled(true);
+                    contextMenu.add(resumeMenuItem);
+                    contextMenu.add(clearMenuItem);
                     break;
                 default: // COMPLETE or CANCELLED
                     pauseSelectedButton.setEnabled(false);
                     resumeSelectedButton.setEnabled(false);
                     cancelSelectedButton.setEnabled(false);
                     clearSelectedButton.setEnabled(true);
+                    contextMenu.add(clearMenuItem);
             }
             resumeSelectedButton.setText(status == Download.PENDING ? "Start" : "Resume");
+            resumeMenuItem.setText(status == Download.PENDING ? "Start" : "Resume");
         } else {
             // No download is selected in table.
             pauseSelectedButton.setEnabled(false);
@@ -364,7 +428,6 @@ currently selected download's status. */
             cancelSelectedButton.setEnabled(false);
             clearSelectedButton.setEnabled(false);
         }
-
     }
 
     private void updateGroupButtons() {
