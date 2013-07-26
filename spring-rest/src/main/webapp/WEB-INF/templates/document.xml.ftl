@@ -8,6 +8,11 @@
     <eadId>${eadId}</eadId>
     <metsId>${metsId}</metsId>
     <pageId>${pageId}</pageId>
+    <#--<breadcrumb>${breadcrumb}</breadcrumb>-->
+    <note>${note}</note>
+    <pdfUrl>${pdfUrl}</pdfUrl>
+    <code>${code}</code>
+    <message>${message}</message>
 
     <#if pager?has_content>
     <pager>
@@ -15,6 +20,7 @@
         <rows>${pager.rows?string("0")}</rows>
         <count>${pager.count?string("0")}</count>
         <pageId>${pager.pageId}</pageId>
+
 
         <pages>
             <#list pager.listofpages as pagerImageItem>

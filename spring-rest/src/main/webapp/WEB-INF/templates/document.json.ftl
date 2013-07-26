@@ -5,10 +5,17 @@
 
 <#if callback?has_content>${callback}({</#if>
 
-	document:{
-        eadId:"${eadId}"
-        , metsId:"${metsId}"
-        , pageId:"${pageId}"
+	"document":{
+        "eadId":"${eadId}"
+        , "metsId":"${metsId}"
+        , "pageId":"${pageId}"
+        , "breadcrumb":[<#list breadcrumb as breadcrumbItem>"${breadcrumbItem}"<#if breadcrumbItem_has_next>,</#if></#list>]
+        , "breadcrumbUrls":[<#list breadcrumbUrls as breadcrumbItem>"${breadcrumbItem}"<#if breadcrumbItem_has_next>,</#if></#list>]
+        , "note":"${note}"
+        , "pdfUrl":"${pdfUrl}"
+        <#--, "f_breadcrumb_url":"${fBreadcrumbUrl}"
+        , "l_breadcrumb_url":"${lBreadcrumbUrl}"-->
+        , "code":"${code}"
 
     <#if pager?has_content>,
         pager: {
@@ -21,13 +28,15 @@
                 label:"${pager.lastpage.label?html}",
                 pageId:"${pager.lastpage.pageid?string("0")}",
                 url:"${pager.lastpage.url}",
-                thumbnail_url:"${pager.lastpage.thumbnailUrl}"
+                thumbnail_url:"${pager.lastpage.thumbnailUrl}",
+                transcription_url:"${pager.lastpage.transcriptionUrl}"
             } ,
             first: {
                 label:"${pager.firstpage.label?html}",
                 pageId:"${pager.firstpage.pageid?string("0")}",
                 url:"${pager.firstpage.url}",
-                thumbnail_url:"${pager.firstpage.thumbnailUrl}"
+                thumbnail_url:"${pager.firstpage.thumbnailUrl}",
+                transcription_url:"${pager.firstpage.transcriptionUrl}"
             } ,
             pages: {
                 page: [
@@ -37,7 +46,8 @@
                         label:"${pagerImageItem.label?html}",
                         pageId:"${pagerImageItem.pageid?string("0")}",
                         url:"${pagerImageItem.url}",
-                        thumbnail_url:"${pagerImageItem.thumbnailUrl}"
+                        thumbnail_url:"${pagerImageItem.thumbnailUrl}",
+                        transcription_url:"${pagerImageItem.transcriptionUrl}"
                     }
                     <#if pagerImageItem_has_next>,</#if>
                     </#list>

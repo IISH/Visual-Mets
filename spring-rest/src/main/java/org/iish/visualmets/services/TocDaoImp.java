@@ -449,13 +449,13 @@ public class TocDaoImp implements TocDao {
 
     private ArrayList<TocFolderItem> findBreadCrumbs(ArrayList<TocFolderItem> breadCrumbs, Node breadNode) {
 
-        // maak breadcrumb item
+        // maak extract item
         try {
             TocFolderItem breadCrumbItem = new TocFolderItem();
             breadCrumbItem.setIndex(String.valueOf(breadNode.getAttributes().getNamedItem("ID").getNodeValue()));
             breadCrumbItem.setTitle(breadNode.getAttributes().getNamedItem("LABEL").getNodeValue());
 
-           // voeg breadcrumb toe aan lijst van breadcrumbs
+           // voeg extract toe aan lijst van breadcrumbs
             breadCrumbs.add(breadCrumbItem);
         } catch ( NullPointerException e) {
 

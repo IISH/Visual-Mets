@@ -30,12 +30,27 @@
                         </systemProperty>
                         <systemProperty>
                             <name>jetty.port</name>
-                            <value>8080</value>
+                            <value>8282</value>
                         </systemProperty>
                     </systemProperties>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>jrebel-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-rebel-xml</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
     </build>
 
     <dependencies>
@@ -96,6 +111,22 @@
             <groupId>javax.jnlp</groupId>
             <artifactId>jnlp-api</artifactId>
             <version>1.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>it.svario.xpathapi</groupId>
+            <artifactId>xpathapi-jaxp</artifactId>
+            <version>0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
         </dependency>
 
     </dependencies>

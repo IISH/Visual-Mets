@@ -19,6 +19,7 @@ package org.iish.visualmets.controllers;
 import org.iish.visualmets.dao.DocumentDao;
 import org.iish.visualmets.datamodels.ImageItem;
 import org.iish.visualmets.services.ImageTransformation;
+import org.iish.visualmets.services.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,6 +54,9 @@ public class ControllerResource {
     @Autowired
     private DocumentDao dao;
 
+	@Autowired
+	private MyService myService;
+
     @Value("#{visualmetsProperties['client.reference_image.padding.min']}")
     private int image_padding_min = 0;
     @Value("#{visualmetsProperties['client.reference_image.padding.max']}")
@@ -62,7 +66,26 @@ public class ControllerResource {
     @Value("#{visualmetsProperties['client.reference_image.zoom.max']}")
     private int image_zoom_max = 400;
 
-    /**
+	@RequestMapping(value = "/resource/get_pdf", method = RequestMethod.GET)
+	public void getPdf(
+			@RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
+			@RequestParam(value = "metsId", required = true) String metsId,
+			@RequestParam(value = "selection", required = false) String selection,
+			@RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
+			HttpServletResponse response
+	)
+			throws Exception, IOException {
+
+		byte[] bytes= myService.createPdf(metsId,selection);
+
+
+		response.setContentType("application/pdf; utf-8");
+		response.setHeader("content-disposition", "inline; filename=\"balbla.pdf\"");
+		response.getOutputStream().write(bytes);
+	}
+
+
+	/**
      * Returns a thumbnail image
      *
      * @param eadId  ead ID
@@ -236,45 +259,9 @@ public class ControllerResource {
         ImageIO.write(img, "jpg", response.getOutputStream());
     }
 
+
     @RequestMapping(value = "/resource/get_transcription", method = RequestMethod.GET)
     public void getTranscription(
-            @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
-            @RequestParam(value = "metsId", required = true) String metsId,
-            @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
-            HttpServletResponse response
-    )
-            throws Exception, IOException {
-
-        ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, "ocr");
-
-        String transcription = "";
-
-        if (imageInfo != null) {
-            String filename = imageInfo.getUrl().toString();
-
-            // TODOx: READ FILE SOURCE
-            try {
-                URL u = new URL(filename);
-                BufferedReader in = new BufferedReader(new InputStreamReader(u.openStream()));
-//                    BufferedReader in = new BufferedReader(	new InputStreamReader( u.openStream(), "UTF-8" ) );
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    transcription = transcription + inputLine + "<br>";
-                }
-                in.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        response.setContentType("text/plain; utf-8");
-        response.getOutputStream().print(transcription);
-    }
-
-    @RequestMapping(value = "/resource/get_transcription_json", method = RequestMethod.GET)
-    public void getTranscriptionInJsonFormat(
             @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
             @RequestParam(value = "metsId", required = true) String metsId,
             @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
@@ -284,6 +271,8 @@ public class ControllerResource {
             throws Exception, IOException {
 
         ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, "ocr");
+
+		//callback="dummy";
 
         String transcription = "";
 
@@ -313,7 +302,7 @@ public class ControllerResource {
         }
 
         if (transcription.equals("")) {
-//            transcription += "-no transcription-";
+            /*transcription += "-no transcription-";*/
         }
         // add json tags
         transcription = callback + "({\n\t\"transcription\":\"" + StringUtils.replace(transcription, "'", "\'") + "\"\n})";

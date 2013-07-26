@@ -56,6 +56,7 @@ public class ControllerUtils {
         }
         else
         {
+            response.setContentType("application/json; charset=utf-8");
             mav.addObject("callback", callback.trim());
         }
 

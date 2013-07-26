@@ -19,9 +19,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.awt.image.RescaleOp;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -58,6 +60,21 @@ public class ImageTransformation {
      * @param maxHeight new height
      * @return a new/scaled image
      */
+
+	/*public static BufferedImage ScaleImage(BufferedImage image, int width, int height) throws IOException {
+		int imageWidth  = image.getWidth();
+		int imageHeight = image.getHeight();
+
+		double scaleX = (double)width/imageWidth;
+		double scaleY = (double)height/imageHeight;
+		AffineTransform scaleTransform = AffineTransform.getScaleInstance(scaleX, scaleY);
+		AffineTransformOp bilinearScaleOp = new AffineTransformOp(scaleTransform, AffineTransformOp.TYPE_BILINEAR);
+
+		return bilinearScaleOp.filter(
+				image,
+				new BufferedImage(width, height, image.getType()));
+	}*/
+
     public BufferedImage ScaleImage(BufferedImage bi, int maxWidth, int maxHeight) {
         double originalWidth = bi.getWidth() * 1.0;
         double originalHeight = bi.getHeight() * 1.0;

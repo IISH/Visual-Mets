@@ -15,10 +15,6 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/client/*</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>JnlpDownloadServlet</servlet-name>

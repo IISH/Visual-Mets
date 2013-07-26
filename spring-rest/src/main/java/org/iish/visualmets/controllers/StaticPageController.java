@@ -15,10 +15,12 @@
  */
 package org.iish.visualmets.controllers;
 
+import org.iish.visualmets.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -87,6 +89,11 @@ public class StaticPageController {
         return mav;
     }
 
+    @RequestMapping(value = "/mets2.template.html", method = RequestMethod.GET)
+    public ModelAndView template(@RequestParam(value = "callback", required = false) String callback, HttpServletResponse response) {
+        return ControllerUtils.createModelAndViewPage("mets2.template", callback, response);
+    }
+
     @RequestMapping("/{pageName}.html")
     public ModelAndView getHtmlPage(
             @PathVariable("pageName") String pageName,
@@ -118,7 +125,7 @@ public class StaticPageController {
                                 @RequestParam(value = "metsId", required = false) String metsId,
                                 HttpServletResponse response) {
         response.setContentType("application/x-java-jnlp-file; charset=utf-8");
-
+                                            f
         ModelAndView mav = new ModelAndView(pageName + ".jnlp");
         mav.addObject("metsId", metsId) ;
         mav.addObject("pageName", pageName) ;
