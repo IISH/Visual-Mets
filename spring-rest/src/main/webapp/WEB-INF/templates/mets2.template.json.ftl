@@ -57,9 +57,7 @@
     <img src="" class="mets-image mets-hide"/>
 
     <div class="mets-text mets-text-vertical mets-hide"></div>
-    <div class="mets-logo-holder">
-        <img src="logo.png"/>
-    </div>
+    <div class="mets-logo-holder"><!-- image here --></div>
 </div>
 <div class="mets-toolbar mets-toolbar-footer">
     <div class="mets-bar">
