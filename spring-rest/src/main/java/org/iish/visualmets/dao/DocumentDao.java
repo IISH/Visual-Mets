@@ -1,5 +1,7 @@
 package org.iish.visualmets.dao;
 
+import au.edu.apsr.mtk.base.FileGrp;
+import au.edu.apsr.mtk.base.StructMap;
 import org.iish.visualmets.datamodels.ImageItem;
 import org.iish.visualmets.datamodels.PagerItem;
 
@@ -19,4 +21,6 @@ public interface DocumentDao {
     PagerItem getPager(String eadId, String metsId, int pageId, int start, int rows, String use) throws Exception;
 
     PagerItem getPagerPageInfo(String eadId, String metsId, int pageId, int start, int rows, String use) throws Exception;
+
+    ImageItem getUrls(FileGrp fileGrp, StructMap map, String use, String metsId, int pageId) throws Exception;
 }
