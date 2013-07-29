@@ -1,5 +1,5 @@
-@import "../../less/variables";
-@import "../../less/mixins";
+@import "../../less/variables.less";
+@import "../../less/mixins.less";
 
 
 .bar-style(){
@@ -50,11 +50,11 @@
   }
 }
 
-@import "modal";
-@import "tooltip";
+@import "modal.less";
+@import "tooltip.less";
 // load layout syle
-@import "layout/style.page";
-@import "layout/style.thumbnail";
+@import "layout/style.page.less";
+@import "layout/style.thumbnail.less";
 
 div.mets-container{
   width: 100%;
@@ -74,8 +74,9 @@ div.mets-container{
     }
   }
   .mets-toolbar{
-    display: table;
+    display: block;
     width: 100%;
+    max-width: 100%;
     .bar-style();
     .mets-bar{
       max-height: 29px;

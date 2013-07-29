@@ -56,7 +56,7 @@ NS.LANG.en = {
         modal : {
             header : 'Help',
             body : '<div>place help text here please<br />' +
-                'location is language f<i></i>ile. </div>'
+                'location is language file. </div>'
         }
     }
 };

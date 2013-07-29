@@ -28,7 +28,7 @@
     <meta charset="UTF-8">
     <title>:: metsviewer minify ::</title>
 
-    <link href="../../spring-rest/src/main/webapp/css/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="../css/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
 
     <style type="text/css">
 

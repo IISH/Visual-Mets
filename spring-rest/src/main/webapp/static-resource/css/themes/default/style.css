@@ -477,8 +477,9 @@ div.mets-container .mets-btn:hover.active {
   background-color: #4f4f4f \9;
 }
 div.mets-container .mets-toolbar {
-  display: table;
+  display: block;
   width: 100%;
+  max-width: 100%;
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #5c5c5c;

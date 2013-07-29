@@ -5,8 +5,18 @@
      */
     App.mets2.Model.extend({
         fullScreen : {
-            active : false
+            active : false,
+            scroll : 0
         }
+    });
+
+
+    App.mets2.Model.extend('getScrollPos', function(){
+        return this.fullScreen.scroll;
+    });
+
+    App.mets2.Model.extend('setScrollPos', function(scroll){
+        this.fullScreen.scroll = scroll;
     });
 
     /**
@@ -128,6 +138,11 @@
         $(window).unbind('resize.textview');
 
         this.event.fire('onResize');
+
+        // capture scroll...
+
+        // stet to 0
+        $(document).scrollTop(model.getScrollPos());
         frame.setRelative();
         frame.release();
         frame.setSize({
@@ -161,6 +176,10 @@
             $UT.delay(function(){
 
                 self.event.fire('onResize');
+                if(model.getScrollPos()==0){
+                    model.setScrollPos($(document).scrollTop());
+                    $(document).scrollTop(0);
+                }
                 frame.release();
                 frame.setAbsolute();
                 frame.setSize({
@@ -174,6 +193,12 @@
         });
 
         self.event.fire('onResize');
+
+        // capture scroll...
+        model.setScrollPos($(document).scrollTop());
+        // stet to 0
+        $(document).scrollTop(0);
+
         frame.release();
         frame.setAbsolute();
         frame.setSize({
