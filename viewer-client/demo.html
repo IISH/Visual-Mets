@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>:: metsviewer v2.0 (demo) ::</title>
+
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
+
+
+
+    <link href="http://mets2viewer.deontwikkelfabriek.nl/css/themes/default/style.css" rel="stylesheet" type="text/css" media="all" />
+    <script type="text/javascript" src="http://mets2viewer.deontwikkelfabriek.nl/js/mets2viewer.min.js"></script>
+    <script type="text/javascript">
+        (function($){
+            $(document).ready(function(){
+                $('#myMetsViewer').mets2Viewer({
+                    'initialize' : {
+                        'metsId' : 'http://hdl.handle.net/10622/ARCH01225.30?locatt=view:mets',
+                        'pager' : {
+                            'start' : 0,
+                            'rows' : -1
+                        }
+                    }
+                });
+            });
+        })(jQuery);
+    </script>
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row-fluid">
+        <div class="span8"> <h1>Mets<span style="color: #6996cc;">2</span>Viewer <span style="font-weight: 100; font-size: 18px;">(2.0) demo</span></h1></div>
+        <div class="span8">
+
+            <div id="parent" style="width: 1000px; height: 500px;">
+                <div id="myMetsViewer"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
