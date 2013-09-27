@@ -5,7 +5,8 @@
      */
     App.mets2.Model.extend({
         fullScreen : {
-            active : false
+            active : false,
+            scrollPos : 0
         }
     });
 
@@ -32,6 +33,24 @@
      */
     App.mets2.Model.extend('isFullScreenEnable', function(){
         return this.fullScreen.active;
+    });
+
+
+    /**
+     * get the stored scroll position before enabling full screen mode
+     * @return int pos
+     */
+    App.mets2.Model.extend('getScrollPosition', function(pos){
+        return this.fullScreen.scrollPos;
+    });
+
+
+    /**
+     * store scroll position from current window scroll pos
+     * @return void
+     */
+    App.mets2.Model.extend('setScrollPosition', function(pos){
+        this.fullScreen.scrollPos = pos;
     });
 
     /**
@@ -123,6 +142,7 @@
 
         // enable scroll bars...
         $('body').css('overflow', 'auto');
+        $(window).scrollTop(model.getScrollPosition());
 
         // unbind to window resize
         $(window).unbind('resize.textview');
@@ -158,6 +178,8 @@
         // disable scroll bars...
         $('body').css('overflow', 'hidden');
 
+        model.setScrollPosition($(window).scrollTop());
+        $(window).scrollTop(0);
 
         // set to window resize
         $(window).bind('resize.textview',function(){
