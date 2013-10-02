@@ -198,8 +198,15 @@ public class MyService {
                     Document doc = dBuilder.parse(in);
 
                     doc.getDocumentElement().normalize();
-
                     String[] array = {number};
+
+                    if (XPathAPI.selectSingleNode(doc, "//ead:ead", nsMap, array) == null) {
+                        map.put(KEY_NOTE, "");
+                        map.put(KEY_BREADCRUMB, list);
+                        map.put(KEY_CODE, HttpServletResponse.SC_OK);
+                        return map;
+                    }
+
                     Node levelNode = XPathAPI.selectSingleNode(doc, "//ead:container[normalize-space(.)='{}']", nsMap, array);
                     if (levelNode != null) {
                         code = HttpServletResponse.SC_OK;
@@ -435,7 +442,7 @@ public class MyService {
     }
 
     //TODO replace with IOUtils
-	/*public String readResponse(InputStream is) throws IOException {
+    /*public String readResponse(InputStream is) throws IOException {
 		BufferedInputStream bis = new BufferedInputStream(is);
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		int result = bis.read();
