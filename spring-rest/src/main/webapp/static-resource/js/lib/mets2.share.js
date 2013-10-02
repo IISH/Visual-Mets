@@ -9,8 +9,8 @@
     App.mets2.Model.extend({
         share : {
             link : {
-                css : '/css/themes/default/style.css',
-                js : '/js/mets2viewer.min.js'
+                css : '/rest/resources/css/themes/default/style.css',
+                js : '/rest/resources/js/mets2viewer.min.js'
             },
             modal : {
                 header : 'Embed code',
@@ -18,8 +18,8 @@
 '<tr>' +
 '<td colspan="2">' +
     '<textarea style="width: 520px; height: 150px; font-size: 11px; line-height: 14px; color: #595959; font-family: monospace;">' +"\n"+
-                '<link href="/rest/resources/{cssLink}" rel="stylesheet" type="text/css" media="all" />' +"\n"+
-                '<script type="text/javascript" src="/rest/resources/{jsLink}"></script>'+"\n"+
+                '<link href="{cssLink}" rel="stylesheet" type="text/css" media="all" />' +"\n"+
+                '<script type="text/javascript" src="{jsLink}"></script>'+"\n"+
                 '<script type="text/javascript">' +"\n"+
                     "\t"+'(function($){' +"\n"+
                     "\t"+'$(document).ready(function(){' +"\n"+
