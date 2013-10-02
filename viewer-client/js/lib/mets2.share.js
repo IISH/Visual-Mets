@@ -9,8 +9,8 @@
     App.mets2.Model.extend({
         share : {
             link : {
-                css : '/css/themes/default/style.css',
-                js : '/js/mets2viewer.min.js'
+                css : '/rest/resources/css/themes/default/style.css',
+                js : '/rest/resources/js/mets2viewer.min.js'
             },
             modal : {
                 header : 'Embed code',
