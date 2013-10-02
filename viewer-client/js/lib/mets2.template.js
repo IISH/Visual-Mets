@@ -22,7 +22,7 @@
             'template'  : {
                 'url' : 'template'
             },
-            'default' : 'http://visualmets.socialhistoryservices.org/template/template.handler.php?callback=?'
+            'default' : 'http://visualmets.socialhistoryservices.org/rest/mets2.template.html?callback=?'
         }
     ]);
 

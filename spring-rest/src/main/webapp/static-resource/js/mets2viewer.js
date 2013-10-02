@@ -88,7 +88,7 @@
      * ......................................................................
      *
      $('#metsViewSample').mets2Viewer({
-        template :'http://visualmets.socialhistoryservices.org/template/template.handler.php?callback=?',
+        template :'http://visualmets.socialhistoryservices.org/rest/mets2.template.html?callback=?',
         debug  : true,
         layout : 'thumbnail',
         initialize : {
