@@ -15,7 +15,7 @@
      *
      * ..........................................................................................
      * Sample code request:
-     * viewer.request('http://node-143.dev.socialhistoryservices.org/mets2/rest/document?', {
+     * viewer.request('http://visualmets.socialhistoryservices.org/mets2/rest/document?', {
             'metsId'      : 'http://disseminate.objectrepository.org/mets/10622/ARCH01225.70',
             'defaults'    : true,
             'scale' : {
