@@ -207,11 +207,11 @@ public class MyService {
                         return map;
                     }
 
-                    Node levelNode = XPathAPI.selectSingleNode(doc, "//ead:container[normalize-space(.)='{}']", nsMap, array);
+                    Node levelNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']", nsMap, array);
                     if (levelNode != null) {
                         code = HttpServletResponse.SC_OK;
 
-                        Node noteNode = XPathAPI.selectSingleNode(doc, "//ead:container[normalize-space(.)='{}']/following-sibling::ead:note", nsMap, array);
+                        Node noteNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']/following-sibling::ead:note", nsMap, array);
                         if (noteNode != null) {
                             map.put(KEY_NOTE, flattenString(noteNode.getTextContent()));
                         }
@@ -221,11 +221,15 @@ public class MyService {
 
                         //first level from titleproper
                         for (int i = 2; i <= levels; i++) {
-                            Node aNode = XPathAPI.selectSingleNode(doc, "//ead:container[normalize-space(.)='{}']/ancestor::ead:c0" + i + "/ead:did/ead:unittitle", nsMap, array);
-                            if (i == levels)
-                                list.add((String) map.get(MyService.KEY_NUMBER) + ": " + flattenString(aNode.getTextContent()));
-                            else
-                                list.add(flattenString(aNode.getTextContent()));
+                            Node aNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']/ancestor::ead:c0" + i + "/ead:did/ead:unittitle", nsMap, array);
+                            if (aNode == null) {
+                                list.add("");
+                            } else {
+                                if (i == levels)
+                                    list.add((String) map.get(MyService.KEY_NUMBER) + ": " + flattenString(aNode.getTextContent()));
+                                else
+                                    list.add(flattenString(aNode.getTextContent()));
+                            }
                         }
 
                         Node firstNode = XPathAPI.selectSingleNode(doc, "//ead:titleproper", nsMap);
@@ -443,7 +447,7 @@ public class MyService {
 
     //TODO replace with IOUtils
     /*public String readResponse(InputStream is) throws IOException {
-		BufferedInputStream bis = new BufferedInputStream(is);
+        BufferedInputStream bis = new BufferedInputStream(is);
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		int result = bis.read();
 		while (result != -1) {

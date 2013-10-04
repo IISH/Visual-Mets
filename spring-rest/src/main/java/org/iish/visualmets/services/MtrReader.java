@@ -164,8 +164,6 @@ public class MtrReader implements DocumentDao {
             int i = start - 1;
             int j = rows == -1 ? documentCount : start + rows - 1;
 
-            int n = 0;
-            long t = 0;
             for (int position = i; position < j && position < documentCount; position++) {
                 Date from = new Date();
                 final Div div = divs.get(position);
@@ -173,9 +171,6 @@ public class MtrReader implements DocumentDao {
                 pagerItem.add(url_tpl + div.getOrder(), div.getLabel(), Integer.parseInt(div.getOrder()), url.getUrl(), url_transcription_tpl + div.getOrder(), url_pageinfo_tpl + div.getOrder());
                 Date to = new Date();
                 long l = (to.getTime() - from.getTime());
-
-                t += l;
-                n++;
             }
         }
 
