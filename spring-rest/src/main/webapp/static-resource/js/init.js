@@ -32,7 +32,7 @@
             });
 
             viewer.init({
-                'url'      : 'http://vmets.socialhistoryservices.org/rest/document?',
+                'url'      : 'http://visualmets.socialhistoryservices.org/rest/document?',
                 'metsId'   : $('input[name=metsId]').val(),
                 'defaults' : true,
                 'pager' : {

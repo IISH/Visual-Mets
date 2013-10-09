@@ -9,8 +9,8 @@
     App.mets2.Model.extend({
         share : {
             link : {
-                css : '/rest/resources/css/themes/default/style.css',
-                js : '/rest/resources/js/mets2viewer.min.js'
+                css : 'http://visualmets.socialhistoryservices.org/rest/resources/css/themes/default/style.css',
+                js : 'http://visualmets.socialhistoryservices.org/rest/resources/js/mets2viewer.min.js'
             },
             modal : {
                 header : 'Embed code',

@@ -59,7 +59,7 @@
     });
 
      viewer.init({
-        'url'      : 'http://vmets.socialhistoryservices.org/rest/document?',
+        'url'      : 'http://visualmets.socialhistoryservices.org/rest/document?',
         'metsId'   : $('input[name=metsId]').val(),
         'defaults' : true,
         'pager' : {
@@ -97,7 +97,7 @@
         debug  : true,
         layout : 'thumbnail',
         initialize : {
-            'url'      : 'http://vmets.socialhistoryservices.org/rest/document?',
+            'url'      : 'http://visualmets.socialhistoryservices.org/rest/document?',
             'metsId'   : $('input[name=metsId]').val(),
             'defaults' : true,
             'pager' : {
@@ -118,7 +118,7 @@
             options.layout = options.layout || 'thumbnail';
             options.debug = (options.debug == undefined) ? false : options.debug;
             // initialize options
-            options.initialize.url = options.initialize.url || 'http://vmets.socialhistoryservices.org/rest/document?';
+            options.initialize.url = options.initialize.url || 'http://visualmets.socialhistoryservices.org/rest/document?';
             options.initialize.defaults = (options.initialize.defaults == undefined) ? false : options.initialize.defaults;
 
 

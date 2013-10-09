@@ -294,6 +294,7 @@
   box-sizing: border-box;
 }
 .tooltip {
+  white-space: normal;
   position: absolute;
   z-index: 1030;
   display: block;
@@ -324,7 +325,7 @@
   padding: 0 5px;
 }
 .tooltip-inner {
-  max-width: 200px;
+  max-width: 250px;
   padding: 5px;
   color: #ffffff;
   text-align: center;
@@ -333,6 +334,7 @@
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+  white-space: normal;
 }
 .tooltip-arrow {
   position: absolute;
