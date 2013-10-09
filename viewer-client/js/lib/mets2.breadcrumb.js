@@ -1,4 +1,48 @@
 (function($){
+    /**
+     * frame target
+     * @field breadcrumb.length    int          the max length of the breadcrumb
+     * @field breadcrumb.suffix    String       ellipsis suffix post fix
+     */
+    App.mets2.Model.extend({
+        breadcrumb : {
+            length : 100,
+            suffix : '...'
+        }
+    });
+
+    App.mets2.Model.map([
+        {
+            'breadcrumb'  : {
+                'length' : 'ellipsis'
+            },
+            'default' : 100
+        },{
+            'breadcrumb'  : {
+                'suffix' : 'ellipsisSuffix'
+            },
+            'default' : '...'
+        }
+    ]);
+
+    /**
+     * get the max length of a breadcrumb string length to trigger the ellipsis
+     * @return int length
+     */
+    App.mets2.Model.extend('getEllipsisLength', function(){
+        return this.breadcrumb.length;
+    });
+
+
+
+    /**
+     * get the ellipsis suffix default "..."
+     * @return String suffix
+     */
+    App.mets2.Model.extend('getEllipsisSuffix', function(){
+        return this.breadcrumb.suffix;
+    });
+
 
     /**
      * get the breadcrumb data
@@ -53,6 +97,8 @@
         var breadcrumbUrl  = this.getModel().getBreadcrumbUrl();
 
         ul.empty();
+        var items = [];
+        var totalLength = 0;
         for(var i=0; i < breadcrumb.length; i++) {
 
             var a = $('<a>');
@@ -65,14 +111,24 @@
             }
 
             a.attr({
-                'href':((breadcrumbUrl[i])?breadcrumbUrl[i]:'#'),
-                'target' : '_blank'
+                'href'           :((breadcrumbUrl[i])?breadcrumbUrl[i]:'#'),
+                'target'         : '_blank',
+                'title'          : breadcrumb[i]
             })
              .html(breadcrumb[i])
              .appendTo(li);
-
             li.appendTo(ul);
+            // store
+            items.push(a);
+            totalLength = totalLength +a.text().length;
+            // set function...
+            a.ellipsistip({
+                length : this.model.getEllipsisLength(),
+                suffix : this.model.getEllipsisSuffix()
+            });
         }
+
+
     });
 
 })(jQuery);

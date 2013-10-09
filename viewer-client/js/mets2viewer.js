@@ -10,27 +10,32 @@
      * /minify/index.php this script will generate a new minified file in /js/mets2viewer.min.js
      *
      * @param option arguments
-     * @option language     String          default language set in (en) ISO_3166-1 landcodes format see (nl.lang.js)
-     * @option template     String          the html to load if this is not set it will look in the dom (target) for the html
-     * @option target       Array|jQuery    jquery selector target to place the viewer
-     * @option height       int             height of the viewer default "auto" it will adapt to the parent
-     * @option width        int             width of the viewer default "auto" it will adapt to the parent
-     * @option debug        boolean         by turning debug mode on it will show console information (firefox, add firebug)
-     * @option layout       String          the name reference of the layout that must be present at onload
-     * @option layoutConfig Object          it's possible to overwrite event the layout loading behaviour's
+     * @option language         String          default language set in (en) ISO_3166-1 landcodes format see (nl.lang.js)
+     * @option template         String          the html to load if this is not set it will look in the dom (target) for the html
+     * @option target           Array|jQuery    jquery selector target to place the viewer
+     * @option height           int             height of the viewer default "auto" it will adapt to the parent
+     * @option width            int             width of the viewer default "auto" it will adapt to the parent
+     * @option debug            boolean         by turning debug mode on it will show console information (firefox, add firebug)
+     * @option layout           String          the name reference of the layout that must be present at onload
+     * @option ellipsis         int             the max length of the breadcrumb default the ellipsis will be triggest on (int)100 characters to turn on set in on (int)0
+     * @option ellipsisSuffix   String          ellipsis suffix post fix default (string)"..."
+     * @option layoutConfig     Object          it's possible to overwrite event the layout loading behaviour's
      * @option layoutConfig.*
      * @see Controller.LayoutManager, file mets2.layout.manager.js, line 45
      *
+     *
      * ----------------------------------------------------------------------------------------------------
      * for all the extend methods, this must be loaded before all other extend methods
-     * example:
+     * example: whith all the properties!
      * ....................................................................................................
      *
      var viewer = App.mets2Viewer({
-        template :'http://visualmets.socialhistoryservices.org/rest/mets2.template.html?callback=?',
+        template :'http://mets2viewer.deontwikkelfabriek.nl/template/template.handler.php?callback=?',
         target : $('#metsViewSample'),
         height : 500,
-        width : 900,
+        width  : 900,
+        ellipsis : 100,
+        ellipsisSuffix : '...'
         debug  : true,
         layout : 'thumbnail',
         layoutConfig : {
@@ -54,7 +59,7 @@
     });
 
      viewer.init({
-        'url'      : 'http://visualmets.socialhistoryservices.org/rest/document?',
+        'url'      : 'http://vmets.socialhistoryservices.org/rest/document?',
         'metsId'   : $('input[name=metsId]').val(),
         'defaults' : true,
         'pager' : {
@@ -88,11 +93,11 @@
      * ......................................................................
      *
      $('#metsViewSample').mets2Viewer({
-        template :'http://visualmets.socialhistoryservices.org/rest/mets2.template.html?callback=?',
+        template :'http://mets2viewer.deontwikkelfabriek.nl/template/template.handler.php?callback=?',
         debug  : true,
         layout : 'thumbnail',
         initialize : {
-            'url'      : 'http://visualmets.socialhistoryservices.org/rest/document?',
+            'url'      : 'http://vmets.socialhistoryservices.org/rest/document?',
             'metsId'   : $('input[name=metsId]').val(),
             'defaults' : true,
             'pager' : {
@@ -113,7 +118,7 @@
             options.layout = options.layout || 'thumbnail';
             options.debug = (options.debug == undefined) ? false : options.debug;
             // initialize options
-            options.initialize.url = options.initialize.url || 'http://visualmets.socialhistoryservices.org/rest/document?';
+            options.initialize.url = options.initialize.url || 'http://vmets.socialhistoryservices.org/rest/document?';
             options.initialize.defaults = (options.initialize.defaults == undefined) ? false : options.initialize.defaults;
 
 
@@ -151,7 +156,14 @@
          * by using deep copy technique of jquery method "extend"
          */
         else if (typeof(arg1) === "object" && arg2 == null) {
+
             jQuery.extend(true, this.prototype, arg1);
+            /* for(var o in arg1){
+                if(arg1.hasOwnProperty(o)){
+                    this.prototype[o] = jQuery.extend({}, arg1[o]);
+                    $$(this.prototype);
+                }
+            }*/
         }
     };
 
@@ -200,14 +212,6 @@
      *
      * @param arg1 array
      */
-    Function.prototype.map = function (arg1) {
-        for (var i = 0; i < arg1.length; i++) {
-            if (!this.prototype['Map']) {
-                this.prototype['Map'] = [];
-            }
-            this.prototype.Map.push(arg1[i]);
-        }
-    };
 
 
     /**
@@ -499,6 +503,17 @@
             return output;
         };
     };
+
+    Function.prototype.map = function (arg1) {
+        for (var i = 0; i < arg1.length; i++) {
+            if (!this.prototype['Map']) {
+                this.prototype['Map'] = [];
+            }
+            this.prototype.Map.push(arg1[i]);
+        }
+    };
+
+
 
     App.mets2.Model.prototype.autoOptionMapping = function (options) {
         // make option reference point....

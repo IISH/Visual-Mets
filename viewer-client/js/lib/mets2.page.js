@@ -194,8 +194,8 @@
          * @return param String
          */
         this.getParam = function(){
-            var temp = this.model.getImageParam();
-            return '&'+$.param(this.model.getImageParam());
+            var temp = $.param(this.model.getImageParam());
+            return ($UT.isEmpty(temp)?temp:'&'+temp);
         };
 
         /**

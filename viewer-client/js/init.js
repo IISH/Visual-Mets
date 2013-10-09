@@ -1,14 +1,20 @@
 (function($){
 
+    /**
+     * TODO breadgrumb:
+     * elipse breadgrumb reken de width van de scgherm en de margen s en pediing een vervolgens de breete
+     * item verhouding is breete (elipse) wordt bepaald door de lengthe + margens + paddings gedeelt door de aantal itens
+     * lengthe = (window.width - margen + paddings) / count of items breadgrumb
+     *
+     * --------------------------------------------------------------------------------
+     * TODO empresent fix in thumbnail:
+     */
     $(document).ready(function(){
         var btn = $('.save');
         btn.bind('click',function(){
 
-/*
            $('#metsViewSample').mets2Viewer({
                 debug : true,
-                width: 800,
-                height: 500,
                 initialize : {
                     'metsId'   : $('input[name=metsId]').val(),
                     'defaults' : true,
@@ -17,16 +23,16 @@
                         'rows'  : -1
                     }
                 }
-            });*/
+            });
 
       /*      var viewer = App.mets2Viewer({
-                template :'http://visualmets.socialhistoryservices.org/rest/mets2.template.html?callback=?',
+                template :'http://mets2viewer.deontwikkelfabriek.nl/template/template.handler.php?callback=?',
                 target : $('#metsViewSample'),
                 debug  : true
             });
 
             viewer.init({
-                'url'      : 'http://visualmets.socialhistoryservices.org/rest/document?',
+                'url'      : 'http://vmets.socialhistoryservices.org/rest/document?',
                 'metsId'   : $('input[name=metsId]').val(),
                 'defaults' : true,
                 'pager' : {
@@ -34,14 +40,15 @@
                     'rows'  : -1
                 }
             });*/
+            //viewer.load();
 
+/*
             scroller = new App.mets2EmbedHandler();
             scroller.scrollPage(function(iterator, selector, params){
 
                 selector.mets2Viewer(params);
-            });
+            });*/
 
-            //viewer.load();
 
 
             return false;

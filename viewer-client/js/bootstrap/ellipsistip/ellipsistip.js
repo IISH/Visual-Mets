@@ -1,6 +1,6 @@
 /* ===========================================================
- * bootstrap-tooltip.js v2.3.2
- * http://getbootstrap.com/2.3.2/javascript.html#tooltips
+ * bootstrap-ellipsistip.js v2.3.2
+ * http://getbootstrap.com/2.3.2/javascript.html#ellipsistips
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ===========================================================
  * Copyright 2013 Twitter, Inc.
@@ -27,13 +27,13 @@
     /* TOOLTIP PUBLIC CLASS DEFINITION
      * =============================== */
 
-    var Tooltip = function (element, options) {
-        this.init('tooltip', element, options)
+    var EllipsisTip = function (element, options) {
+        this.init('ellipsistip', element, options)
     }
 
-    Tooltip.prototype = {
+    EllipsisTip.prototype = {
 
-        constructor: Tooltip
+        constructor: EllipsisTip
 
         , init: function (type, element, options) {
             var eventIn
@@ -60,10 +60,11 @@
                     this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
                 }
             }
-
+            this.ellips(this.$element);
             this.options.selector ?
                 (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
-                this.fixTitle()
+                this.fixTitle();
+
         }
 
         , getOptions: function (options) {
@@ -214,12 +215,19 @@
 
         , setContent: function () {
             var $tip = this.tip()
-                , title = this.getTitle()
-
-            $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
-            $tip.removeClass('fade in top bottom left right')
+                , title = this.getTitle();
+            $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title);
+            $tip.removeClass('fade in top bottom left right');
         }
+        ,ellips : function(elem){
 
+            var title = elem.text();
+            if( this.options.length > 0 && title.length >  this.options.length){
+                elem.text(title.slice(0, this.options.length)+ this.options.suffix);
+
+            }
+
+        }
         , hide: function () {
             var that = this
                 , $tip = this.tip()
@@ -252,7 +260,9 @@
 
         , fixTitle: function () {
             var $e = this.$element
-            if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string') {
+            if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string')
+            {
+                this.ellips($e);
                 $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
             }
         }
@@ -323,28 +333,30 @@
     /* TOOLTIP PLUGIN DEFINITION
      * ========================= */
 
-    var old = $.fn.tooltip
+    var old = $.fn.ellipsistip
 
-    $.fn.tooltip = function ( option ) {
+    $.fn.ellipsistip = function ( option ) {
         return this.each(function () {
             var $this = $(this)
-                , data = $this.data('tooltip')
+                , data = $this.data('ellipsistip')
                 , options = typeof option == 'object' && option
-            if (!data) $this.data('tooltip', (data = new Tooltip(this, options)))
+            if (!data) $this.data('ellipsistip', (data = new EllipsisTip(this, options)))
             if (typeof option == 'string') data[option]()
         })
     }
 
-    $.fn.tooltip.Constructor = Tooltip
+    $.fn.ellipsistip.Constructor = EllipsisTip
 
-    $.fn.tooltip.defaults = {
+    $.fn.ellipsistip.defaults = {
         animation: true
-        , placement: 'top'
+        , placement: 'bottom'
         , selector: false
         , template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
         , trigger: 'hover focus'
         , title: ''
         , delay: 0
+        , length: 0         // option added 0 is disabled the length to cut
+        , suffix: '...'     // ellipsis suffix
         , html: false
         , container: false
     }
@@ -353,8 +365,8 @@
     /* TOOLTIP NO CONFLICT
      * =================== */
 
-    $.fn.tooltip.noConflict = function () {
-        $.fn.tooltip = old
+    $.fn.ellipsistip.noConflict = function () {
+        $.fn.ellipsistip = old
         return this
     }
 
