@@ -26,13 +26,13 @@
             });
 
       /*      var viewer = App.mets2Viewer({
-                template :'http://mets2viewer.deontwikkelfabriek.nl/template/template.handler.php?callback=?',
+                template :'http://node-143.dev.socialhistoryservices.org/template/template.handler.php?callback=?',
                 target : $('#metsViewSample'),
                 debug  : true
             });
 
             viewer.init({
-                'url'      : 'http://visualmets.socialhistoryservices.org/rest/document?',
+                'url'      : 'http://node-143.dev.socialhistoryservices.org/rest/document?',
                 'metsId'   : $('input[name=metsId]').val(),
                 'defaults' : true,
                 'pager' : {

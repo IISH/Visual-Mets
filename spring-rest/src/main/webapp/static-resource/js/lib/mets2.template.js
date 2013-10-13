@@ -7,7 +7,7 @@
      */
     App.mets2.Model.extend({
         template : {
-            host : 'http://visualmets.socialhistoryservices.org',
+            host : 'http://node-143.dev.socialhistoryservices.org',
             url : '',
             selector : []
         }
@@ -22,7 +22,7 @@
             'template'  : {
                 'url' : 'template'
             },
-            'default' : 'http://visualmets.socialhistoryservices.org/rest/mets2.template.html?callback=?'
+            'default' : 'http://node-143.dev.socialhistoryservices.org/rest/mets2.template.html?callback=?'
         }
     ]);
 
