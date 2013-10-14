@@ -30,7 +30,7 @@
      * ....................................................................................................
      *
      var viewer = App.mets2Viewer({
-        template :'http://node-143.dev.socialhistoryservices.org/template/template.handler.php?callback=?',
+        template :'http://visualmets.socialhistory.org/template/template.handler.php?callback=?',
         target : $('#metsViewSample'),
         height : 500,
         width  : 900,
@@ -59,7 +59,7 @@
     });
 
      viewer.init({
-        'url'      : 'http://node-143.dev.socialhistoryservices.org/rest/document?',
+        'url'      : 'http://visualmets.socialhistory.org/rest/document?',
         'metsId'   : $('input[name=metsId]').val(),
         'defaults' : true,
         'pager' : {
@@ -93,11 +93,11 @@
      * ......................................................................
      *
      $('#metsViewSample').mets2Viewer({
-        template :'http://node-143.dev.socialhistoryservices.org/template/template.handler.php?callback=?',
+        template :'http://visualmets.socialhistory.org/template/template.handler.php?callback=?',
         debug  : true,
         layout : 'thumbnail',
         initialize : {
-            'url'      : 'http://node-143.dev.socialhistoryservices.org/rest/document?',
+            'url'      : 'http://visualmets.socialhistory.org/rest/document?',
             'metsId'   : $('input[name=metsId]').val(),
             'defaults' : true,
             'pager' : {
@@ -118,7 +118,7 @@
             options.layout = options.layout || 'thumbnail';
             options.debug = (options.debug == undefined) ? false : options.debug;
             // initialize options
-            options.initialize.url = options.initialize.url || 'http://node-143.dev.socialhistoryservices.org/rest/document?';
+            options.initialize.url = options.initialize.url || 'http://visualmets.socialhistory.org/rest/document?';
             options.initialize.defaults = (options.initialize.defaults == undefined) ? false : options.initialize.defaults;
 
 
