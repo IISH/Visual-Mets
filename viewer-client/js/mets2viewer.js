@@ -282,7 +282,7 @@
         this.metsId = "";
         this.options = {};
 
-        this.themePath = '/rest/resources/css/themes/';
+        this.themePath = 'css/themes/';
         this.theme = 'default';
 
         // argument parser for!
