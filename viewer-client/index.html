@@ -32,7 +32,7 @@
                 $('select[name=themes]').change(function(){
                     var link = $('#theme');
                     var theme = $(this).find('option:selected').val();
-                    link.attr({'href':'css/themes/'+theme+'/style.css?_=2.1'});
+                    link.attr({'href':'/rest/resources/css/themes/'+theme+'/style.css?_=2.1'});
                 });
             });
         })(jQuery);
