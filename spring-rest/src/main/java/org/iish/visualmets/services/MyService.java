@@ -2,6 +2,7 @@ package org.iish.visualmets.services;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.pdfbox.PDFSplit;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -60,6 +61,8 @@ public class MyService {
     public String generatePdfUrl(String _metsId) {
         return proxy_host_mets + "rest/resource/get_pdf?metsId=" + _metsId;
     }
+
+    private Logger log = Logger.getLogger(getClass());
 
 
     public ArrayList generateBreadcrumbUrls(String _archive, String _number) {
@@ -151,25 +154,12 @@ public class MyService {
             dbFactory.setNamespaceAware(true);
             nsMap.put("ead", ead_namespace);
 
-            //TODO namespace yes of no
-/*
-
-			if (ead_namespace != null && !ead_namespace.equals("")) {
-				dbFactory.setNamespaceAware(true);
-				nsMap.put("ead", ead_namespace);
-			} else
-				dbFactory.setNamespaceAware(false);
-*/
-
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
-
+            final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             try {
 
                 URL server = new URL(this.generateEadUrl(_metsId));
                 HttpURLConnection connection = (HttpURLConnection) server.openConnection();
                 code = connection.getResponseCode();
-                //System.out.println("EAD CODE: "+connection.getResponseCode());
                 if (code == HttpServletResponse.SC_OK) {
                     connection.connect();
                     InputStream in = connection.getInputStream();
@@ -388,7 +378,7 @@ public class MyService {
                         result.add(value - 1);
                 }
             } catch (NumberFormatException e) {
-
+                        log.error(e);
             }
         }
 
@@ -407,6 +397,7 @@ public class MyService {
         String result;
         result = _s.replaceAll("[\r\n]+", "");
         result = result.replaceAll("\\s+", " ");
+        result = result.replaceAll("\"", "'");
         return result.trim();
     }
 
