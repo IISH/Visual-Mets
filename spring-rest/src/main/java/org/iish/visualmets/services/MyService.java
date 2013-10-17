@@ -208,7 +208,13 @@ public class MyService {
                     }
 
                     Node levelNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']", nsMap, array);
-                    if (levelNode != null) {
+                    if (levelNode == null) {
+                        // code = HttpServletResponse.SC_NOT_FOUND;
+                        map.put(KEY_NOTE, "");
+                        map.put(KEY_BREADCRUMB, list);
+                        map.put(KEY_CODE, HttpServletResponse.SC_OK);
+                        return map;
+                    } else {
                         code = HttpServletResponse.SC_OK;
 
                         Node noteNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']/following-sibling::ead:note", nsMap, array);
@@ -236,8 +242,6 @@ public class MyService {
                         list.add(0, flattenString(firstNode.getTextContent()));
 
                         map.put(KEY_BREADCRUMB, list);
-                    } else {
-                        code = HttpServletResponse.SC_NOT_FOUND;
                     }
                 }
 
