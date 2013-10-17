@@ -100,22 +100,32 @@
         events : {
             'click' : function(){
                 if(this.model.isTextViewEnabled()){
-                    var active = this.model.isTextViewActive();
-                    var textView = this.getView().TextView();
-                    // toggle boolean
-                    this.model.setTextViewActive(((active)?false:true));
+
                     // toggle button..
-                    if(this.model.isTextViewActive()){
-                        this.buttonFocus();
-                        textView.show();
+                    if(!this.model.isTextViewActive()){
+                        this.show();
                     }else{
-                        this.buttonBlur();
-                        textView.hide();
+                        this.hide();
                     }
                 }
             }
         },
         methods : {
+            hide : function(){
+
+                this.model.setTextViewActive(false);
+                var textView = this.getView().TextView();
+                this.buttonBlur();
+                textView.hide();
+            },
+            show : function(){
+
+                this.model.setTextViewActive(true);
+                var textView = this.getView().TextView();
+                this.buttonFocus();
+                textView.show();
+
+            },
             buttonFocus : function(){
 
                 this.btn.addClass('mets-button-focus');
@@ -146,19 +156,27 @@
 
         var self    = this;
         var model   = self.getModel();
-
+        page        = model.getCurrentLayoutPage();
+        if(self.isDebugActive()){
+            console.group("TRANSCRIPTION: ");
+            console.info("TRANSCRIPT URL: %c"+ page.getTranscriptionUrl(), "color:#002f74; font-weight: bold;");
+        }
         self.Transcription().addDisableClass();
 
         $.ajax({
             type: 'GET',
-            url: model.getTranscriptionUrl(),
+            url: page.getTranscriptionUrl(),
             beforeSend : function(){
                 self.event.fire('beforeTranscriptionLoaded');
             },
             success: function(data){
                 try{
-                    model.setTranscription(data.transcription);
+                    model.setTranscription($UT.nl2br(data.transcription));
 
+                    if(self.isDebugActive()){
+                        console.log($UT.nl2br(data.transcription));
+                        console.groupEnd();
+                    }
                     self.event.fire('onTranscriptionReady');
 
                     // check if empty text
@@ -247,8 +265,10 @@
              * @return {{TextView: Object}}
              */
             hide : function(){
-                img.css({'margin':'15px auto'});
-                textView.hide();
+                if(img){
+                    img.css({'margin':'15px auto'});
+                    textView.hide();
+                }
                 return this;
             },
 

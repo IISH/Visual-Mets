@@ -260,7 +260,10 @@
 
             // on success image loaded
             self.event.addListener('onImageLoad', function(page){
+
+
                 self.getView().paginationOverview();
+
                 self.getView().PageLoader().open();
                 self.getView().PageLoader().text(self.getLabel('loader.loading.page', {'title':page.getTitle()}));
 
@@ -281,11 +284,17 @@
             });
             // triggert's when the que is started
             self.event.addListener('onStartQueueReady', function(){
+
+                // hide again transcription
+                self.Transcription().hide();
+
                 // open permanent link
                 self.getView().PermanentLink(layoutManager.getLayout().getPermanentLinkConfig()).show();
             });
             // on image queue ready
             self.event.addListener('onImageQueueReady', function(page, pos, end, errorCount){
+
+
                 self.getView().PageLoader().close();
                 // no errors occurred close message
                 if(errorCount == 0){
@@ -293,6 +302,7 @@
                     layoutManager.updateLayout();
                 }
                 self.addZooming();
+
                 self.loadTextView();
 
             });

@@ -1,14 +1,14 @@
-@import "../../less/variables";
-@import "../../less/mixins";
+@import "../../less/variables.less";
+@import "../../less/mixins.less";
 
 
 .bar-style(){
-  .buttonBackground(#f2f6fa, #dfe6ec);
-  @shadow: inset 0 1px 0 #fff, 0 1px 2px #f2f6fa;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  border: 1px solid #b3bfd6;
+  .buttonBackground(#686868, #4a4a4a);
+  @shadow: inset 0 1px 0 #8d8d8d, 0 1px 2px #aeaeae;
+  text-shadow: 0 1px 1px #232323;
+  border: 1px solid #232323;
+  @shadow: inset 0 1px 0 #898989, 0 1px 0px #808080;
   .box-shadow(@shadow);
-  /*font-family: Georgia;*/
 }
 
 .setBkgPos(@X: 0, @Y: 0) {
@@ -16,7 +16,10 @@
   @Yshift: -20px;
   background-position: (@Xshift * @X) (@Yshift * @Y);
 }
+
+
 .setImputStyle(){
+  .border-radius(3px);
   padding:6px 4px;
   margin: -1px 0 0 2px;
   .box-shadow(inset 1px 1px 5px #101010);
@@ -30,6 +33,8 @@
   padding:4px 6px;
 }
 .input(){
+  color: @white;
+  .border-radius(3px);
   padding:6px 4px;
   margin: -1px 0 0 2px;
   .box-shadow(inset 1px 1px 5px #101010);
@@ -47,26 +52,26 @@
   }
 }
 
-@import "modal";
-@import "tooltip";
+@import "modal.less";
+@import "tooltip.less";
 // load layout syle
-@import "layout/style.page";
-@import "layout/style.thumbnail";
+@import "layout/style.page.less";
+@import "layout/style.thumbnail.less";
 
 div.mets-container{
   width: 100%;
   height: 100%;
+  .border-radius(3px);
   font-family: "Arial";
   .mets-btn{
     .bar-style();
     padding: 4px 12px;
+    .border-radius(3px);
     margin-left: 4px;
     font-style: 12px;
     cursor: pointer;
-    color: #3e5f85;
     &:hover{
-      .buttonBackground(#4875a2, #3e5f85);
-      color: @white;
+      .buttonBackground( #4a4a4a, #686868);
       text-decoration: none;
     }
   }
@@ -84,18 +89,18 @@ div.mets-container{
       }
       .mets-button-wrapper{
         .bar-style();
-
         margin: 0 3px 0 3px;
+        .border-radius(3px);
         display: block;
         float: left;
         .mets-button,
         .mets-label{
-          color: #3e5f85;
-          padding: 3px 4px;
-          display: block;
-          float: left;
-          font-size: 12px;
-          text-decoration: none;
+           color: @white;
+           padding: 3px 4px;
+           display: block;
+           float: left;
+           font-size: 12px;
+           text-decoration: none;
         }
         input[type=button].mets-button,
         input[type=submit].mets-button,
@@ -106,22 +111,14 @@ div.mets-container{
           margin: 0;
         }
         .mets-button:hover{
-          .buttonBackground(#4875a2, #3e5f85);
-          color: @white;
-          i{
-            background-image: url('mets_icon_template_20x20_hover.png');
-          }
+          .buttonBackground(lighten(#686868, 15%), lighten(#4a4a4a, 8%));
         }
         .mets-button-focus{
-          .box-shadow(inset 1px 1px 4px #304d6b);
-          .buttonBackground(#3e5f85, #4875a2);
-          i{
-            background-image: url('mets_icon_template_20x20_hover.png');
-          }
+           .box-shadow(inset 1px 1px 5px #101010);
+           .buttonBackground(#343434, #333333);
         }
         .mets-button-focus:hover{
-          .buttonBackground(#73a0ff, #3e5f85);
-          color: #9c00f5;
+          .buttonBackground(darken(#343434, 5%), darken(#333333, 5%));
         }
         .mets-button-disable{
           .opacity(40);
@@ -136,11 +133,11 @@ div.mets-container{
         padding-left: 10px;
         b{
           padding-right: 8px;
-          color: #3e5f85;
+          color: #b9deff;
           font-weight: 100;
         }
         span{
-          color: #729FC8;
+          color: #cccccc;
         }
         div#mets-description-link,
         div#mets-image-link{
@@ -179,6 +176,7 @@ div.mets-container{
       display: block;
       list-style: none;
       @height: 15px;
+      font-style: italic;
       line-height: @height;
       min-height: @height;
       height: @height;
@@ -201,7 +199,7 @@ div.mets-container{
         padding-left: 15px;
         line-height: @height;
         a{
-          color: #000000;
+          color: #fff;
           line-height: @height;
           i{
             line-height: @height;
@@ -217,7 +215,7 @@ div.mets-container{
     }
   }
   .mets-toolbar-footer{
-    border-top: 0;
+
   }
   .mets-clear{
     clear: both;
@@ -228,12 +226,10 @@ div.mets-container{
     display: block;
     height: 100%;
     width: 100%;
-    background: #f3f3f3;
-    .box-shadow(inset 1px 1px 100px #eff6ff);
-    border-bottom: 1px #B3BFD6 solid;
-    border-right: 1px #B3BFD6 solid;
-    border-left: 1px #B3BFD6 solid;
-    color: #73A0C9;
+    background: #d1d1d1;
+    .box-shadow(inset 1px 1px 100px #a7a7a7);
+    border: 1px #979797 solid;
+    color: #3f3f3f;
     overflow: hidden;
     paosition: relative;
     .mets-loader-frame{
@@ -242,26 +238,26 @@ div.mets-container{
       left: 0;
       z-index: 105;
       text-align: center;
-      width: 128px;
+      width: 80px;
       padding-top: 10px;
       .mets-loader{
         padding: 10px;
-        margin-top: -80px;
-        width: 128px;
-        height: 128px;
+        width: 80px;
+        heiught: 80px;
+        .border-radius(10px);
+        background: url('loader-backgr.png');
         .mets-loader-text{
-          color: @black;
-          /*text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);*/
-          line-height: 25px;
+          color: #fff;
+          line-height: 18px;
           padding: 5px;
-          font-size: 16px;
+          font-size: 11px;
           margin: 0 auto;
           text-align: center;
         }
         .mets-loader-img{
           margin: 0 auto;
-          width: 128px;
-          height: 128px;
+          height: 32px;
+          width: 32px;
           background: url('loader.gif') top center no-repeat;
         }
       }
@@ -277,7 +273,7 @@ div.mets-container{
       .border-radius(5px);
       background: #c4dbff;
       border: 1px #838383 solid;
-      color: #73A0C9;
+      color: #050f29;
       padding: 15px;
       font-size: 12px;
       font-size: 12px;
