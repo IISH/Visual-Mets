@@ -9,6 +9,7 @@ import org.iish.visualmets.datamodels.PagerItem;
 import org.iish.visualmets.util.FileHash;
 import org.iish.visualmets.util.Security;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.util.UriUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -266,9 +267,8 @@ public class MtrReader implements DocumentDao {
     }
 
     private Node requestMetsDocument(String url) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, TransformerException {
-
         DocumentBuilder db = dbf.newDocumentBuilder();
-        final Document document = db.parse(url);
+        final Document document = db.parse(url.replaceAll(" ", "%20"));
         return GetNode(document, "//mets:mets");
     }
 

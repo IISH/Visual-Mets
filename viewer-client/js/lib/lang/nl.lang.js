@@ -60,7 +60,7 @@ NS.LANG.en = {
     help : {
         modal : {
             header : 'Help',
-            body : '<div>De IISG viewer is beschikbaar in een compact scherm en volledig scherm.Het compacte scherm heeft een werkbalk bovenaan met navigatie. Door te klikken op een plaatje wordt het plaatje groter getoond op het scherm.' +
+            body : '<div>De IISG viewer is beschikbaar in een compact scherm en volledig scherm. Het compacte scherm heeft een werkbalk bovenaan met navigatie. Door te klikken op een plaatje wordt het plaatje groter getoond op het scherm.' +
 'De icoontjes rechtsboven maken het mogelijk te wisselen naar een overzicht van thumbnails of een volledig scherm.<br /><br />' +
 'In het volledige scherm zijn drie werkbalken zichtbaar:<br />' +
 '1. de bovenste werkbalk toont informatie over de context met een link terug naar de inventaris.<br />' +
