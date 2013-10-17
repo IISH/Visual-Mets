@@ -19,12 +19,13 @@
 
 
     <bean id="imageTransformation" class="org.iish.visualmets.services.ImageTransformation"/>
-    <bean id="documentDao" class="org.iish.visualmets.services.MtrReader">
+    <bean id="cacheService" class="org.iish.visualmets.services.CacheService">
         <property name="cacheFolder" value="#{visualmetsProperties['external.cacheFolder']}"/>
         <property name="cacheLimitInBytes" value="19327352832"/>
         <property name="cacheLimitInSeconds" value="3600"/>
         <property name="trusted" value="#{visualmetsProperties['external.trusted']}"/>
     </bean>
+    <bean id="documentDao" class="org.iish.visualmets.services.MtrReader"/>
 
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/WEB-INF/templates/"/>

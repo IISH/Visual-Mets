@@ -9,7 +9,9 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.util.PDFMergerUtility;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.util.UriUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -32,6 +34,9 @@ import it.svario.xpathapi.jaxp.XPathAPI;
  * Time: 12:38
  */
 public class MyService {
+
+    @Autowired
+    public CacheService cacheService;
 
     public static final String KEY_NOTE = "note_key";
     public static final String KEY_BREADCRUMB = "breadcrumb_key";
@@ -69,42 +74,21 @@ public class MyService {
     }
 
     private int codeMets(String _metsId, Map _map) throws Exception {
-        //String number = this.extractNumber(_metsId);
-
-        //return HttpServletResponse.SC_OK;
-
-        InputStream inputStream;
 
         int resultCode;// = HttpServletResponse.SC_UNAUTHORIZED;
-
-
         try {
 
-            URL server = new URL(_metsId);
+            URL server = new URL(UriUtils.encodeHttpUrl(_metsId, "utf-8"));
             HttpURLConnection connection = (HttpURLConnection) server.openConnection();
             resultCode = connection.getResponseCode();
+            connection.disconnect();
 
             if (resultCode == HttpServletResponse.SC_OK) {
-
-
-                connection.connect();
-                inputStream = connection.getInputStream();
-
                 Map<String, String> nsMap = new HashMap<String, String>();
-
                 nsMap.put("epdcx", "http://purl.org/eprint/epdcx/2006-11-16/");
-
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-
-                dbFactory.setNamespaceAware(true);
-
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(inputStream);
-
+                final Document doc = cacheService.loadDocument(_metsId);
                 doc.getDocumentElement().normalize();
-
                 String accessString = XPathAPI.selectSingleNodeAsString(doc, "//epdcx:description[@epdcx:resourceId='level2']/child::epdcx:statement/@epdcx:valueRef", nsMap);
-                //System.out.println("ACCESS: " + accessString);
                 if (accessString != null && accessString.equals("http://purl.org/eprint/accessRights/OpenAccess"))
                     resultCode = HttpServletResponse.SC_OK;
                 else if (accessString == null)
@@ -125,16 +109,11 @@ public class MyService {
 
 
     private String extractArchive(String _metsId) {
-        //http://disseminate.objectrepository.org/mets/10622/ARCH01225.1
+
         int pos = StringUtils.lastIndexOf(_metsId, "/");
         String temp = _metsId.substring(pos, _metsId.length());
         String result = StringUtils.substringBetween(temp, "/", ".");
         return result;
-        /*System.out.println(after);
-
-		String ead=StringUtils.substringBetween(mets,"/",".");
-		return ead;*/
-
     }
 
     //hdl.handle.net/10622/ARCH01225.35?locatt=view:mets

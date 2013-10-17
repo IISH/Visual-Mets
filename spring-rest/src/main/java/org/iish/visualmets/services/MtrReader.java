@@ -2,36 +2,16 @@ package org.iish.visualmets.services;
 
 import au.edu.apsr.mtk.base.*;
 import au.edu.apsr.mtk.ch.METSReader;
-import org.apache.log4j.Logger;
 import org.iish.visualmets.dao.DocumentDao;
 import org.iish.visualmets.datamodels.ImageItem;
 import org.iish.visualmets.datamodels.PagerItem;
-import org.iish.visualmets.util.FileHash;
-import org.iish.visualmets.util.Security;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.util.UriUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.*;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -45,18 +25,13 @@ public class MtrReader implements DocumentDao {
     @Value("#{visualmetsProperties['proxy.host.mets']}")
     private String proxy_host_mets = "/";
 
+    @Autowired
+    public CacheService cacheService;
+
     private String trusted;
     private long cacheLimitInBytes;
     private String cacheFolder;
-    private DocumentBuilderFactory dbf;
     private long cacheLimitInSeconds;
-
-    public MtrReader() {
-        dbf = DocumentBuilderFactory.newInstance();
-        dbf.setIgnoringComments(true);
-        dbf.setNamespaceAware(true);
-        dbf.setValidating(false);
-    }
 
     @Override
     public ImageItem getUrl(String eadId, String metsId, int pageId, String use) throws Exception {
@@ -225,74 +200,15 @@ public class MtrReader implements DocumentDao {
      */
     private METS loadMetsDocument(String url) throws Exception {
 
-        final String filename = FileHash.SHA1(url);
-        final String file = cacheFolder + filename;
-        File f = new File(file);
-        if (!f.exists()) {
-            Security.authorize(trusted, new URI(url).getHost());
-            Node node = requestMetsDocument(url);
-            if (node != null)
-                normalise(node, file);
-        }
-        InputStream in = new FileInputStream(f);
-        METSReader mr = new METSReader();
-        mr.mapToDOM(in);
-        METSWrapper mw = new METSWrapper(mr.getMETSDocument());
+        final METSReader mr = new METSReader();
+        //final Node node = GetNode(document, "//mets:mets");
+        mr.mapToDOM(cacheService.inputStream(url));
+        final METSWrapper mw = new METSWrapper(mr.getMETSDocument());
         //mw.validate();
         return mw.getMETSObject();
     }
 
-    /**
-     * Clear the cache in case it exceeds the limit.
-     *
-     * @return
-     */
-    private int emptyCache() throws IOException {
-        int count = 0;
-        File folder = new File(cacheFolder);
-        if (!folder.exists())
-            folder.mkdirs();
-        final boolean hasExpired = folder.lastModified() + cacheLimitInSeconds < new Date().getTime();
-        if (folder.length() > cacheLimitInBytes || hasExpired) {
-            final File[] files = folder.listFiles();
-            for (File file : files) {
-                try {
-                    file.delete();
-                    count++;
-                } catch (Exception e) {
-                }
-            }
-        }
-        return count;
-    }
-
-    private Node requestMetsDocument(String url) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, TransformerException {
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        final Document document = db.parse(url.replaceAll(" ", "%20"));
-        return GetNode(document, "//mets:mets");
-    }
-
-    /**
-     * The document is loaded, transformed and stored to a cache.
-     * ToDo: depending on specifications, apply xslt stylesheets.
-     *
-     * @param node
-     * @param file
-     * @throws IOException
-     * @throws TransformerException
-     */
-    private void normalise(Node node, String file) throws IOException, TransformerException {
-
-        emptyCache();
-        TransformerFactory transformerFactory =
-                TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMSource source = new DOMSource(node);
-        StreamResult result = new StreamResult(new File(file));
-        transformer.transform(source, result);
-    }
-
-    private Node GetNode(Node node, String xquery) throws XPathExpressionException {
+   /* private Node GetNode(Node node, String xquery) throws XPathExpressionException {
         XPathExpression expr = getXPathExpression(xquery);
         return (Node) expr.evaluate(node, XPathConstants.NODE);
     }
@@ -334,21 +250,5 @@ public class MtrReader implements DocumentDao {
         XPathExpression expr = xpath.compile(xquery);
 
         return expr;
-    }
-
-    public void setTrusted(String trusted) {
-        this.trusted = trusted;
-    }
-
-    public void setCacheFolder(String cacheFolder) {
-        this.cacheFolder = cacheFolder;
-    }
-
-    public void setCacheLimitInBytes(long cacheLimitInBytes) {
-        this.cacheLimitInBytes = cacheLimitInBytes;
-    }
-
-    public void setCacheLimitInSeconds(long cacheLimitInSeconds) {
-        this.cacheLimitInSeconds = 1000L * cacheLimitInSeconds;
-    }
+    }*/
 }
