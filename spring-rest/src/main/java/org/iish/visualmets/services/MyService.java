@@ -101,7 +101,7 @@ public class MyService {
             }
 
         } catch (IOException e) {
-
+            log.error(e);
             e.printStackTrace();
             _map.put(KEY_MESSAGE, e.getMessage());
             resultCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
