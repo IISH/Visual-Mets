@@ -47,7 +47,9 @@ import java.util.Map;
 @Controller
 public class ControllerDocument {
 
-	@Autowired
+    private static final String REFERENCE_IMAGE = "hires reference image";
+
+    @Autowired
 	private VisualMetsProperties visualMetsProperties;
 
 	@Autowired
@@ -92,9 +94,9 @@ public class ControllerDocument {
 		// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
 		// check if the given fileGrp is allowed
-		String[] allowedFileGrps = {"reference image", "thumbnail image", "reference"};
+		String[] allowedFileGrps = {"archive image", "hires reference image", REFERENCE_IMAGE, "thumbnail image", "reference"};
 		if (!Arrays.asList(allowedFileGrps).contains(fileGrp)) {
-			fileGrp = "reference image";
+			fileGrp = REFERENCE_IMAGE;
 		}
 
 		// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
@@ -169,7 +171,7 @@ public class ControllerDocument {
 				// This will be added to the response... here we have a specific image layer... it must be generic.
 
 				// ToDo: remove with the USE parameter, rather than hardcoding over here
-				ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, "reference image");
+				ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, REFERENCE_IMAGE);
 				// hack voor dora russel (die returneert reference)
 				if (imageInfo == null) {
 					imageInfo = getImageInfo(eadId, metsId, pageId, "reference");
@@ -231,7 +233,7 @@ public class ControllerDocument {
 		mav.addObject("metsId", metsId);
 
 		// The pager
-		PagerItem pagerItem = dao.getPager("", metsId, 1, 1, 9999, "reference image");
+		PagerItem pagerItem = dao.getPager("", metsId, 1, 1, 9999, REFERENCE_IMAGE);
 		mav.addObject("pager", pagerItem);
 
 		return mav;
@@ -254,7 +256,7 @@ public class ControllerDocument {
 		mav.addObject("pageId", pageId);
 
 		// The pager
-		PagerItem pagerItem = dao.getPagerPageInfo("", metsId, pageId, pageId, 1, "reference image");
+		PagerItem pagerItem = dao.getPagerPageInfo("", metsId, pageId, pageId, 1, REFERENCE_IMAGE);
 		mav.addObject("pager", pagerItem);
 
 		return mav;
