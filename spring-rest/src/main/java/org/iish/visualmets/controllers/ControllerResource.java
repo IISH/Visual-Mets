@@ -47,6 +47,8 @@ import java.util.Arrays;
 @Controller
 public class ControllerResource {
 
+    private static final String REFERENCE_IMAGE = "hires reference image";
+
     @Autowired
     private ImageTransformation imageTransformation;
 
@@ -209,9 +211,9 @@ public class ControllerResource {
         // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
         // check if the given fileGrp is allowed
-        String[] allowedFileGrps = {"reference image", "thumbnail image", "reference"};
+        String[] allowedFileGrps = {"archive image", "hires reference image", REFERENCE_IMAGE, "thumbnail image", "reference"};
         if (!Arrays.asList(allowedFileGrps).contains(fileGrp)) {
-            fileGrp = "reference image";
+            fileGrp = REFERENCE_IMAGE;
         }
 
         // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
