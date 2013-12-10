@@ -30,7 +30,7 @@
      * ....................................................................................................
      *
      var viewer = App.mets2Viewer({
-        template :'http://visualmets.socialhistory.org/template/template.handler.php?callback=?',
+        template :'http://mets2viewer.deontwikkelfabriek.nl/template/template.handler.php?callback=?',
         target : $('#metsViewSample'),
         height : 500,
         width  : 900,
@@ -59,7 +59,7 @@
     });
 
      viewer.init({
-        'url'      : 'http://visualmets.socialhistory.org/rest/document?',
+        'url'      : 'hhttp://visualmets.socialhistory.org/rest/document?',
         'metsId'   : $('input[name=metsId]').val(),
         'defaults' : true,
         'pager' : {
@@ -93,7 +93,7 @@
      * ......................................................................
      *
      $('#metsViewSample').mets2Viewer({
-        template :'http://visualmets.socialhistory.org/template/template.handler.php?callback=?',
+        template :'http://mets2viewer.deontwikkelfabriek.nl/template/template.handler.php?callback=?',
         debug  : true,
         layout : 'thumbnail',
         initialize : {
@@ -273,7 +273,7 @@
 
 
         this.frame = []; // frame metsviewer selector
-        this.version = 2.2;
+        this.version = '2.1.5';
         this.url = "";   // main request url
 
         this.Document = null;  // the documented data object

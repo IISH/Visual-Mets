@@ -70,7 +70,7 @@
              */
             cssClass : 'mets-layout-full-screen-thumbnail',
             events   : {
-                click : function(page){
+                click : function(page, controller){
 
                     return 'PageFullScreenLayout';
                 }

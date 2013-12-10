@@ -47,7 +47,7 @@
      * map the option parameter to the reverence point layout.name
      *
      * for the default size and full screen size its possible to define your own template
-     * to load by tose behaviour's in the instance configuration
+     * to load by those behaviour's in the instance configuration
      * sample:
      * ----------------------------------------------------------------------------------
        layoutConfig : {
@@ -340,7 +340,7 @@ App.mets2.Controller.extend('LayoutManager', function(){
                     (function(event, page){
                         page.getImage().bind(e+'.mets-img', function(){
                           // capture new layout
-                           var layout_fn = events[event](page);
+                           var layout_fn = events[event](page, controller);
                            if(layout_fn){
 
                                // load new layout ...

@@ -211,7 +211,7 @@ public class ControllerResource {
         // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
         // check if the given fileGrp is allowed
-        String[] allowedFileGrps = {"archive image", "hires reference image", REFERENCE_IMAGE, "thumbnail image", "reference"};
+        String[] allowedFileGrps = {"archive image", "hires reference image", REFERENCE_IMAGE, "thumbnail image", "reference image"};
         if (!Arrays.asList(allowedFileGrps).contains(fileGrp)) {
             fileGrp = REFERENCE_IMAGE;
         }

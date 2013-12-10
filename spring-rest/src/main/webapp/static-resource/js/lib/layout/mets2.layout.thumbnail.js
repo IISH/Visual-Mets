@@ -104,7 +104,7 @@
              */
             cssClass : 'mets-layout-thumbnail',
             events   : {
-                click : function(page){
+                click : function(page, controller){
 
                     return 'PageLayout';
                 }

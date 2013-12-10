@@ -47,10 +47,10 @@ NS.LANG.en = {
     copyright : {
         modal : {
             header : 'Copyright bepaling',
-            body : '<div>1. Het IISG stelt, als deel van zijn missie, zijn collecties beschikbaar voor onderzoek, onderwijs en priv� gebruik.<br />' +
+            body : '<div>1. Het IISG stelt, als deel van zijn missie, zijn collecties beschikbaar voor onderzoek, onderwijs en privé gebruik.<br />' +
 '2. Bij het materiaal biedt het IISG ook informatie over auteursrecht, voor zover bekend. Deze gegevens zijn te vinden in de beschrijving in de catalogus. De aard van de (historische) collecties maakt het echter niet altijd mogelijk volledige of juiste informatie te achterhalen.<br />' +
 '3. In de meeste gevallen bezit het IISG niet het auteursrecht van het materiaal.<br />' +
-'4. Kopie�n van materiaal uit IISG collecties worden geleverd voor onderzoek, onderwijs en priv� gebruik.<br />' +
+'4. Kopieën van materiaal uit IISG collecties worden geleverd voor onderzoek, onderwijs en privé gebruik.<br />' +
 '5. Wanneer een gebruiker het materiaal voor een ander doel, zoals publicatie of verspreiding op andere manier, wil gebruiken, is hij zelf verplicht het auteursrecht en gebruiksvoorwaarden uit te zoeken en daaraan te voldoen.<br />' +
 '6. Het IISG bemiddelt niet in kwesties betreffende auteursrecht van derden.<br />' +
 '7. Behalve wanneer het IISG zelf het auteursrecht bezit, kan het niet toestemming geven of weigeren voor publicatie of verspreiding op een andere manier. Voor toestemming en eventuele kosten moet contact met de rechthebbende gezocht worden.<br />' +
@@ -60,7 +60,7 @@ NS.LANG.en = {
     help : {
         modal : {
             header : 'Help',
-            body : '<div>De IISG viewer is beschikbaar in een compact scherm en volledig scherm.Het compacte scherm heeft een werkbalk bovenaan met navigatie. Door te klikken op een plaatje wordt het plaatje groter getoond op het scherm.' +
+            body : '<div>De IISG viewer is beschikbaar in een compact scherm en volledig scherm. Het compacte scherm heeft een werkbalk bovenaan met navigatie. Door te klikken op een plaatje wordt het plaatje groter getoond op het scherm.' +
 'De icoontjes rechtsboven maken het mogelijk te wisselen naar een overzicht van thumbnails of een volledig scherm.<br /><br />' +
 'In het volledige scherm zijn drie werkbalken zichtbaar:<br />' +
 '1. de bovenste werkbalk toont informatie over de context met een link terug naar de inventaris.<br />' +

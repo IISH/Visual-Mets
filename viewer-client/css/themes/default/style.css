@@ -1328,6 +1328,9 @@ div.mets-container .mets-success.active {
 .mets-bar i.reset {
   background-position: -100px -40px;
 }
+.mets-bar i.fullsize {
+  background-position: -120px -40px;
+}
 .mets-hide {
   display: none;
 }

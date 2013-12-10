@@ -16,6 +16,25 @@
 
 
                     $('#metsViewSample').mets2Viewer({
+                        layout : 'thumbnailIISG',
+                        layoutConfig : {
+                            toFullScreen : {
+                                'thumbnail' : 'thumbnailFullScreen',
+                                'page'      : 'pageFullScreen'
+                            },
+                            toDefaultScreen   : {
+                                'thumbnailFullScreen' : 'thumbnailIISG',
+                                'pageFullScreen'      : 'page'
+                            },
+                            toStart : {
+                                fullScreen    : {
+                                    'pageFullScreen' : 'thumbnailFullScreen'
+                                },
+                                defaultScreen : {
+                                    'page' : 'thumbnailIISG'
+                                }
+                            }
+                        },
                         initialize : {
                             'metsId'   : $('input[name=metsId]').val(),
                             'defaults' : true,
@@ -32,7 +51,7 @@
                 $('select[name=themes]').change(function(){
                     var link = $('#theme');
                     var theme = $(this).find('option:selected').val();
-                    link.attr({'href':'/rest/resources/css/themes/'+theme+'/style.css?_=2.1'});
+                    link.attr({'href':'css/themes/'+theme+'/style.css?_=2.1'});
                 });
             });
         })(jQuery);

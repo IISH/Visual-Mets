@@ -1,11 +1,14 @@
 (function($){
     /**
+     * the custom IISG layout
+     * @name ThumbnailIISGLayout
+     *
      * layout properties for more info
      * @see mets2.LayoutInterface
      */
     App.mets2.Model.extend({
         layouts : {
-            thumbnail : {
+            thumbnailIISG : {
                 rows : 2,
                 pages  : 8,
                 margin : 10,
@@ -84,7 +87,7 @@
             getGridSize             : function
        }}
      */
-    App.mets2.View.extend('ThumbnailLayout', function(){
+    App.mets2.View.extend('ThumbnailIISGLayout', function(){
 
         var self   = this;
         var model  = this.getModel();
@@ -96,7 +99,7 @@
              * every Layout must have a field name , the name of the layout type
              * @type {string}
              */
-            name    : 'thumbnail',
+            name    : 'thumbnailIISG',
             /**
              * the class style for the match of css
              * @see ".mets-container"
@@ -106,7 +109,11 @@
             events   : {
                 click : function(page, controller){
 
-                    return 'PageLayout';
+                    model.enableFullScreen();
+                    controller.activateFullScreen();
+                    controller.Fullscreen().buttonFocus();
+
+                    return 'PageFullScreenLayout';
                 }
             },
             getData : function(){

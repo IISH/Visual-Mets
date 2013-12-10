@@ -17,6 +17,7 @@
     App.mets2.Controller.route('overview',{
         events : {
             'click' : function(){
+
               this.loadThumbLayout();
             }
         },
@@ -42,7 +43,7 @@
 
                 for(var name in config){
                     if(config.hasOwnProperty(name)){
-
+                        $$(layoutType);
                         if(layoutType == name){
 
                             model.setTypeLayout(config[name]);

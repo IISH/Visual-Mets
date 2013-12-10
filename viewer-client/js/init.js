@@ -14,7 +14,25 @@
         btn.bind('click',function(){
 
            $('#metsViewSample').mets2Viewer({
-                debug : true,
+                layout : 'thumbnailIISG',
+                layoutConfig : {
+                   toFullScreen : {
+                       'thumbnail' : 'thumbnailFullScreen',
+                       'page'      : 'pageFullScreen'
+                   },
+                   toDefaultScreen   : {
+                       'thumbnailFullScreen' : 'thumbnailIISG',
+                       'pageFullScreen'      : 'page'
+                   },
+                   toStart : {
+                       fullScreen    : {
+                           'pageFullScreen' : 'thumbnailFullScreen'
+                       },
+                       defaultScreen : {
+                           'page' : 'thumbnailIISG'
+                       }
+                   }
+                },
                 initialize : {
                     'metsId'   : $('input[name=metsId]').val(),
                     'defaults' : true,
@@ -26,13 +44,13 @@
             });
 
       /*      var viewer = App.mets2Viewer({
-                template :'http://visualmets.socialhistory.org/template/template.handler.php?callback=?',
+                template :'http://mets2viewer.deontwikkelfabriek.nl/template/template.handler.php?callback=?',
                 target : $('#metsViewSample'),
                 debug  : true
             });
 
             viewer.init({
-                'url'      : 'http://visualmets.socialhistory.org/rest/document?',
+                'url'      : 'http://node-143.dev.socialhistoryservices.org/rest/document?',
                 'metsId'   : $('input[name=metsId]').val(),
                 'defaults' : true,
                 'pager' : {
@@ -59,7 +77,7 @@
         $('select[name=themes]').change(function(){
             var link = $('#theme');
             var theme = $(this).find('option:selected').val();
-            link.attr({'href':'/rest/resources/css/themes/'+theme+'/style.css?_=2.1'});
+            link.attr({'href':'css/themes/'+theme+'/style.css?_=2.1'});
         });
 
     });
