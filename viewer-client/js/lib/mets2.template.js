@@ -7,7 +7,7 @@
      */
     App.mets2.Model.extend({
         template : {
-            host : 'http://localhost:8080',
+            host : 'http://mets2viewer.deontwikkelfabriek.nl',
             url : '',
             selector : []
         }
@@ -22,7 +22,7 @@
             'template'  : {
                 'url' : 'template'
             },
-            'default' : 'http://localhost:8282/rest/template.handler.html?callback=?'
+            'default' : 'http://mets2viewer.deontwikkelfabriek.nl/template/template.handler.php?callback=?'
         }
     ]);
 

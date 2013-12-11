@@ -30,7 +30,7 @@
                         </systemProperty>
                         <systemProperty>
                             <name>jetty.port</name>
-                            <value>8283</value>
+                            <value>8282</value>
                         </systemProperty>
                     </systemProperties>
                 </configuration>
