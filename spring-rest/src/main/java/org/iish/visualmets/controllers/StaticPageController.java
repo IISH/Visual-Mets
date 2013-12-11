@@ -89,9 +89,9 @@ public class StaticPageController {
         return mav;
     }
 
-    @RequestMapping(value = "/mets2.template.html", method = RequestMethod.GET)
+    @RequestMapping(value = "/template.handler.html", method = RequestMethod.GET)
     public ModelAndView template(@RequestParam(value = "callback", required = false) String callback, HttpServletResponse response) {
-        return ControllerUtils.createModelAndViewPage("mets2.template", callback, response);
+        return ControllerUtils.createModelAndViewPage("template.handler", callback, response);
     }
 
     @RequestMapping("/{pageName}.html")
