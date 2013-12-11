@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>:: metsviewer v2.0 ::</title>
 
-    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="http://localhost:8283/rest/resources/css/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
 
-    <link href="css/themes/iisg/style.css?_=2.1" rel="stylesheet" type="text/css" media="all" id="theme" />
-    <script type="text/javascript" src="js/mets2viewer.min.js?_=2.2"></script>
+    <link href="http://localhost:8283/rest/resources/css/themes/iisg/style.css?_=2.1" rel="stylesheet" type="text/css" media="all" id="theme" />
+    <script type="text/javascript" src="http://localhost:8283/rest/resources/js/mets2viewer.min.js?_=2.2"></script>
     <script type="text/javascript">
         (function($){
             $(document).ready(function(){
@@ -16,6 +16,8 @@
 
 
                     $('#metsViewSample').mets2Viewer({
+                        template:'http://localhost:8283/rest/template.handler.html?',
+
                         layout : 'thumbnailIISG',
                         layoutConfig : {
                             toFullScreen : {
@@ -36,6 +38,7 @@
                             }
                         },
                         initialize : {
+                            url:'http://localhost:8283/rest/document?',
                             'metsId'   : $('input[name=metsId]').val(),
                             'defaults' : true,
                             'pager' : {
