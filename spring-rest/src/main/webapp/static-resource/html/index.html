@@ -8,10 +8,10 @@
     (function ($) {
         $(document).ready(function () {
             $('#myMetsViewer').mets2Viewer({
-                'template': '/rest/template.handler.html?callback=?',
+                'template': 'http://localhost:8282/rest/template.handler.html?callback=?',
                 'initialize': {
-                    'url':'/rest/document?',
-                    'metsId': 'http://hdl.handle.net/10622/ARCH00712.A 1?locatt=view:mets',
+                    'url':'http://localhost:8282/rest/document?',
+                    'metsId': 'http://localhost:8282/rest/resources/html/mets.xml',
                     'pager': {
                         'start': 0,
                         'rows': -1
