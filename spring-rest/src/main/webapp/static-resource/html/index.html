@@ -1,28 +1,114 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 
-<body>
-
+<head>
+     <title>test mets view</title>
+    <link href="/rest/resources/css/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
 <link href="/rest/resources/css/themes/default/style.css" rel="stylesheet" type="text/css" media="all"/>
 <script type="text/javascript" src="/rest/resources/js/mets2viewer.min.js"></script>
+
 <script type="text/javascript">
-    (function ($) {
-        $(document).ready(function () {
-            $('#myMetsViewer').mets2Viewer({
-                'template': 'http://localhost:8282/rest/template.handler.html?callback=?',
-                'initialize': {
+    (function($){
+        $(document).ready(function(){
+            var btn = $('.save');
+            btn.bind('click',function(){
+
+
+                $('#metsViewSample').mets2Viewer({
+                    layout : 'thumbnailIISG',
+                    layoutConfig : {
+                        toFullScreen : {
+                            'thumbnail' : 'thumbnailFullScreen',
+                            'page'      : 'pageFullScreen'
+                        },
+                        toDefaultScreen   : {
+                            'thumbnailFullScreen' : 'thumbnailIISG',
+                            'pageFullScreen'      : 'page'
+                        },
+                        toStart : {
+                            fullScreen    : {
+                                'pageFullScreen' : 'thumbnailFullScreen'
+                            },
+                            defaultScreen : {
+                                'page' : 'thumbnailIISG'
+                            }
+                        }
+                    },
+                    'template': 'http://localhost:8282/rest/template.handler.html?callback=?',
+                    initialize : {
                     'url':'http://localhost:8282/rest/document?',
                     'metsId': 'http://localhost:8282/rest/resources/html/mets.xml',
-                    'pager': {
-                        'start': 0,
-                        'rows': -1
+                        'pager' : {
+                            'start' : 0,
+                            'rows'  : -1
+                        }
                     }
-                }
+                });
+            });
+            btn.trigger('click');
+
+
+            $('select[name=themes]').change(function(){
+                var link = $('#theme');
+                var theme = $(this).find('option:selected').val();
+                link.attr({'href':'css/themes/'+theme+'/style.css?_=2.2'});
             });
         });
     })(jQuery);
 </script>
-<div id="parent" style="width: 1000px; height: 500px;">
-    <div id="myMetsViewer"></div>
+
+<style type="text/css">
+    .container{
+        width: 1000px;
+        height: 550px;
+        margin: 5% auto;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row-fluid">
+        <div class="span8"> <h1>Mets<span style="color: #6996cc;">2</span>Viewer <span style="font-weight: 100; font-size: 18px;">(b2.0)</span></h1></div>
+        <div class="span4">
+            <!--
+              select theme
+              <select name="theme">
+                  <option value="default">default</option>
+                  <option value="osx">osx</option>
+              </select>
+              -->
+        </div>
+    </div>
+
+
+
+    <div class="mets-container mets-hide" id="metsViewSample"></div>
+
+    <div class="" style="border-radius: 20px; padding: 20px; background: #e2e2e2; margin-bottom:20px;margin-top: 30px;">
+
+        <table cellpadding="5" width="100%">
+            <tr>
+                <td width="120">css theme</td>
+                <td>
+                    <select name="themes">
+                        <option value="iisg">iisg</option>
+                        <option value="default">default</option>
+                        <option value="osx">osx</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td width="120">mets url (id)</td>
+                <td><input name="metsId" style="width:100%" value="http://localhost:8282/rest/resources/html/mets.xml" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button class="btn btn-primary pull-right btn-large save">Update</button>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 </body>

@@ -14,6 +14,7 @@
         btn.bind('click',function(){
 
            $('#metsViewSample').mets2Viewer({
+                debug : true,
                 layout : 'thumbnailIISG',
                 layoutConfig : {
                    toFullScreen : {
