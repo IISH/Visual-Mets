@@ -261,6 +261,12 @@
             // on success image loaded
             self.event.addListener('onImageLoad', function(page){
 
+                /**
+                 * @fillSize file size active
+                 */
+                if(self.getModel().isFullSizeActive()){
+                    self.getModel().addFullSizeParamToImage();
+                }
 
                 self.getView().paginationOverview();
 

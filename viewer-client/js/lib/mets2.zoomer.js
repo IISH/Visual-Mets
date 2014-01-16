@@ -14,7 +14,7 @@
     App.mets2.Model.extend({
         scaleVector : {
             steps : 10,
-            max   : 10000,
+            max   : 10000000,
             min   : 300,
             level : 0,
             dragging : {
@@ -148,7 +148,10 @@
                     this.addDisableClass();
 
                 }
-
+                /**
+                 * @fillSize deactivate full size rendering!
+                 */
+                this.model.deactivateFullSize();
             },
             removeDisableClass : function(){
                 this.btn.removeClass('mets-button-disable');
@@ -157,7 +160,6 @@
                 this.btn.addClass('mets-button-disable');
             },
             renderSize : function(size){
-
                 var step = (this.model.getScaleSteps()*this.model.getZoomLevel())/100;
                 return {
                     width   : Math.round(size.width+(size.width*step)),
@@ -208,6 +210,10 @@
                     this.addDisableClass();
 
                 }
+                /**
+                 * @fillSize deactivate full size rendering!
+                 */
+                this.model.deactivateFullSize();
             },
             removeDisableClass : function(){
                 this.btn.removeClass('mets-button-disable');
@@ -250,6 +256,7 @@
 
         loader.open();
         loader.text('zoomming ('+model.getZoomLevel()+')');
+
 
         $UT.delay(function(){
 

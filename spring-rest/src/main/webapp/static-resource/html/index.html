@@ -1,75 +1,82 @@
 <html xmlns="http://www.w3.org/1999/html">
 
 <head>
-     <title>test mets view</title>
-    <link href="/rest/resources/css/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
-<link href="/rest/resources/css/themes/default/style.css" rel="stylesheet" type="text/css" media="all"/>
-<script type="text/javascript" src="/rest/resources/js/mets2viewer.min.js"></script>
+    <title>test mets view</title>
+    <link href="/rest/resources/css/bootstrap.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/rest/resources/css/themes/default/style.css?_=2.5" rel="stylesheet" type="text/css" media="all"/>
+    <script type="text/javascript" src="/rest/resources/js/mets2viewer.min.js?_=2.5"></script>
 
-<script type="text/javascript">
-    (function($){
-        $(document).ready(function(){
-            var btn = $('.save');
-            btn.bind('click',function(){
+    <script type="text/javascript">
 
+        var pathArray = window.location.href.split('/');
+        var protocol = pathArray[0];
+        var host = pathArray[2];
+        var url = protocol + '//' + host;
+        $('#metsId').value = url + '/rest/resources/html/testmets.xml';
 
-                $('#metsViewSample').mets2Viewer({
-                    layout : 'thumbnailIISG',
-                    layoutConfig : {
-                        toFullScreen : {
-                            'thumbnail' : 'thumbnailFullScreen',
-                            'page'      : 'pageFullScreen'
-                        },
-                        toDefaultScreen   : {
-                            'thumbnailFullScreen' : 'thumbnailIISG',
-                            'pageFullScreen'      : 'page'
-                        },
-                        toStart : {
-                            fullScreen    : {
-                                'pageFullScreen' : 'thumbnailFullScreen'
+        (function ($) {
+            $(document).ready(function () {
+                var btn = $('.save');
+                btn.bind('click', function () {
+
+                    $('#metsViewSample').mets2Viewer({
+                        layout: 'thumbnailIISG',
+                        layoutConfig: {
+                            toFullScreen: {
+                                'thumbnail': 'thumbnailFullScreen',
+                                'page': 'pageFullScreen'
                             },
-                            defaultScreen : {
-                                'page' : 'thumbnailIISG'
+                            toDefaultScreen: {
+                                'thumbnailFullScreen': 'thumbnailIISG',
+                                'pageFullScreen': 'page'
+                            },
+                            toStart: {
+                                fullScreen: {
+                                    'pageFullScreen': 'thumbnailFullScreen'
+                                },
+                                defaultScreen: {
+                                    'page': 'thumbnailIISG'
+                                }
+                            }
+                        },
+                        'template': url + '/rest/template.handler.html?callback=?',
+                        initialize: {
+                            'url': url + '/rest/document?',
+                            'metsId': url + '/rest/testmets.xml',
+                            'pager': {
+                                'start': 0,
+                                'rows': -1
                             }
                         }
-                    },
-                    'template': 'http://localhost:8282/rest/template.handler.html?callback=?',
-                    initialize : {
-                    'url':'http://localhost:8282/rest/document?',
-                    'metsId': 'http://localhost:8282/rest/resources/html/mets.xml',
-                        'pager' : {
-                            'start' : 0,
-                            'rows'  : -1
-                        }
-                    }
+                    });
+                });
+                btn.trigger('click');
+
+
+                $('select[name=themes]').change(function () {
+                    var link = $('#theme');
+                    var theme = $(this).find('option:selected').val();
+                    link.attr({'href': 'css/themes/' + theme + '/style.css?_=2.2'});
                 });
             });
-            btn.trigger('click');
+        })(jQuery);
+    </script>
 
-
-            $('select[name=themes]').change(function(){
-                var link = $('#theme');
-                var theme = $(this).find('option:selected').val();
-                link.attr({'href':'css/themes/'+theme+'/style.css?_=2.2'});
-            });
-        });
-    })(jQuery);
-</script>
-
-<style type="text/css">
-    .container{
-        width: 1000px;
-        height: 550px;
-        margin: 5% auto;
-    }
-</style>
+    <style type="text/css">
+        .container {
+            width: 1000px;
+            height: 550px;
+            margin: 5% auto;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="container">
     <div class="row-fluid">
-        <div class="span8"> <h1>Mets<span style="color: #6996cc;">2</span>Viewer <span style="font-weight: 100; font-size: 18px;">(b2.0)</span></h1></div>
+        <div class="span8"><h1>Mets<span style="color: #6996cc;">2</span>Viewer <span
+                style="font-weight: 100; font-size: 18px;">(b2.0)</span></h1></div>
         <div class="span4">
             <!--
               select theme
@@ -80,7 +87,6 @@
               -->
         </div>
     </div>
-
 
 
     <div class="mets-container mets-hide" id="metsViewSample"></div>
@@ -100,7 +106,8 @@
             </tr>
             <tr>
                 <td width="120">mets url (id)</td>
-                <td><input name="metsId" style="width:100%" value="http://localhost:8282/rest/resources/html/mets.xml" /></td>
+                <td><input id="metsId" name="metsId" style="width:100%" value=""/>
+                </td>
             </tr>
             <tr>
                 <td colspan="2">

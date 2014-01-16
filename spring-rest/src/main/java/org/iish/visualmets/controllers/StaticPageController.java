@@ -119,6 +119,20 @@ public class StaticPageController {
         return mav;
     }
 
+    @RequestMapping("/{pageName}.xml")
+    public ModelAndView getXmlPage(
+            @PathVariable("pageName") String pageName,
+            HttpServletResponse response
+    ) throws Exception {
+
+        response.setContentType("text/xml; charset=utf-8");
+
+        ModelAndView mav = new ModelAndView(pageName + ".xml");
+        mav.addObject("proxy_host_mets", proxy_host_mets);
+
+        return mav;
+    }
+
 /*
     @RequestMapping("/{pageName}.jnlp")
     public ModelAndView getJNLP(@PathVariable("pageName") String pageName,

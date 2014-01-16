@@ -141,10 +141,17 @@
                 var size  = canvas.getSize();
                 var param = model.getImageParam();
                 // return the stored width, height if this exist
-                return {
-                    'scale'  : 0,
-                    'width'  : param.width || size.width,
-                    'height' :  param.height || (size.height - model.getPageScaleMargin())
+                /**
+                 * @fillSize do not on fullsize
+                 */
+                if(!self.getModel().isFullSizeActive()){
+                    return {
+                        'scale'  : 0,
+                        'width'  : param.width || size.width,
+                        'height' : param.height || (size.height - model.getPageScaleMargin())
+                    }
+                }else{
+                    return {};
                 }
             },
             getLayoutViews : function(){
@@ -161,11 +168,16 @@
 
                 // set url if not exist
                 page.setUrl(page.getUrlByType(this.whichUrlTypeToLoad()));
-                //
-                model.addParamToImage({
-                    width : size.width,
-                    height : (size.height - model.getPageScaleMargin())
-                });
+                /**
+                 * @fillSize do not on fullsize
+                 */
+                if(!self.getModel().isFullSizeActive()){
+                    model.addParamToImage({
+                        width : size.width,
+                        height : (size.height - model.getPageScaleMargin())
+                    });
+                }
+
                 page.add();
             }
         };

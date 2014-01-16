@@ -247,7 +247,7 @@
                 succes : function(img){
 
                     self.show();
-                    fn();
+                    fn(img);
                     if(self.model.isDebugActive()){
                         console.info("IMAGE: %c"+self.getUrl()+self.getParam(), "color:#043989; font-weight: 800;");
                     }
@@ -352,6 +352,13 @@
             var size = this.getImageSize();
             return (size.width > size.height);
         };
+
+        this.getSize = function(){
+            return {
+                width  : this.page.width(),
+                height : this.page.height()
+            }
+        }
 
     });
 

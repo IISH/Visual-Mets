@@ -59,7 +59,7 @@
     });
 
      viewer.init({
-        'url'      : 'hhttp://visualmets.socialhistory.org/rest/document?',
+        'url'      : 'http://visualmets.socialhistory.org/rest/document?',
         'metsId'   : $('input[name=metsId]').val(),
         'defaults' : true,
         'pager' : {
@@ -273,7 +273,7 @@
 
 
         this.frame = []; // frame metsviewer selector
-        this.version = '2.1.5';
+        this.version = '2.1.7';
         this.url = "";   // main request url
 
         this.Document = null;  // the documented data object
@@ -287,6 +287,11 @@
 
         // argument parser for!
         this.autoOptionMapping(options);
+
+
+        this.getVersion =  function(){
+            return version;
+        };
 
         this.getDocument = function () {
             return this.Document;

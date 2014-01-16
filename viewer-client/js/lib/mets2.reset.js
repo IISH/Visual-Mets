@@ -26,6 +26,12 @@
                 model.setZoomLevel(0);
                 var size   = this.getView().Canvas().getScaledSize();
 
+
+                    /**
+                     * @fillSize deactivate full size rendering!
+                     */
+                    model.deactivateFullSize();
+
                     model.resetParamImage();
 
                     model.addParamToImage({
