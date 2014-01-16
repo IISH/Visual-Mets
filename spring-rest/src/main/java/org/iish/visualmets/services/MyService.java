@@ -154,76 +154,57 @@ public class MyService {
             dbFactory.setNamespaceAware(true);
             nsMap.put("ead", ead_namespace);
 
-            final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            try {
+            Document doc = cacheService.loadDocument(this.generateEadUrl(_metsId));
+            if (doc != null) {
+                String[] array = {number};
 
-                URL server = new URL(this.generateEadUrl(_metsId));
-                HttpURLConnection connection = (HttpURLConnection) server.openConnection();
-                code = connection.getResponseCode();
-                if (code == HttpServletResponse.SC_OK) {
-                    connection.connect();
-                    InputStream in = connection.getInputStream();
-
-                    Document doc = dBuilder.parse(in);
-
-                    doc.getDocumentElement().normalize();
-                    String[] array = {number};
-
-                    if (XPathAPI.selectSingleNode(doc, "//ead:ead", nsMap, array) == null) {
-                        map.put(KEY_NOTE, "");
-                        map.put(KEY_BREADCRUMB, list);
-                        map.put(KEY_CODE, HttpServletResponse.SC_OK);
-                        return map;
-                    }
-
-                    Node levelNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']", nsMap, array);
-                    if (levelNode == null) {
-                        // code = HttpServletResponse.SC_NOT_FOUND;
-                        map.put(KEY_NOTE, "");
-                        map.put(KEY_BREADCRUMB, list);
-                        map.put(KEY_CODE, HttpServletResponse.SC_OK);
-                        return map;
-                    } else {
-                        code = HttpServletResponse.SC_OK;
-
-                        Node noteNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']/following-sibling::ead:note", nsMap, array);
-                        if (noteNode != null) {
-                            map.put(KEY_NOTE, flattenString(noteNode.getTextContent()));
-                        }
-
-                        String nodeName = levelNode.getParentNode().getParentNode().getNodeName();
-                        int levels = numberOfLevels(nodeName);
-
-                        //first level from titleproper
-                        for (int i = 2; i <= levels; i++) {
-                            Node aNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']/ancestor::ead:c0" + i + "/ead:did/ead:unittitle", nsMap, array);
-                            if (aNode == null) {
-                                list.add("");
-                            } else {
-                                if (i == levels)
-                                    list.add((String) map.get(MyService.KEY_NUMBER) + ": " + flattenString(aNode.getTextContent()));
-                                else
-                                    list.add(flattenString(aNode.getTextContent()));
-                            }
-                        }
-
-                        Node firstNode = XPathAPI.selectSingleNode(doc, "//ead:titleproper", nsMap);
-                        list.add(0, flattenString(firstNode.getTextContent()));
-
-                        map.put(KEY_BREADCRUMB, list);
-                    }
+                if (XPathAPI.selectSingleNode(doc, "//ead:ead", nsMap, array) == null) {
+                    map.put(KEY_NOTE, "");
+                    map.put(KEY_BREADCRUMB, list);
+                    map.put(KEY_CODE, HttpServletResponse.SC_OK);
+                    return map;
                 }
 
+                Node levelNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']", nsMap, array);
+                if (levelNode == null) {
+                    // code = HttpServletResponse.SC_NOT_FOUND;
+                    map.put(KEY_NOTE, "");
+                    map.put(KEY_BREADCRUMB, list);
+                    map.put(KEY_CODE, HttpServletResponse.SC_OK);
+                    return map;
+                } else {
+                    code = HttpServletResponse.SC_OK;
 
-            } catch (IOException e) {
-                code = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                map.put(KEY_MESSAGE, e.getMessage());
-                e.printStackTrace();
+                    Node noteNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']/following-sibling::ead:note", nsMap, array);
+                    if (noteNode != null) {
+                        map.put(KEY_NOTE, flattenString(noteNode.getTextContent()));
+                    }
+
+                    String nodeName = levelNode.getParentNode().getParentNode().getNodeName();
+                    int levels = numberOfLevels(nodeName);
+
+                    //first level from titleproper
+                    for (int i = 2; i <= levels; i++) {
+                        Node aNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']/ancestor::ead:c0" + i + "/ead:did/ead:unittitle", nsMap, array);
+                        if (aNode == null) {
+                            list.add("");
+                        } else {
+                            if (i == levels)
+                                list.add((String) map.get(MyService.KEY_NUMBER) + ": " + flattenString(aNode.getTextContent()));
+                            else
+                                list.add(flattenString(aNode.getTextContent()));
+                        }
+                    }
+
+                    Node firstNode = XPathAPI.selectSingleNode(doc, "//ead:titleproper", nsMap);
+                    list.add(0, flattenString(firstNode.getTextContent()));
+
+                    map.put(KEY_BREADCRUMB, list);
+                }
             }
-
-
         }
-        map.put(KEY_CODE, code);
+
+        map.put(KEY_CODE, HttpServletResponse.SC_OK);
 
 
         return map;
@@ -378,7 +359,7 @@ public class MyService {
                         result.add(value - 1);
                 }
             } catch (NumberFormatException e) {
-                        log.error(e);
+                log.error(e);
             }
         }
 
