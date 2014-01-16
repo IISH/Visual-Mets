@@ -273,7 +273,7 @@
 
 
         this.frame = []; // frame metsviewer selector
-        this.version = '2.1.7';
+        this.version = '2.1.8';
         this.url = "";   // main request url
 
         this.Document = null;  // the documented data object

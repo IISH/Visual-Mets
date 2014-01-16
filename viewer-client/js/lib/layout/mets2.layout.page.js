@@ -90,7 +90,8 @@
      */
     App.mets2.View.extend('PageLayout', function(){
 
-        var model = this.getModel();
+        var self   = this;
+        var model  = this.getModel();
         var canvas = this.Canvas();
 
         var methods = {
@@ -171,6 +172,7 @@
                 /**
                  * @fillSize do not on fullsize
                  */
+                // TODO bug reverence klopt niet
                 if(!self.getModel().isFullSizeActive()){
                     model.addParamToImage({
                         width : size.width,
