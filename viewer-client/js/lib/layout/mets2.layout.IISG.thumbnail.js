@@ -189,12 +189,7 @@
              * @return void
              */
             update : function(){
-                /*
-                    DODO fix model instance bug!! voor meerdere viewers
 
-                    console.warn('GET CANVAS  ', model.getCanvasSelector());
-                    console.warn('SELECTOR    ', model.getFrameSelector());
-                */
                 var cells = model.getCanvasSelector().find('.mets-thumb-cell');
                 var size = methods.getGridSize();
                 var cell = [];

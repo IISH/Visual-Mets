@@ -18,8 +18,8 @@
                 layout : 'thumbnailIISG',
                 layoutConfig : {
                    toFullScreen : {
-                       'thumbnail' : 'thumbnailFullScreen',
-                       'page'      : 'pageFullScreen'
+                       'thumbnailIISG'  : 'pageFullScreen',
+                       'page'           : 'thumbnailFullScreen'
                    },
                    toDefaultScreen   : {
                        'thumbnailFullScreen' : 'thumbnailIISG',

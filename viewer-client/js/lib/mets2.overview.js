@@ -43,9 +43,8 @@
 
                 for(var name in config){
                     if(config.hasOwnProperty(name)){
-                        $$(layoutType);
-                        if(layoutType == name){
 
+                        if(layoutType == name){
                             model.setTypeLayout(config[name]);
                             manager = this.LayoutManager();
                             manager.init();

@@ -324,7 +324,6 @@
             var layoutType = self.getModel().getTypeLayout();
                 var configLayout = {};
 
-
             if(self.getModel().isFullScreenEnable()){
 
                 // get layout load configuration...
@@ -332,6 +331,7 @@
 
                 for(var name1 in configLayout){
                     if(configLayout.hasOwnProperty(name1)){
+
                         if(layoutType == name1){
 
                             self.getModel().setTypeLayout(configLayout[name1]);
@@ -351,6 +351,7 @@
                 for(var name2 in configLayout){
                     if(configLayout.hasOwnProperty(name2)){
                         if(layoutType == name2){
+
                             self.getModel().setTypeLayout(configLayout[name2]);
                             layoutManager.load();
                             layoutManager.removePages();

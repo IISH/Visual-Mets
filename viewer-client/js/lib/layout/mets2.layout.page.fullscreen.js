@@ -118,6 +118,7 @@
              */
             update : function(){
 
+
                 var page   = model.getCurrentLayoutPage();
                 var size   = canvas.getScaledSize();
 

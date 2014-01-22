@@ -560,6 +560,7 @@ App.mets2.Controller.extend('LayoutManager', function(){
             var end  = this.getLayout().getAmountPages()+pos;
             // queue
             controller.event.fire('onStartQueueReady', pages);
+
             this.pageQueueLoader(pages, pos, end);
             return this;
         },
