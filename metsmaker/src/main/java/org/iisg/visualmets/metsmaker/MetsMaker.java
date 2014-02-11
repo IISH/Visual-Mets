@@ -239,7 +239,7 @@ public class MetsMaker {
             FLocat fl2 = f2.newFLocat();
             fl2.setLocType("HANDLE");
             fl2.setType("simple");
-            referenceImageUrl = this.proxy + columns[pidColumnNr] + "?locatt=view:level2";
+            referenceImageUrl = this.proxy + columns[pidColumnNr] + "?locatt=view:level1";
             referenceImageUrl = referenceImageUrl.replace("\"", "");
             fl2.setHref(referenceImageUrl);
 
