@@ -193,7 +193,7 @@ public class ControllerResource {
             @RequestParam(value = "width", required = false, defaultValue = "0") Integer width,
             @RequestParam(value = "height", required = false, defaultValue = "0") Integer height,
             @RequestParam(value = "callback", required = false) String callback,
-            @RequestParam(value = "fileGrp", required = false, defaultValue = "reference image") String fileGrp,
+            @RequestParam(value = "fileGrp", required = false, defaultValue = REFERENCE_IMAGE) String fileGrp,
             HttpServletResponse response
     )
             throws Exception, IOException {
