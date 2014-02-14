@@ -91,7 +91,7 @@ public class MyService {
                 nsMap.put("epdcx", "http://purl.org/eprint/epdcx/2006-11-16/");
                 final Document doc = cacheService.loadDocument(_metsId);
                 doc.getDocumentElement().normalize();
-                String accessString = XPathAPI.selectSingleNodeAsString(doc, "//epdcx:description[@epdcx:resourceId='level2']/child::epdcx:statement/@epdcx:valueRef", nsMap);
+                String accessString = XPathAPI.selectSingleNodeAsString(doc, "//epdcx:description[@epdcx:resourceId='level1']/child::epdcx:statement/@epdcx:valueRef", nsMap);
                 if (accessString != null && accessString.equals("http://purl.org/eprint/accessRights/OpenAccess"))
                     resultCode = HttpServletResponse.SC_OK;
                 else if (accessString == null)
