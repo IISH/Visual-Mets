@@ -156,13 +156,14 @@ public class CacheService {
         final boolean hasExpired = folder.lastModified() + cacheLimitInSeconds < new Date().getTime();
         if (folder.length() > cacheLimitInBytes || hasExpired) {
             final File[] files = folder.listFiles();
-            for (File file : files) {
-                try {
-                    file.delete();
-                    count++;
-                } catch (Exception e) {
+            if (files != null)
+                for (File file : files) {
+                    try {
+                        file.delete();
+                        count++;
+                    } catch (Exception e) {
+                    }
                 }
-            }
         }
         return count;
     }
