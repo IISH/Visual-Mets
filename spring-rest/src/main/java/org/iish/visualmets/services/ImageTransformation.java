@@ -305,7 +305,7 @@ public class ImageTransformation {
                             canvas vis-a-vis the given reference image size.
     */
 //    public int getScale(String pageId, int canvas_width, int canvas_height) {
-    public int getScale(int current_width, int current_height, int canvas_width, int canvas_height, int max_scale) {
+    public int getScale(int current_width, int current_height, float canvas_width, float canvas_height, int max_scale) {
         int scale = 0;
 
         int scale_width = (int)(canvas_width*100.0/current_width);
