@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,9 +16,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -106,6 +110,38 @@ public class CacheService {
         }
 
         return document;
+    }
+
+    public BufferedImage loadImage(String url) {
+        final URL _url;
+        try {
+            _url = new URL(url);
+        } catch (MalformedURLException e) {
+            log.error(e);
+            throw new SecurityException(e.getMessage());
+        }
+
+        return loadImage(_url);
+    }
+
+    private BufferedImage loadImage(URL url) {
+        final String filename = SHA1(url.toString());
+        final String file = cacheFolder + filename;
+        final File f = new File(file);
+
+        try {
+            if (f.exists()) {
+                return ImageIO.read(f);
+            } else {
+                final BufferedImage img = ImageIO.read(url);
+                emptyCache();
+                ImageIO.write(img, "jpg", f);
+                return img;
+            }
+        } catch (IOException e) {
+            f.delete();
+            throw new SecurityException(e.getMessage());
+        }
     }
 
     public InputStream inputStream(String url) {

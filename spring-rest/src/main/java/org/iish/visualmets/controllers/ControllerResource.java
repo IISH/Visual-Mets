@@ -18,6 +18,7 @@ package org.iish.visualmets.controllers;
 
 import org.iish.visualmets.dao.DocumentDao;
 import org.iish.visualmets.datamodels.ImageItem;
+import org.iish.visualmets.services.CacheService;
 import org.iish.visualmets.services.ImageTransformation;
 import org.iish.visualmets.services.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
 
-//import java.awt.*;
-//import java.awt.geom.AffineTransform;
-//import java.awt.image.RasterFormatException;
-//import java.awt.image.RescaleOp;
-
 @Controller
 public class ControllerResource {
 
@@ -51,6 +47,9 @@ public class ControllerResource {
 
     @Autowired
     private ImageTransformation imageTransformation;
+
+    @Autowired
+    public CacheService cacheService;
 
     @Qualifier("documentDao")
     @Autowired
@@ -125,7 +124,7 @@ public class ControllerResource {
 
         // GET ORIGINAL SIZE IMAGE
         ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, "thumbnail image");
-        BufferedImage img = ImageIO.read(new URL(imageInfo.getUrl().toString()));
+        BufferedImage img =  cacheService.loadImage(imageInfo.getUrl()) ;
 
         // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
@@ -227,7 +226,7 @@ public class ControllerResource {
         if (imageInfo == null) {
             imageInfo = getImageInfo(eadId, metsId, pageId, "reference");
         }
-        BufferedImage img = ImageIO.read(new URL(imageInfo.getUrl().toString()));
+        BufferedImage img =  cacheService.loadImage ( imageInfo.getUrl() ) ;
 
         // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
