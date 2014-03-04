@@ -22,8 +22,6 @@ public class MtrReader implements DocumentDao {
 
     @Value("#{visualmetsProperties['proxy.host']}")
     private String proxy_host = "/";
-    @Value("#{visualmetsProperties['proxy.host.mets']}")
-    private String proxy_host_mets = "/";
 
     @Autowired
     public CacheService cacheService;
@@ -98,10 +96,10 @@ public class MtrReader implements DocumentDao {
     public PagerItem getPager(String eadId, String metsId, int pageId, int start, int rows, String use) throws Exception {
 
         final METS mets = loadMetsDocument(metsId);
-        final String url_tpl = proxy_host_mets + "rest/resource/reference_image?metsId=" + metsId + "&pageId=";
+        final String url_tpl = proxy_host + "rest/resource/reference_image?metsId=" + metsId + "&pageId=";
         //final String url_thumbnail_tpl = proxy_host_mets + "rest/resource/thumbnail_image?metsId=" + metsId + "&pageId=";
-        final String url_transcription_tpl = proxy_host_mets + "rest/resource/get_transcription?metsId=" + metsId + "&pageId=";
-        final String url_pageinfo_tpl = proxy_host_mets + "rest/pageInfo?metsId=" + metsId + "&pageId=";
+        final String url_transcription_tpl = proxy_host + "rest/resource/get_transcription?metsId=" + metsId + "&pageId=";
+        final String url_pageinfo_tpl = proxy_host + "rest/pageInfo?metsId=" + metsId + "&pageId=";
         final PagerItem pagerItem = new PagerItem();
         pagerItem.setEadid(eadId); // ToDo: remove.. useless
         pagerItem.setMetsid(metsId);
@@ -157,9 +155,9 @@ public class MtrReader implements DocumentDao {
     public PagerItem getPagerPageInfo(String eadId, String metsId, int pageId, int start, int rows, String use) throws Exception {
 
         final METS mets = loadMetsDocument(metsId);
-        final String url_tpl = proxy_host_mets + "rest/resource/reference_image?metsId=" + metsId + "&pageId=";
-        final String url_thumbnail_tpl = proxy_host_mets + "rest/resource/thumbnail_image?metsId=" + metsId + "&pageId=";
-        final String url_transcription_tpl = proxy_host_mets + "rest/resource/get_transcription?metsId=" + metsId + "&pageId=";
+        final String url_tpl = proxy_host + "rest/resource/reference_image?metsId=" + metsId + "&pageId=";
+        final String url_thumbnail_tpl = proxy_host + "rest/resource/thumbnail_image?metsId=" + metsId + "&pageId=";
+        final String url_transcription_tpl = proxy_host + "rest/resource/get_transcription?metsId=" + metsId + "&pageId=";
         final PagerItem pagerItem = new PagerItem();
         pagerItem.setEadid(eadId); // ToDo: remove.. useless
         pagerItem.setMetsid(metsId);

@@ -39,8 +39,6 @@ public class CacheService {
 
     @Value("#{visualmetsProperties['proxy.host']}")
     private String proxy_host = "/";
-    @Value("#{visualmetsProperties['proxy.host.mets']}")
-    private String proxy_host_mets = "/";
 
     private String trusted;
     private long cacheLimitInBytes;

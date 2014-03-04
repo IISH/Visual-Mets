@@ -46,8 +46,8 @@ public class MyService {
     public static final String KEY_CODE = "code_key";
     public static final String KEY_MESSAGE = "code_message";
 
-    @Value("#{visualmetsProperties['proxy.host.mets']}")
-    private String proxy_host_mets = "/";
+    @Value("#{visualmetsProperties['proxy.host']}")
+    private String proxy_host = "/";
 
     @Value("#{visualmetsProperties['handle.host']}")
     private String handle_host = "/";
@@ -59,7 +59,7 @@ public class MyService {
     private String ead_namespace;
 
     public String generatePdfUrl(String _metsId) {
-        return proxy_host_mets + "rest/resource/get_pdf?metsId=" + _metsId;
+        return proxy_host + "rest/resource/get_pdf?metsId=" + _metsId;
     }
 
     private Logger log = Logger.getLogger(getClass());
