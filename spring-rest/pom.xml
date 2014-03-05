@@ -13,7 +13,7 @@
     <packaging>war</packaging>
     <description>Package to manage all REST API calls from HTTP clients</description>
     <build>
-        <finalName>visualmets</finalName>
+        <finalName>visualmets-1.0</finalName>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
