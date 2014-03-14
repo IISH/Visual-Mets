@@ -79,9 +79,11 @@ public class MyService {
     private int codeMets(String _metsId, Map _map) throws Exception {
 
         int resultCode;// = HttpServletResponse.SC_UNAUTHORIZED;
-        try {
+        final String eUrl = UriUtils.encodeHttpUrl(_metsId, "utf-8");
 
-            URL server = new URL(UriUtils.encodeHttpUrl(_metsId, "utf-8"));
+
+        try {
+            URL server = new URL(eUrl);
             HttpURLConnection connection = (HttpURLConnection) server.openConnection();
             resultCode = connection.getResponseCode();
             connection.disconnect();
@@ -101,8 +103,8 @@ public class MyService {
             }
 
         } catch (IOException e) {
+            log.error(eUrl);
             log.error(e);
-            e.printStackTrace();
             _map.put(KEY_MESSAGE, e.getMessage());
             resultCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }

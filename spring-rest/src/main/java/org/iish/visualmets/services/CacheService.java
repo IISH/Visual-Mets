@@ -78,18 +78,25 @@ public class CacheService {
                 throw new SecurityException(e.getMessage());
             }
 
+        final String eUrl  ;
         try {
-            authorize(trusted, new URI(UriUtils.encodeHttpUrl(url, "utf-8")).getHost());
-        } catch (URISyntaxException e) {
-            log.error(e);
-            throw new SecurityException(e.getMessage());
+            eUrl = UriUtils.encodeHttpUrl(url, "utf-8");
         } catch (UnsupportedEncodingException e) {
             throw new SecurityException(e.getMessage());
         }
 
         try {
-            document = db.parse(UriUtils.encodeHttpUrl(url, "utf-8"));
+            authorize(trusted, new URI(eUrl).getHost());
+        } catch (URISyntaxException e) {
+            log.error(eUrl);
+            log.error(e);
+            throw new SecurityException(e.getMessage());
+        }
+
+        try {
+            document = db.parse(eUrl);
         } catch (SAXException e) {
+            log.error(eUrl);
             log.error(e);
             throw new SecurityException(e.getMessage());
         } catch (IOException e) {
