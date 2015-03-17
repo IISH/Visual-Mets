@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<METS:mets xmlns:dcterms="http://purl.org/dc/terms/"
+           OBJID="10622/BULK03145"
+           xmlns:METS="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd http://purl.org/dc/terms/ http://dublincore.org/schemas/xmls/qdc/2008/02/11/dcterms.xsd">
+    <METS:fileSec>
+        <METS:fileGrp>
+            <METS:file MIMETYPE="text/xml" ID="FOLDER_DC_1">
+                <METS:FContent>
+                    <METS:xmlData>
+                        <dcterms:title>BULK03145</dcterms:title>
+                        <dcterms:created>2015-03-16T17:41:01Z</dcterms:created>
+                        <dcterms:accessRights>closed</dcterms:accessRights>
+                    </METS:xmlData>
+                </METS:FContent>
+            </METS:file>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:file MIMETYPE="text/xml" ID="FOLDER_DC_2">
+                <METS:FContent>
+                    <METS:xmlData>
+                        <dcterms:title>اعلاميه ها، بيانيه ها و نامه ها</dcterms:title>
+                        <dcterms:created>2015-03-13T11:33:42Z</dcterms:created>
+                        <dcterms:accessRights>closed</dcterms:accessRights>
+                    </METS:xmlData>
+                </METS:FContent>
+            </METS:file>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:file MIMETYPE="text/xml" ID="FOLDER_DC_3">
+                <METS:FContent>
+                    <METS:xmlData>
+                        <dcterms:title>Тифлис-Баку рабочий</dcterms:title>
+                        <dcterms:created>2015-03-13T11:16:09Z</dcterms:created>
+                        <dcterms:accessRights>closed</dcterms:accessRights>
+                    </METS:xmlData>
+                </METS:FContent>
+            </METS:file>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:file MIMETYPE="text/xml" ID="FOLDER_DC_5">
+                <METS:FContent>
+                    <METS:xmlData>
+                        <dcterms:title>disk2</dcterms:title>
+                        <dcterms:created>2015-03-04T16:46:30Z</dcterms:created>
+                        <dcterms:accessRights>closed</dcterms:accessRights>
+                    </METS:xmlData>
+                </METS:FContent>
+            </METS:file>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:file MIMETYPE="text/xml" ID="FOLDER_DC_9">
+                <METS:FContent>
+                    <METS:xmlData>
+                        <dcterms:title>الندوة السادسة</dcterms:title>
+                        <dcterms:created>2015-03-13T11:33:47Z</dcterms:created>
+                        <dcterms:accessRights>closed</dcterms:accessRights>
+                    </METS:xmlData>
+                </METS:FContent>
+            </METS:file>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_6">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>DSC00654.JPG</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:15Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="image/jpeg" CHECKSUM="437ae364f7e0fec1f3f2ba2de916e957" SIZE="131127"
+                           CHECKSUMTYPE="MD5" ID="FILE_6">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/6885DFD6-F411-4E55-A6E7-6A93B912148F?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_11">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>آماده باشد و به هر کس می توانید اطلاع دهید.doc</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:19Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="application/msword" CHECKSUM="7ea747996ca6b28a4305f882d6e0c1fe" SIZE="39936"
+                           CHECKSUMTYPE="MD5" ID="FILE_11">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/971836C6-F8FF-408E-AC02-B9F38E565EDC?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_8">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>DSC00652.JPG</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:15Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="image/jpeg" CHECKSUM="6ca9a3e7bd4264cd763cc8cd2c6e181b" SIZE="129699"
+                           CHECKSUMTYPE="MD5" ID="FILE_8">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/08EA2BA3-FF85-4678-90FD-E12E725C8288?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_10">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>manifest.csv</dcterms:title>
+                            <dcterms:created>2015-03-04T16:46:49Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="text/csv" CHECKSUM="04523874da4afccef704c1c5bee7f5e4" SIZE="159578"
+                           CHECKSUMTYPE="MD5" ID="FILE_10">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/B436EC23-23B0-4F26-B55F-7D550171602D?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_7">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>DSC00653.JPG</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:15Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="image/jpeg" CHECKSUM="f15563b3e043d18136773f0b9d2bdeff" SIZE="159271"
+                           CHECKSUMTYPE="MD5" ID="FILE_7">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/8F589739-D6BB-4B1D-BB63-A09698DF01B0?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_14">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>امه به دبیر کل سازمان ملل متحد.doc</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:19Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="application/msword" CHECKSUM="f1cc7a084478dd5b3ad658df7896f8d4" SIZE="33792"
+                           CHECKSUMTYPE="MD5" ID="FILE_14">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/AACCC221-8A1B-4984-8319-549B35859785?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_13">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>برخيز که وقت اتحاد است.doc</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:20Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="application/msword" CHECKSUM="bf78a3e846db9252c50cff77e56277c6" SIZE="1681408"
+                           CHECKSUMTYPE="MD5" ID="FILE_13">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/4B5EF87C-2994-4E37-B36B-EB188706D973?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_4">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>DSC00651.JPG</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:15Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="image/jpeg" CHECKSUM="543bbf6a42ac684735800ddc099dce0c" SIZE="147511"
+                           CHECKSUMTYPE="MD5" ID="FILE_4">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/FFAB0378-FC82-4AF1-B631-822862DDB147?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_12">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>برای خواندن نامه شعله سعدی به خمينی روی شکل زير کليک کنيد.doc</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:19Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="application/msword" CHECKSUM="cd78a9027940de99775c87e8aafea44b" SIZE="79872"
+                           CHECKSUMTYPE="MD5" ID="FILE_12">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/7DBE479A-6835-412E-9EB8-7A85424D68B8?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_16">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>02.mp3</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:22Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="audio/mpeg" CHECKSUM="710b9bc95dba54a67eb295df61ac5af0" SIZE="1288411"
+                           CHECKSUMTYPE="MD5" ID="FILE_16">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/AE2B2406-B658-4802-8236-2305C9E91D87?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:fileGrp>
+                <METS:file MIMETYPE="text/xml" ID="FILE_DC_15">
+                    <METS:FContent>
+                        <METS:xmlData>
+                            <dcterms:title>01.mp3</dcterms:title>
+                            <dcterms:created>2015-01-30T10:38:22Z</dcterms:created>
+                            <dcterms:accessRights>closed</dcterms:accessRights>
+                        </METS:xmlData>
+                    </METS:FContent>
+                </METS:file>
+                <METS:file MIMETYPE="audio/mpeg" CHECKSUM="bb12e3bdc3acf968c1549cc4a255b4f1" SIZE="2063360"
+                           CHECKSUMTYPE="MD5" ID="FILE_15">
+                    <METS:FLocat xlink:type="simple"
+                                 xlink:href="http://hdl.handle.net/10622/8752CC98-A840-4CB3-855C-F9A5A9779EA4?locatt=view:master"
+                                 LOCTYPE="HANDLE"/>
+                </METS:file>
+            </METS:fileGrp>
+        </METS:fileGrp>
+        <METS:fileGrp>
+            <METS:file MIMETYPE="text/xml" ID="FOLDER_DC_17">
+                <METS:FContent>
+                    <METS:xmlData>
+                        <dcterms:title>disk1</dcterms:title>
+                        <dcterms:created>2015-03-04T16:46:30Z</dcterms:created>
+                        <dcterms:accessRights>closed</dcterms:accessRights>
+                    </METS:xmlData>
+                </METS:FContent>
+            </METS:file>
+        </METS:fileGrp>
+    </METS:fileSec>
+    <METS:structMap ID="physical">
+        <METS:div TYPE="folder" LABEL="BULK03145">
+            <METS:div TYPE="dc" LABEL="dc">
+                <METS:fptr FILEID="FOLDER_DC_1"/>
+            </METS:div>
+            <METS:div TYPE="folder" LABEL="اعلاميه ها، بيانيه ها و نامه ها">
+                <METS:div TYPE="dc" LABEL="dc">
+                    <METS:fptr FILEID="FOLDER_DC_2"/>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="آماده باشد و به هر کس می توانید اطلاع دهید.doc">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_11"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_11"/>
+                    </METS:div>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="امه به دبیر کل سازمان ملل متحد.doc">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_14"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_14"/>
+                    </METS:div>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="برخيز که وقت اتحاد است.doc">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_13"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_13"/>
+                    </METS:div>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="برای خواندن نامه شعله سعدی به خمينی روی شکل زير کليک کنيد.doc">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_12"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_12"/>
+                    </METS:div>
+                </METS:div>
+            </METS:div>
+            <METS:div TYPE="folder" LABEL="Тифлис-Баку рабочий">
+                <METS:div TYPE="dc" LABEL="dc">
+                    <METS:fptr FILEID="FOLDER_DC_3"/>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="DSC00654.JPG">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_6"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_6"/>
+                    </METS:div>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="DSC00652.JPG">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_8"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_8"/>
+                    </METS:div>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="DSC00653.JPG">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_7"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_7"/>
+                    </METS:div>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="DSC00651.JPG">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_4"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_4"/>
+                    </METS:div>
+                </METS:div>
+            </METS:div>
+            <METS:div TYPE="folder" LABEL="disk2">
+                <METS:div TYPE="dc" LABEL="dc">
+                    <METS:fptr FILEID="FOLDER_DC_5"/>
+                </METS:div>
+            </METS:div>
+            <METS:div TYPE="folder" LABEL="الندوة السادسة">
+                <METS:div TYPE="dc" LABEL="dc">
+                    <METS:fptr FILEID="FOLDER_DC_9"/>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="02.mp3">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_16"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_16"/>
+                    </METS:div>
+                </METS:div>
+                <METS:div TYPE="file" LABEL="01.mp3">
+                    <METS:div TYPE="content" LABEL="Content">
+                        <METS:fptr FILEID="FILE_15"/>
+                    </METS:div>
+                    <METS:div TYPE="dc" LABEL="Dublin Core">
+                        <METS:fptr FILEID="FILE_DC_15"/>
+                    </METS:div>
+                </METS:div>
+            </METS:div>
+            <METS:div TYPE="file" LABEL="manifest.csv">
+                <METS:div TYPE="content" LABEL="Content">
+                    <METS:fptr FILEID="FILE_10"/>
+                </METS:div>
+                <METS:div TYPE="dc" LABEL="Dublin Core">
+                    <METS:fptr FILEID="FILE_DC_10"/>
+                </METS:div>
+            </METS:div>
+            <METS:div TYPE="folder" LABEL="disk1">
+                <METS:div TYPE="dc" LABEL="dc">
+                    <METS:fptr FILEID="FOLDER_DC_17"/>
+                </METS:div>
+            </METS:div>
+        </METS:div>
+    </METS:structMap>
+</METS:mets>
