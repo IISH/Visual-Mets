@@ -1,9 +1,12 @@
 package org;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -11,12 +14,34 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Checksum {
 
+    private static int BLENGTH = 242144;
 
-    public static String generateMD5(final File file) throws NoSuchAlgorithmException, IOException {
+    public static String generateMD5(final URL url, final File file) {
 
-        FileInputStream fis = new FileInputStream(file);
-        String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
-        fis.close();
+        try {
+            return fromUrlToFileWithMD5(url, file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    private static String fromUrlToFileWithMD5(URL url, File file) throws IOException, NoSuchAlgorithmException {
+        byte[] buffer = new byte[BLENGTH];
+        final DigestInputStream digestInputStream = new DigestInputStream(url.openStream(), MessageDigest.getInstance("md5"));
+        final FileOutputStream fileOutputStream = new FileOutputStream(file);
+        while (digestInputStream.read(buffer) != -1) {
+            fileOutputStream.write(buffer);
+        }
+        fileOutputStream.close();
+
+        final byte[] digest = digestInputStream.getMessageDigest().digest();
+        String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(digest);
+        digestInputStream.close();
 
         return md5;
     }

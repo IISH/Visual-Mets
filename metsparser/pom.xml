@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>mets-parser</groupId>
-    <artifactId>mets-parser</artifactId>
+    <groupId>metsparser</groupId>
+    <artifactId>metsparser</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -25,12 +25,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
-            <!--1.2.15 has links to JMX classes which cause problems-->
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

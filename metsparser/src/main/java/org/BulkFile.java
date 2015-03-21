@@ -77,6 +77,10 @@ public class BulkFile {
         this.checksum = checksum;
     }
 
+    public String getChecksum() {
+        return checksum;
+    }
+
     public void setLength(long length) {
         this.length = length;
     }
@@ -99,16 +103,21 @@ public class BulkFile {
         // TODO: download the file and place it.
         final URL url = new URL(bulkFile.getHref());
         final File file = new File(bulkFile.getPath(), bulkFile.getTitle());
-        FileUtils.copyURLToFile(url, file);
+        final String md5 = Checksum.generateMD5(url, file);
         if (!file.setLastModified(bulkFile.getCreated())) {
             System.err.write("Unable to set date ".getBytes());
             System.exit(1);
         }
+
+        if (!Checksum.compare(md5, bulkFile.getChecksum())) {
+            System.err.write("Checksum does not match.".getBytes());
+            System.exit(1);
+        }
+
         return true;
     }
 
     private static boolean writeDummyFile(BulkFile bulkFile) {
-
 
         final File file = new File(bulkFile.getPath(), bulkFile.getTitle());
         try {
@@ -129,7 +138,5 @@ public class BulkFile {
 
         return true;
     }
-
-
 
 }
