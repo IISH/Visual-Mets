@@ -2,6 +2,7 @@ package org;
 
 import au.edu.apsr.mtk.base.*;
 import au.edu.apsr.mtk.ch.METSReader;
+import org.apache.commons.io.FileExistsException;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -27,18 +28,15 @@ final public class RecreateBulk {
     private File parent;
     private String metsFile;
     private METSWrapper wrapper;
+    private String accessToken;
 
-    public RecreateBulk(String metsFile, String targetFolder) throws FileNotFoundException {
+    public RecreateBulk(String metsFile, String targetFolder, String accessToken) throws FileNotFoundException, FileExistsException {
         setMetsFile(metsFile);
         setParent(targetFolder);
+        setAccessToken(accessToken);
     }
 
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, METSException {
-        final RecreateBulk recreateFolder = new RecreateBulk(args[0], args[1]);
-        recreateFolder.recreate();
-    }
-
-    private void recreate() throws METSException, IOException, SAXException, ParserConfigurationException {
+    public void recreate() throws METSException, IOException, SAXException, ParserConfigurationException {
         final METSReader reader = new METSReader();
         reader.mapToDOM(new FileInputStream(getMetsFile()));
         wrapper = new METSWrapper(reader.getMETSDocument());
@@ -58,7 +56,7 @@ final public class RecreateBulk {
             } else if (div.getType().equals(FILE_TYPE)) {
                 final BulkFile file = getFile(div);
                 file.setPath(folder.getAbsolutePath());
-                BulkFile.writeFile(file);
+                BulkFile.writeFile(file, accessToken);
             }
         }
     }
@@ -110,10 +108,10 @@ final public class RecreateBulk {
     }
 
 
-    public void setParent(String parent) throws FileNotFoundException {
+    public void setParent(String parent) throws FileExistsException {
         this.parent = new File(parent);
-        if (!this.parent.exists())
-            throw new FileNotFoundException();
+        if (this.parent.exists())
+            throw new FileExistsException(parent);
     }
 
     public String getMetsFile() {
@@ -122,5 +120,9 @@ final public class RecreateBulk {
 
     public void setMetsFile(String metsFile) {
         this.metsFile = metsFile;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

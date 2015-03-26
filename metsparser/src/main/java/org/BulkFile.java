@@ -1,17 +1,12 @@
 package org;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URL;
-import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * BulkFile
@@ -87,23 +82,25 @@ public class BulkFile {
 
     public static boolean writeFolder(BulkFile bulkFile) {
         final File file = new File(bulkFile.getPath(), bulkFile.getTitle());
-        return file.mkdir();
+        return file.mkdirs();
     }
 
-    public static boolean writeFile(BulkFile bulkFile) throws IOException {
+    public static boolean writeFile(BulkFile bulkFile, String accessToken) throws IOException {
 
         final String environment = System.getProperty("environment", "PRODUCTION");
         if (environment.equalsIgnoreCase("production"))
-            return writeFileFromUrl(bulkFile);
+            return writeFileFromUrl(bulkFile, accessToken);
         else
             return writeDummyFile(bulkFile);
+
+
     }
 
-    private static boolean writeFileFromUrl(BulkFile bulkFile) throws IOException {
+    private static boolean writeFileFromUrl(BulkFile bulkFile, String accessToken) throws IOException {
         // TODO: download the file and place it.
-        final URL url = new URL(bulkFile.getHref());
+        final URL url = new URL(bulkFile.getHref() + "&urlappend=%3Faccess_token%3D" + accessToken);
         final File file = new File(bulkFile.getPath(), bulkFile.getTitle());
-        final String md5 = Checksum.generateMD5(url, file);
+        final String md5 = Checksum.downloadWithDigest(url, file);
         if (!file.setLastModified(bulkFile.getCreated())) {
             System.err.write("Unable to set date ".getBytes());
             System.exit(1);

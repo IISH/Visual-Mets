@@ -1,5 +1,7 @@
 package org;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,7 +18,7 @@ public class Checksum {
 
     private static int BLENGTH = 242144;
 
-    public static String generateMD5(final URL url, final File file) {
+    public static String downloadWithDigest(final URL url, final File file) {
 
         try {
             return fromUrlToFileWithMD5(url, file);
@@ -31,19 +33,31 @@ public class Checksum {
 
 
     private static String fromUrlToFileWithMD5(URL url, File file) throws IOException, NoSuchAlgorithmException {
-        byte[] buffer = new byte[BLENGTH];
         final DigestInputStream digestInputStream = new DigestInputStream(url.openStream(), MessageDigest.getInstance("md5"));
         final FileOutputStream fileOutputStream = new FileOutputStream(file);
-        while (digestInputStream.read(buffer) != -1) {
-            fileOutputStream.write(buffer);
+        IOUtils.copy(digestInputStream, fileOutputStream) ;
+        final byte[] md5 = digestInputStream.getMessageDigest().digest();
+        return asHex(md5);
+    }
+
+    private static final char[] HEX_CHARS = {'0', '1', '2', '3',
+            '4', '5', '6', '7',
+            '8', '9', 'a', 'b',
+            'c', 'd', 'e', 'f',};
+    /**
+     * Turns array of bytes into string representing each byte as
+     * unsigned hex number.
+     *
+     * @param hash Array of bytes to convert to hex-string
+     * @return Generated hex string
+     */
+    public static String asHex (byte hash[]) {
+        char buf[] = new char[hash.length * 2];
+        for (int i = 0, x = 0; i < hash.length; i++) {
+            buf[x++] = HEX_CHARS[(hash[i] >>> 4) & 0xf];
+            buf[x++] = HEX_CHARS[hash[i] & 0xf];
         }
-        fileOutputStream.close();
-
-        final byte[] digest = digestInputStream.getMessageDigest().digest();
-        String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(digest);
-        digestInputStream.close();
-
-        return md5;
+        return new String(buf);
     }
 
     /**
