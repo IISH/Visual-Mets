@@ -9,7 +9,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,17 +29,16 @@ final public class RecreateBulk {
     private METSWrapper wrapper;
     private String accessToken;
 
-    public RecreateBulk(String metsFile, String targetFolder, String accessToken) throws FileNotFoundException, FileExistsException {
+    public RecreateBulk(String metsFile, String targetFolder, String accessToken) throws IOException, SAXException, ParserConfigurationException, METSException {
         setMetsFile(metsFile);
         setParent(targetFolder);
         setAccessToken(accessToken);
-    }
-
-    public void recreate() throws METSException, IOException, SAXException, ParserConfigurationException {
         final METSReader reader = new METSReader();
         reader.mapToDOM(new FileInputStream(getMetsFile()));
         wrapper = new METSWrapper(reader.getMETSDocument());
+    }
 
+    public void recreate() throws METSException, IOException {
         final StructMap physical = wrapper.getMETSObject().getStructMap("physical");
         divs(physical.getDivs(), parent);
     }
