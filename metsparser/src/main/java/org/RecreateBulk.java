@@ -3,6 +3,8 @@ package org;
 import au.edu.apsr.mtk.base.*;
 import au.edu.apsr.mtk.ch.METSReader;
 import org.apache.commons.io.FileExistsException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -19,6 +21,7 @@ import java.util.List;
  */
 final public class RecreateBulk {
 
+    private Log logger = LogFactory.getLog(RecreateBulk.class);
 
     private static final String FOLDER_TYPE = "folder";
     private static final String FILE_TYPE = "file";
@@ -49,11 +52,13 @@ final public class RecreateBulk {
             if (div.getType().equals(FOLDER_TYPE)) {
                 final BulkFile file = getFolder(div);
                 file.setPath(folder.getAbsolutePath());
+                logger.info("Write folder: " + file.getPath());
                 BulkFile.writeFolder(file);
                 divs(div.getDivs(), new File(folder, file.getTitle()));
             } else if (div.getType().equals(FILE_TYPE)) {
                 final BulkFile file = getFile(div);
                 file.setPath(folder.getAbsolutePath());
+                logger.info("Write file: " + file.getPath());
                 BulkFile.writeFile(file, accessToken);
             }
         }
