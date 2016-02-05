@@ -271,14 +271,15 @@ public class ControllerResource {
     )
             throws Exception, IOException {
 
-        ImageItem imageInfo = getImageInfo(eadId, metsId, pageId, "ocr");
+        ImageItem imageInfoOcr = getImageInfo(eadId, metsId, pageId, "ocr");
+        ImageItem imageInfoTranscription = getImageInfo(eadId, metsId, pageId, "transcription plain text");
 
 		//callback="dummy";
 
         String transcription = "";
 
-        if (imageInfo != null) {
-            String filename = imageInfo.getUrl().toString();
+        if ((imageInfoOcr != null) || (imageInfoTranscription != null)) {
+            String filename = (imageInfoOcr != null) ? imageInfoOcr.getUrl() : imageInfoTranscription.getUrl();
 
             // TODOx: READ FILE SOURCE
             try {
