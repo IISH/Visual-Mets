@@ -20,7 +20,7 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.iisg.visualmets</groupId>
     <artifactId>visualmets</artifactId>
-    <version>1.1.0</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
     <description>Visual METS</description>
 
