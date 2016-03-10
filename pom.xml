@@ -32,8 +32,8 @@ limitations under the License.
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -48,7 +48,7 @@ limitations under the License.
     <repositories>
         <repository>
             <id>springsource maven repo</id>
-            <url>http://maven.springframework.org/milestone</url>
+            <url>http://mvnrepository.com/</url>
         </repository>
         <repository>
             <id>m2</id>

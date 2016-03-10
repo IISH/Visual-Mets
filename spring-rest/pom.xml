@@ -8,12 +8,12 @@
     </parent>
 
     <artifactId>spring-rest</artifactId>
-    <version>1.0</version>
+    <version>1.1.0</version>
 
     <packaging>war</packaging>
     <description>Package to manage all REST API calls from HTTP clients</description>
     <build>
-        <finalName>visualmets-1.0</finalName>
+        <finalName>visualmets-1.1.0</finalName>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
@@ -33,20 +33,6 @@
                         </systemProperty>
                     </systemProperties>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.zeroturnaround</groupId>
-                <artifactId>jrebel-maven-plugin</artifactId>
-                <version>1.1.1</version>
-                <executions>
-                    <execution>
-                        <id>generate-rebel-xml</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
 
@@ -70,12 +56,6 @@
             <artifactId>junit</artifactId>
             <version>4.7</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
-            <scope>runtime</scope>
         </dependency>
         <!-- Logging -->
         <dependency>

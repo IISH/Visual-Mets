@@ -130,7 +130,9 @@ public class MyService {
 
     private String generateEadUrl(String _metsId) {
         String archive = this.extractArchive(_metsId);
-        return ead_host.replace("{0}", archive);
+        if (archive != null)
+            return ead_host.replace("{0}", archive);
+        return null;
     }
 
 
@@ -156,7 +158,8 @@ public class MyService {
             dbFactory.setNamespaceAware(true);
             nsMap.put("ead", ead_namespace);
 
-            Document doc = cacheService.loadDocument(this.generateEadUrl(_metsId));
+            String eadUrl = this.generateEadUrl(_metsId);
+            Document doc = (eadUrl != null) ? cacheService.loadDocument(eadUrl) : null;
             if (doc != null) {
                 String[] array = {number};
 
