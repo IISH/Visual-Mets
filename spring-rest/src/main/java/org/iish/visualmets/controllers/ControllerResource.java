@@ -293,9 +293,6 @@ public class ControllerResource {
                     transcription = transcription + inputLine + "<br>";
                 }
                 in.close();
-                if (!dataAdded) {
-//                        transcription += "-no transcription-";
-                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -303,11 +300,8 @@ public class ControllerResource {
             }
         }
 
-        if (transcription.equals("")) {
-            /*transcription += "-no transcription-";*/
-        }
         // add json tags
-        transcription = callback + "({\n\t\"transcription\":\"" + StringUtils.replace(transcription, "'", "\'") + "\"\n})";
+        transcription = callback + "({\n\t\"transcription\":\"" + StringUtils.replace(transcription, "'", "\'").replace("\"","\\\"") + "\"\n})";
 
         response.setContentType("text/plain; utf-8");
         response.getOutputStream().print(transcription);
