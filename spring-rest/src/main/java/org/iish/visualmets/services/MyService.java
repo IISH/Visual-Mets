@@ -143,16 +143,14 @@ public class MyService {
 
         String number = this.extractNumber(_metsId);
         String archive = this.extractArchive(_metsId);
-        ArrayList dummy = new ArrayList();
+        final ArrayList dummy = new ArrayList();
         map.put(KEY_NUMBER, number);
         map.put(KEY_BREADCRUMB, dummy);
         map.put(KEY_NOTE, "");
         map.put(KEY_ARCHIVE, archive);
 
-        int code = codeMets(_metsId, map);
-
-        if (code == HttpServletResponse.SC_OK) {
-
+        int response_code = codeMets(_metsId, map);
+        if (response_code == HttpServletResponse.SC_OK) {
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             dbFactory.setNamespaceAware(true);
@@ -172,13 +170,13 @@ public class MyService {
 
                 Node levelNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']", nsMap, array);
                 if (levelNode == null) {
-                    // code = HttpServletResponse.SC_NOT_FOUND;
+                    // response_code = HttpServletResponse.SC_NOT_FOUND;
                     map.put(KEY_NOTE, "");
                     map.put(KEY_BREADCRUMB, list);
                     map.put(KEY_CODE, HttpServletResponse.SC_OK);
                     return map;
                 } else {
-                    code = HttpServletResponse.SC_OK;
+                    response_code = HttpServletResponse.SC_OK;
 
                     Node noteNode = XPathAPI.selectSingleNode(doc, "//ead:unitid[normalize-space(.)='{}']/following-sibling::ead:note", nsMap, array);
                     if (noteNode != null) {
@@ -209,8 +207,7 @@ public class MyService {
             }
         }
 
-        map.put(KEY_CODE, HttpServletResponse.SC_OK);
-
+        map.put(KEY_CODE, response_code);
 
         return map;
     }

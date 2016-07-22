@@ -45,7 +45,7 @@ public class StaticPageController {
      */
     @RequestMapping(value = "/")
     public ModelAndView indexHtml(HttpServletResponse response) throws Exception {
-        return getHtmlPage("index.html", response);
+        return getHtmlPage("index", response);
     }
 
     /**

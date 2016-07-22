@@ -135,13 +135,13 @@ public class ControllerDocument {
         //String pdfUrl=proxy_host_mets + "rest/resource/get_pdf?metsId=" + metsId;
 
 
-        int code = (Integer) map.get(MyService.KEY_CODE);
-        mav.addObject("code", code);
+        int response_code = (Integer) map.get(MyService.KEY_CODE);
+        mav.addObject("code", response_code);
         String message = (String) map.get(MyService.KEY_MESSAGE);
         if (message != null)
             mav.addObject("message", message);
 
-        if (code == HttpServletResponse.SC_OK) {
+        if (response_code == HttpServletResponse.SC_OK) {
             mav.addObject("pdfUrl", myService.generatePdfUrl(metsId));
 
             // The pager
