@@ -21,6 +21,7 @@ import org.iish.visualmets.datamodels.ImageItem;
 import org.iish.visualmets.services.CacheService;
 import org.iish.visualmets.services.ImageTransformation;
 import org.iish.visualmets.services.MyService;
+import org.iish.visualmets.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,8 +76,9 @@ public class ControllerResource {
 			@RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
 			HttpServletResponse response
 	)
-			throws Exception, IOException {
+			throws Exception {
 
+        ControllerUtils.redirect(metsId);
 		byte[] bytes= myService.createPdf(metsId,selection);
 
 
@@ -112,7 +114,9 @@ public class ControllerResource {
             @RequestParam(value = "callback", required = false) String callback,
             HttpServletResponse response
     )
-            throws Exception, IOException {
+            throws Exception {
+
+        metsId = ControllerUtils.redirect(metsId);
 
 //        @RequestParam(value = "eadId", required = true) String eadId,
 
@@ -195,8 +199,11 @@ public class ControllerResource {
             @RequestParam(value = "fileGrp", required = false, defaultValue = REFERENCE_IMAGE) String fileGrp,
             HttpServletResponse response
     )
-            throws Exception, IOException {
-//         @RequestParam(value = "eadId", required = true) String eadId,
+            throws Exception {
+
+        metsId = ControllerUtils.redirect(metsId);
+
+        //         @RequestParam(value = "eadId", required = true) String eadId,
 //        @RequestParam(value = "width", required = false, defaultValue = "400") Integer width,
 //        @RequestParam(value = "height", required = false, defaultValue = "400") Integer height,
 //        @RequestParam(value = "padding", required = false, defaultValue = "0") Integer padding,

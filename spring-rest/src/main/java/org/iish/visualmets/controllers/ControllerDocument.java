@@ -85,6 +85,7 @@ public class ControllerDocument {
 //        @RequestParam(value = "eadId", required = true) String eadId,
 
 
+        metsId = ControllerUtils.redirect(metsId);
         Map map = myService.extract(metsId);
         //System.out.println(map);
 
@@ -173,7 +174,7 @@ public class ControllerDocument {
                     imageInfo = getImageInfo(eadId, metsId, pageId, "reference");
                 }
 
-                logger.debug("URL: " + imageInfo.getUrl().toString());
+                logger.debug("URL: " + imageInfo.getUrl());
                 final BufferedImage img = cacheService.loadImage(imageInfo.getUrl());
                 int scl = imageTransformation.getScale(img.getWidth(), img.getHeight(), scaleWidth, scaleHeight, 100);
                 mav.addObject("image_width", img.getWidth());
@@ -220,6 +221,8 @@ public class ControllerDocument {
             @RequestParam(value = "callback", required = false) String callback,
             HttpServletResponse response) throws Exception, IOException {
 
+        metsId = ControllerUtils.redirect(metsId);
+
         ModelAndView mav = ControllerUtils.createModelAndViewPage("documentInfo", callback, response);
 
         // Now collect the resources and defaults
@@ -241,6 +244,8 @@ public class ControllerDocument {
             @RequestParam(value = "pageId", required = false, defaultValue = "1") int pageId,
             @RequestParam(value = "callback", required = false) String callback,
             HttpServletResponse response) throws Exception {
+
+        metsId = ControllerUtils.redirect(metsId);
 
         ModelAndView mav = ControllerUtils.createModelAndViewPage("pageInfo", callback, response);
 

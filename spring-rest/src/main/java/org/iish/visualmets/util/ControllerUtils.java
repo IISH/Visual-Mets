@@ -19,6 +19,10 @@ package org.iish.visualmets.util;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.LinkedHashMap;
 
 /*
  * Simple utility methods, accessible to all classes.
@@ -31,6 +35,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public class ControllerUtils {
+
+    private static int cache_request_limit = 1000;
+    private static final LinkedHashMap cache = new LinkedHashMap(cache_request_limit);
 
     /**
      * Determines the type of template: JSON or XML.
@@ -61,5 +68,28 @@ public class ControllerUtils {
         }
 
         return mav;
+    }
+
+    /**
+     * Check response code and Location header field value for redirect information.
+     * If any return the new domain and protocol.
+     *
+     * @param url the target url. Could be a handle.
+     * @return A resolvable url
+     */
+    public static String redirect(String url) throws IOException {
+        if ( cache_request_limit++ % 1000 == 0 )
+            cache.clear();
+        if ( cache.containsKey(url)) return (String) cache.get(url);
+        URL server = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) server.openConnection();
+        int resultCode = connection.getResponseCode();
+        String location = connection.getHeaderField("Location");
+        connection.disconnect();
+        if ( resultCode == HttpServletResponse.SC_OK || location == null )
+            return url;
+        else
+            cache.put(url, location);
+        return location;
     }
 }

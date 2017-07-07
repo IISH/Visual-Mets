@@ -5,6 +5,7 @@ import au.edu.apsr.mtk.ch.METSReader;
 import org.iish.visualmets.dao.DocumentDao;
 import org.iish.visualmets.datamodels.ImageItem;
 import org.iish.visualmets.datamodels.PagerItem;
+import org.iish.visualmets.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.xml.sax.SAXException;
@@ -50,7 +51,7 @@ public class MtrReader implements DocumentDao {
                 imageInfo.setPageid(pageId);
                 imageInfo.setUse(use);
                 final FLocat fLocat = file.getFLocats().get(0);
-                imageInfo.setUrl(fLocat.getHref());
+                imageInfo.setUrl(ControllerUtils.redirect(fLocat.getHref()));
                 imageInfo.setMimetype(file.getMIMEType());
             }
         }
