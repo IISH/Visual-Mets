@@ -70,7 +70,7 @@ public class ControllerDocument {
     @RequestMapping(value = "/document", method = RequestMethod.GET)
     public ModelAndView getDocument(
             @RequestParam(value = "eadId", required = false, defaultValue = "") String eadId,
-            @RequestParam(value = "metsId", required = true) String metsId,
+            @RequestParam(value = "metsId") String _metsId,
             @RequestParam(value = "defaults", required = false, defaultValue = "false") Boolean defaults,
             @RequestParam(value = "scale", required = false, defaultValue = "false") Boolean scale,
             @RequestParam(value = "scale.width", required = false, defaultValue = "800") float scaleWidth,
@@ -85,7 +85,7 @@ public class ControllerDocument {
 //        @RequestParam(value = "eadId", required = true) String eadId,
 
 
-        metsId = ControllerUtils.redirect(metsId);
+        final String metsId = ControllerUtils.redirect(_metsId);
         Map map = myService.extract(metsId);
         //System.out.println(map);
 
@@ -113,7 +113,7 @@ public class ControllerDocument {
         mav.addObject("eadId", eadId);
         mav.addObject("pdfUrl", "");
         mav.addObject("message", "");
-        mav.addObject("metsId", metsId);
+        mav.addObject("metsId", _metsId);
         mav.addObject("pageId", pageId);
         mav.addObject("breadcrumb", map.get(MyService.KEY_BREADCRUMB));
         mav.addObject("breadcrumbUrls", myService.generateBreadcrumbUrls((String) map.get(MyService.KEY_ARCHIVE), (String) map.get(MyService.KEY_NUMBER)));
