@@ -30,6 +30,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriUtils;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -278,7 +279,7 @@ public class ControllerResource {
     )
             throws Exception, IOException {
 
-        ImageItem imageInfoOcr = getImageInfo(eadId, metsId, pageId, "ocr");
+        ImageItem imageInfoOcr = getImageInfo(eadId, UriUtils.encodeHttpUrl( metsId, "utf-8"), pageId, "ocr");
         ImageItem imageInfoTranscription = getImageInfo(eadId, metsId, pageId, "transcription plain text");
 
 		//callback="dummy";
@@ -290,7 +291,7 @@ public class ControllerResource {
 
             // TODOx: READ FILE SOURCE
             try {
-                URL u = new URL(filename);
+                URL u = new URL(      UriUtils.encodeHttpUrl( filename, "utf-8"));
                 boolean dataAdded = false;
                 BufferedReader in = new BufferedReader(new InputStreamReader(u.openStream()));
 //                    BufferedReader in = new BufferedReader(	new InputStreamReader( u.openStream(), "UTF-8" ) );

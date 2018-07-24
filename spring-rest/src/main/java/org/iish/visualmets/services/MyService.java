@@ -76,10 +76,10 @@ public class MyService {
         return breadcrumbUrls;
     }
 
-    private int codeMets(String _metsId, Map _map) throws Exception {
+    private int codeMets(String eUrl, Map _map) throws Exception {
 
         int resultCode;// = HttpServletResponse.SC_UNAUTHORIZED;
-        final String eUrl = UriUtils.encodeHttpUrl(_metsId, "utf-8");
+     //   final String eUrl = UriUtils.encodeHttpUrl(_metsId, "utf-8");
 
 
         try {
@@ -91,7 +91,7 @@ public class MyService {
             if (resultCode == HttpServletResponse.SC_OK) {
                 Map<String, String> nsMap = new HashMap<String, String>();
                 nsMap.put("epdcx", "http://purl.org/eprint/epdcx/2006-11-16/");
-                final Document doc = cacheService.loadDocument(_metsId);
+                final Document doc = cacheService.loadDocument(eUrl);
                 doc.getDocumentElement().normalize();
                 String accessString = XPathAPI.selectSingleNodeAsString(doc, "//epdcx:description[@epdcx:resourceId='level1']/child::epdcx:statement/@epdcx:valueRef", nsMap);
                 if (accessString != null && accessString.equals("http://purl.org/eprint/accessRights/OpenAccess"))

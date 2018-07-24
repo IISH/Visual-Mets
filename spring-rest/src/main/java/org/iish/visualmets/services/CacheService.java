@@ -2,7 +2,6 @@ package org.iish.visualmets.services;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.util.UriUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -78,25 +77,18 @@ public class CacheService {
                 throw new SecurityException(e.getMessage());
             }
 
-        final String eUrl  ;
         try {
-            eUrl = UriUtils.encodeHttpUrl(url, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new SecurityException(e.getMessage());
-        }
-
-        try {
-            authorize(trusted, new URI(eUrl).getHost());
+            authorize(trusted, new URI(url).getHost());
         } catch (URISyntaxException e) {
-            log.error(eUrl);
+            log.error(url);
             log.error(e);
             throw new SecurityException(e.getMessage());
         }
 
         try {
-            document = db.parse(eUrl);
+            document = db.parse(url);
         } catch (SAXException e) {
-            log.error(eUrl);
+            log.error(url);
             log.error(e);
             throw new SecurityException(e.getMessage());
         } catch (IOException e) {

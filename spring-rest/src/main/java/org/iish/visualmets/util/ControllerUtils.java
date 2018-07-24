@@ -17,6 +17,7 @@
 package org.iish.visualmets.util;
 
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class ControllerUtils {
 
     private static int cache_request_limit = 1000;
     private static final LinkedHashMap cache = new LinkedHashMap(cache_request_limit);
+    private static final int MAX_REDIRECT_ATTEMPTS = 10;
 
     /**
      * Determines the type of template: JSON or XML.
@@ -70,6 +72,10 @@ public class ControllerUtils {
         return mav;
     }
 
+    public static String redirect(String url) throws IOException {
+        return redirect(UriUtils.encodeHttpUrl(url, "utf-8"), 0);
+    }
+
     /**
      * Check response code and Location header field value for redirect information.
      * If any return the new domain and protocol.
@@ -77,7 +83,7 @@ public class ControllerUtils {
      * @param url the target url. Could be a handle.
      * @return A resolvable url
      */
-    public static String redirect(String url) throws IOException {
+    private static String redirect(String url, int depth) throws IOException {
         if ( cache_request_limit++ % 1000 == 0 )
             cache.clear();
         if ( cache.containsKey(url)) return (String) cache.get(url);
@@ -86,10 +92,15 @@ public class ControllerUtils {
         int resultCode = connection.getResponseCode();
         String location = connection.getHeaderField("Location");
         connection.disconnect();
-        if ( resultCode == HttpServletResponse.SC_OK || location == null )
+        if ( resultCode == HttpServletResponse.SC_OK || location == null ) {
             return url;
+        }
         else
-            cache.put(url, location);
-        return location;
+            if ( depth < MAX_REDIRECT_ATTEMPTS ) {
+                cache.put(url, location);
+                return redirect(location, depth + 1);
+            }
+            else
+                throw new IOException("Too many redirect attempts");
     }
 }

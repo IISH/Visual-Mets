@@ -84,7 +84,6 @@ public class ControllerDocument {
             HttpServletResponse response) throws Exception, IOException {
 //        @RequestParam(value = "eadId", required = true) String eadId,
 
-
         final String metsId = ControllerUtils.redirect(_metsId);
         Map map = myService.extract(metsId);
         //System.out.println(map);
